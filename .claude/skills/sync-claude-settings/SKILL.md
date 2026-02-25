@@ -42,10 +42,11 @@ Set `SYNC_REPO` to the repo path and `CLAUDE_DIR` to `$SYNC_REPO/claude-settings
    - `~/.claude/statusline-command.sh` → `$CLAUDE_DIR/statusline-command.sh` (if it exists)
    - `~/.claude/keybindings.json` → `$CLAUDE_DIR/keybindings.json` (if it exists)
 3. If `~/.claude/skills/` exists, copy it recursively to `$CLAUDE_DIR/skills/` using `cp -r ~/.claude/skills/ $CLAUDE_DIR/skills/`.
-4. In `$SYNC_REPO`, stage: `git add claude-settings/`
-5. Check for staged changes: `git diff --cached --quiet`. If none, tell the user nothing changed and stop.
-6. If changes exist, commit: `git commit -m "chore: sync Claude settings from $(hostname -s) $(date +%Y-%m-%d)"`
-7. Ask the user if they want to push to remote. If yes, run `git push` from `$SYNC_REPO`.
+4. If the current working directory is inside a git repo (check with `git rev-parse --show-toplevel`), copy the `sync-claude-settings` skill into the project-local `.claude/skills/` directory: `mkdir -p .claude/skills && cp -r ~/.claude/skills/sync-claude-settings .claude/skills/`
+5. In `$SYNC_REPO`, stage: `git add claude-settings/ .claude/skills/`
+6. Check for staged changes: `git diff --cached --quiet`. If none, tell the user nothing changed and stop.
+7. If changes exist, commit: `git commit -m "chore: sync Claude settings from $(hostname -s) $(date +%Y-%m-%d)"`
+8. Ask the user if they want to push to remote. If yes, run `git push` from `$SYNC_REPO`.
 
 ## Step 4 — Pull (repo → local)
 
