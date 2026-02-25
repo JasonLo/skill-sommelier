@@ -12,4 +12,6 @@ nohup.out
 /tmp
 tmp.ipynb
 .DS_Store
-.claude/
+.claude/*
+!.claude/skills/
+!.claude/skills/**
