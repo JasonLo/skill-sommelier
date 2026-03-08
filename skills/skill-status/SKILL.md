@@ -1,6 +1,10 @@
 ---
 name: skill-status
-description: Show all repo and local Claude Code skills, compare duplicates with diff.
+description: >-
+  Show all repo and local Claude Code skills, check symlink health, and detect sync issues.
+  Use when the user wants to see what skills are installed, check if skills are synced correctly,
+  or diagnose broken symlinks. Triggers on "skill status", "list skills", "check skills",
+  "what skills do I have", "are my skills synced", "show installed skills".
 allowed-tools:
   - Bash
   - Read

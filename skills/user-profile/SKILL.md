@@ -1,6 +1,11 @@
 ---
 name: user-profile
-description: Analyze Claude Code user history to build a rich profile — interests, tech stack, work patterns, preferences, and personality traits. Use when the user wants to understand their coding habits, generate a developer profile, or review how they use Claude Code.
+description: >-
+  Analyze Claude Code user history to build a rich profile: interests, tech stack, work patterns,
+  preferences, and personality traits. Use when the user wants to understand their coding habits,
+  generate a developer profile, or review how they use Claude Code. Also used by discover-skills
+  for personalized ranking. Triggers on "my profile", "who am I", "analyze my usage",
+  "developer profile", "coding habits", "how do I use Claude".
 allowed-tools:
   - Read
   - Bash

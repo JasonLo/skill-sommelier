@@ -1,6 +1,11 @@
 ---
 name: self-evolve
-description: Continuously discover trending Claude Code skills, study their implementations, and evolve this repo by adopting valuable patterns. Loops until the user stops it.
+description: >-
+  Discover trending Claude Code skills, study their implementations, and evolve this repo
+  by adopting valuable patterns. Runs in a loop until stopped. Use when the user wants to
+  improve the skills collection, adopt community best practices, or keep the repo current.
+  Triggers on "evolve", "self-evolve", "improve skills repo", "adopt new patterns",
+  "update skills from community".
 allowed-tools:
   - Bash
   - Read

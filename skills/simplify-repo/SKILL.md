@@ -1,6 +1,10 @@
 ---
 name: simplify-repo
-description: Audit a repository for unnecessary complexity, critique overengineering, and propose concrete simplifications with user confirmation before applying changes.
+description: >-
+  Audit a repository for unnecessary complexity and propose concrete simplifications.
+  Use when the repo feels bloated, after a big refactor, or to find dead code and overengineering.
+  Triggers on "simplify", "clean up this repo", "reduce complexity", "find dead code",
+  "audit complexity", "overengineered", "too complex".
 allowed-tools:
   - Read
   - Edit

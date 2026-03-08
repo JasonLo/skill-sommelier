@@ -1,6 +1,10 @@
 ---
 name: discover-skills
-description: Search GitHub for trending Claude Code skills and present a ranked table with descriptions.
+description: >-
+  Search GitHub for trending Claude Code skills and present a personalized ranked table.
+  Use when the user wants to find new skills, browse what's available, or explore the skills ecosystem.
+  Triggers on "find skills", "discover skills", "search for skills", "what skills exist",
+  "browse skills", "trending skills", "new skills".
 allowed-tools:
   - Bash
   - Read
