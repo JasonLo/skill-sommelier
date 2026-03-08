@@ -1,0 +1,34 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Count skills
+        id: skills
+        run: echo "count=$(ls -1d skills/*/SKILL.md | wc -l)" >> "$GITHUB_OUTPUT"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          body: |
+            ## Install
+
+            Open Claude Code and say:
+
+            > Clone https://github.com/JasonLo/skill-sommelier and symlink `~/.claude/skills` to its `skills/` directory.
+
+            Or use the built-in skill: `/sync-skills install`
+
+            **${{ steps.skills.outputs.count }} skills** included in this release.

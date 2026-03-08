@@ -29,17 +29,24 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 | [self-evolve](skills/self-evolve/SKILL.md) | dev | Discover trending skills and evolve this repo by adopting valuable patterns |
 | [skill-craft](skills/skill-craft/SKILL.md) | dev | Create, improve, and design Claude Code skills |
 
-## Quick Start
+## Install
+
+Open Claude Code and say:
+
+> Clone https://github.com/JasonLo/skill-sommelier and symlink `~/.claude/skills` to its `skills/` directory.
+
+Or if you already have skill-sommelier installed somewhere, use the built-in skill:
+
+> `/sync-skills install`
+
+To update to latest skills: `/sync-skills update`
+
+## Development
 
 ```bash
-# Clone the repo
 git clone https://github.com/JasonLo/skill-sommelier.git
 cd skill-sommelier
-
 # Project-level skills work automatically via .claude/skills → ../skills symlink
-
-# For global access, symlink the entire skills directory
-ln -sf "$(pwd)/skills" "$HOME/.claude/skills"
 ```
 
 ## Adding a Skill
