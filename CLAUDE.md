@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Commit when feature is complete
+
+- try to commit and push when a feature is fully complete, ask user.
+
 ## Project Overview
 
 **skill-sommelier** is a personal Claude Code skills manager that discovers, curates, and syncs [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) from GitHub. Skills are `SKILL.md` files that teach Claude Code new capabilities.
@@ -41,3 +45,15 @@ The project-level `.claude/skills` is a symlink to `../skills`, so Claude Code a
 - Skills should be self-contained — all references and scripts live inside the skill directory
 - The sync repo path is stored in `~/.claude/.sync-repo`
 - GitHub Actions (`.github/workflows/claude.yml`) enables `@claude` mentions on issues/PRs
+
+## Post-Skill-Run Review
+
+After every skill execution, briefly review the run and suggest improvements in three areas:
+
+1. **Speed** — Could fewer tool calls, parallel execution, or simpler logic make this skill run faster?
+2. **Usefulness** — One small, concrete enhancement that would make the output more valuable without adding complexity.
+3. **Overlap** — Does this skill duplicate functionality with another skill in the repo? If so, recommend consolidation.
+
+Keep each suggestion to one sentence. Skip any area where there's nothing actionable.
+
+Ask user whether they want to improve the skill based on the review.
