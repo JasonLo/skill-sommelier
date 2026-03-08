@@ -1,5 +1,5 @@
 ---
-name: update-readme
+name: ss-update-readme
 description: >-
   Check repo state and update README.md to reflect reality. Use when the user
   says "update readme", "sync readme", "refresh readme", "readme is stale",

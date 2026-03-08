@@ -1,5 +1,5 @@
 ---
-name: self-evolve
+name: ss-self-evolve
 description: >-
   Discover trending Claude Code skills, study their implementations, and evolve this repo
   by adopting valuable patterns. Runs in a loop until stopped. Use when the user wants to
@@ -25,8 +25,8 @@ Autonomously evolve this skill-sommelier repo by discovering trending skills, st
 - Bulk-improving existing skills based on community patterns
 
 ## When NOT to Use
-- Targeted skill creation — use `skill-craft` instead
-- Just browsing skills without intent to change the repo — use `discover-skills`
+- Targeted skill creation — use `ss-skill-craft` instead
+- Just browsing skills without intent to change the repo — use `ss-discover-skills`
 
 ## Step 1 — Read repo context
 
@@ -36,7 +36,7 @@ Autonomously evolve this skill-sommelier repo by discovering trending skills, st
 
 ## Step 2 — Discover trending skills
 
-1. Invoke the `discover-skills` skill to search GitHub for trending Claude Code skills.
+1. Invoke the `ss-discover-skills` skill to search GitHub for trending Claude Code skills.
 2. Collect the results — skill names, descriptions, repo URLs, and star counts.
 
 ## Step 3 — Deep study of promising candidates

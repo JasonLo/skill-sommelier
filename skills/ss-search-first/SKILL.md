@@ -1,5 +1,5 @@
 ---
-name: search-first
+name: ss-search-first
 description: >-
   Research-before-coding workflow. Search for existing tools, libraries, packages,
   MCP servers, and skills before writing custom code. Use when starting a new feature,

@@ -1,5 +1,5 @@
 ---
-name: skill-craft
+name: ss-skill-craft
 description: >-
   Create, improve, and design Claude Code skills. Routes between three modes:
   create (new skill from scratch), improve (fix quality issues in existing skills),

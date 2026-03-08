@@ -1,5 +1,5 @@
 ---
-name: modern-python
+name: ss-modern-python
 description: >-
   Configure Python projects with modern tooling: uv, ruff, ty. Use when creating new Python projects,
   setting up pyproject.toml, migrating from pip/Poetry/mypy/black, or writing standalone scripts.

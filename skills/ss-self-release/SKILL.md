@@ -1,5 +1,5 @@
 ---
-name: self-release
+name: ss-self-release
 description: >-
   Create a new versioned release: bump version, tag, and push to trigger the
   release workflow. Use when the user says "release", "new version",
@@ -23,7 +23,7 @@ Bump the version, create an annotated git tag, and push to trigger the GitHub Ac
 ## When NOT to Use
 
 - User just wants to commit — use normal git workflow instead
-- User wants to update the installed plugin — use `self-update` instead
+- User wants to update the installed plugin — use `ss-self-update` instead
 - User wants to preview changes without releasing — just review the git log
 
 ## Phase 1 — Preflight

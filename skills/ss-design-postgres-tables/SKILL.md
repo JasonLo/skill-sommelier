@@ -1,5 +1,5 @@
 ---
-name: design-postgres-tables
+name: ss-design-postgres-tables
 description: >-
   PostgreSQL table design reference: data types, constraints, indexes, JSONB patterns, partitioning, and best practices.
   Use when designing PostgreSQL tables, schemas, data models, choosing data types or indexes, creating upsert-heavy
