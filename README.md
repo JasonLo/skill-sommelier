@@ -37,11 +37,8 @@ cd skill-sommelier
 
 # Project-level skills work automatically via .claude/skills → ../skills symlink
 
-# For global access, symlink each skill into ~/.claude/skills/
-for skill in skills/*/; do
-  name=$(basename "$skill")
-  ln -sf "$(pwd)/skills/$name" "$HOME/.claude/skills/$name"
-done
+# For global access, symlink the entire skills directory
+ln -sf "$(pwd)/skills" "$HOME/.claude/skills"
 ```
 
 ## Adding a Skill

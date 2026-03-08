@@ -26,11 +26,11 @@ skills/
 │   └── references/           # Optional: reference docs for the skill
 ```
 
-The project-level `.claude/skills` is a symlink to `../skills`, so Claude Code automatically sees all skills when working in this repo. For global access, `~/.claude/skills/` is symlinked per-skill:
+Both project-level and global skills use a single directory symlink to the repo:
 
 ```
-.claude/skills → ../skills                          # project-level (single symlink)
-~/.claude/skills/<name> → /path/to/this/repo/skills/<name>  # global (per-skill symlinks)
+.claude/skills → ../skills                          # project-level
+~/.claude/skills → /path/to/this/repo/skills        # global
 ```
 
 ## Key Conventions
