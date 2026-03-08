@@ -14,10 +14,6 @@ The repo serves dual purposes:
 1. **Skills library** — stores skills under `skills/`
 2. **Self-managing** — includes skills (`sync-skills`, `skill-craft`, etc.) that keep itself and `~/.claude/` in sync via symlinks
 
-Skills have two audiences:
-- **Everyone** — useful to any Claude Code user (discover-skills, make-slides, planning-with-files, python-to-chtc, search-first, simplify-repo, skill-status, sync-skills, user-profile)
-- **Dev** — for developing and evolving this repo (self-evolve, skill-craft)
-
 ## Architecture
 
 There is no build system, test suite, or application code. The repo is a pure documentation library where each skill is a `SKILL.md` with YAML frontmatter (`name`, `description`) and procedural instructions.

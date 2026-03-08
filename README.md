@@ -13,26 +13,24 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 
 ## Skills
 
-| Skill | Audience | Description |
-|-------|----------|-------------|
-| [design-postgres-tables](skills/design-postgres-tables/SKILL.md) | everyone | PostgreSQL table design reference: data types, indexes, constraints, JSONB, partitioning |
-| [discover-skills](skills/discover-skills/SKILL.md) | everyone | Search GitHub for trending Claude Code skills and present a ranked table |
-| [make-slides](skills/make-slides/SKILL.md) | everyone | Create animation-rich HTML presentations from scratch or convert PowerPoint files |
-| [modern-python](skills/modern-python/SKILL.md) | everyone | Modern Python tooling reference: uv, ruff, ty, PEP 723 scripts, migration guides |
-| [planning-with-files](skills/planning-with-files/SKILL.md) | everyone | Use persistent markdown files as working memory for complex multi-step tasks |
-| [python-to-chtc](skills/python-to-chtc/SKILL.md) | everyone | Convert Python scripts into Docker/Apptainer containers for HPC environments |
-| [search-first](skills/search-first/SKILL.md) | everyone | Research existing tools and libraries before writing custom code |
-| [simplify-repo](skills/simplify-repo/SKILL.md) | everyone | Audit a repository for unnecessary complexity and propose simplifications |
-| [skill-status](skills/skill-status/SKILL.md) | everyone | Show all repo and local skills, compare duplicates with diff |
-| [sync-skills](skills/sync-skills/SKILL.md) | everyone | Sync `~/.claude/skills/` to/from this repo using symlinks |
-| [user-profile](skills/user-profile/SKILL.md) | everyone | Analyze Claude Code user history to build a rich profile |
-| | | |
-| [self-evolve](skills/self-evolve/SKILL.md) | dev | Discover trending skills and evolve this repo by adopting valuable patterns |
-| [skill-craft](skills/skill-craft/SKILL.md) | dev | Create, improve, and design Claude Code skills |
+| Skill | Description |
+|-------|-------------|
+| [design-postgres-tables](skills/design-postgres-tables/SKILL.md) | PostgreSQL table design reference: data types, constraints, indexes, JSONB patterns, partitioning, and best practices |
+| [discover-skills](skills/discover-skills/SKILL.md) | Search GitHub for trending Claude Code skills and present a personalized ranked table |
+| [make-slides](skills/make-slides/SKILL.md) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files |
+| [modern-python](skills/modern-python/SKILL.md) | Configure Python projects with modern tooling: uv, ruff, ty |
+| [planning-with-files](skills/planning-with-files/SKILL.md) | Use persistent markdown files as working memory for complex multi-step tasks |
+| [python-to-chtc](skills/python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
+| [search-first](skills/search-first/SKILL.md) | Research-before-coding workflow |
+| [self-evolve](skills/self-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
+| [simplify-repo](skills/simplify-repo/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
+| [skill-craft](skills/skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
+| [skill-status](skills/skill-status/SKILL.md) | Show all repo and local Claude Code skills, check symlink health, and detect sync issues |
+| [sync-skills](skills/sync-skills/SKILL.md) | Sync `~/.claude/skills/` to/from a git repo using symlinks |
+| [update-readme](skills/update-readme/SKILL.md) | Scan skills/ directories and update README.md skills table to match actual repo state |
+| [user-profile](skills/user-profile/SKILL.md) | Analyze Claude Code user history to build a rich profile |
 
 ## Install
-
-**Plugin install** (recommended):
 
 ```
 /plugin marketplace add JasonLo/skill-sommelier
@@ -41,14 +39,7 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 
 Skills are namespaced as `/skill-sommelier:<skill-name>` (e.g., `/skill-sommelier:discover-skills`).
 
-**Manual install** — clone and symlink (skills available without namespace):
-
-```bash
-git clone https://github.com/JasonLo/skill-sommelier.git ~/.local/share/skill-sommelier
-ln -sf ~/.local/share/skill-sommelier/skills ~/.claude/skills
-```
-
-**Update** to latest skills: `/sync-skills update` or `/plugin marketplace update`
+**Update** to latest skills: `/plugin marketplace update`
 
 ## Development
 
