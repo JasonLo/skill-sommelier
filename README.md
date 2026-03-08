@@ -11,31 +11,22 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 3. **Install** — Symlinks curated skills into `~/.claude/skills/` so they're always up to date
 4. **Sync** — Keeps your skill collection portable across machines via this repo
 
-## Meta Skills
+## Skills
 
-Skills that manage this repo and keep your Claude Code environment in sync.
-
-| Skill | Description |
-|-------|-------------|
-| [discover-skills](skills/discover-skills/SKILL.md) | Search GitHub for trending Claude Code skills and present a ranked table |
-| [self-evolve](skills/self-evolve/SKILL.md) | Discover trending skills and evolve this repo by adopting valuable patterns |
-| [skill-craft](skills/skill-craft/SKILL.md) | Create, improve, and design Claude Code skills (router: create/improve/design) |
-| [skill-status](skills/skill-status/SKILL.md) | Show all repo and local skills, compare duplicates with diff |
-| [sync-claude-settings](skills/sync-claude-settings/SKILL.md) | Sync `~/.claude` settings to/from a git repo for cross-machine portability |
-| [sync-skills](skills/sync-skills/SKILL.md) | Sync `~/.claude/skills/` to/from this repo using symlinks |
-
-## Curated Skills
-
-General-purpose skills for everyday workflows.
-
-| Skill | Description |
-|-------|-------------|
-| [make-slides](skills/make-slides/SKILL.md) | Create animation-rich HTML presentations from scratch or convert PowerPoint files |
-| [planning-with-files](skills/planning-with-files/SKILL.md) | Use persistent markdown files as working memory for complex multi-step tasks |
-| [python-to-chtc](skills/python-to-chtc/SKILL.md) | Convert Python scripts into Docker/Apptainer containers for HPC environments |
-| [search-first](skills/search-first/SKILL.md) | Research existing tools and libraries before writing custom code |
-| [simplify-repo](skills/simplify-repo/SKILL.md) | Audit a repository for unnecessary complexity and propose simplifications |
-| [user-profile](skills/user-profile/SKILL.md) | Analyze Claude Code user history to build a rich profile |
+| Skill | Audience | Description |
+|-------|----------|-------------|
+| [discover-skills](skills/discover-skills/SKILL.md) | everyone | Search GitHub for trending Claude Code skills and present a ranked table |
+| [make-slides](skills/make-slides/SKILL.md) | everyone | Create animation-rich HTML presentations from scratch or convert PowerPoint files |
+| [planning-with-files](skills/planning-with-files/SKILL.md) | everyone | Use persistent markdown files as working memory for complex multi-step tasks |
+| [python-to-chtc](skills/python-to-chtc/SKILL.md) | everyone | Convert Python scripts into Docker/Apptainer containers for HPC environments |
+| [search-first](skills/search-first/SKILL.md) | everyone | Research existing tools and libraries before writing custom code |
+| [simplify-repo](skills/simplify-repo/SKILL.md) | everyone | Audit a repository for unnecessary complexity and propose simplifications |
+| [skill-status](skills/skill-status/SKILL.md) | everyone | Show all repo and local skills, compare duplicates with diff |
+| [sync-skills](skills/sync-skills/SKILL.md) | everyone | Sync `~/.claude/skills/` to/from this repo using symlinks |
+| [user-profile](skills/user-profile/SKILL.md) | everyone | Analyze Claude Code user history to build a rich profile |
+| | | |
+| [self-evolve](skills/self-evolve/SKILL.md) | dev | Discover trending skills and evolve this repo by adopting valuable patterns |
+| [skill-craft](skills/skill-craft/SKILL.md) | dev | Create, improve, and design Claude Code skills |
 
 ## Quick Start
 
