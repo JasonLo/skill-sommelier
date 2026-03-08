@@ -34,13 +34,22 @@ If the file does not exist, run the `ss-user-profile` skill first (it will save 
 
 Store the profile context for use in ranking.
 
-## Step 2 — Parse arguments
+## Step 2 — Parse arguments and license preference
 
 `$ARGUMENTS` can contain:
 - A **keyword** (e.g., `python`, `docker`) — filters search results
 - A **number** — sets max results (default: 10)
 - Both (e.g., `python 20`)
 - Empty — no filter, 10 results
+
+**Ask user for license filtering preference:**
+
+Use `AskUserQuestion` to ask: "**License filtering:** Only show skills with permissive licenses (MIT, Apache, BSD, etc.)? This is recommended to avoid licensing conflicts."
+
+- **Default: Yes** (recommended) — Only permissive licenses are shown. Skills with restrictive licenses (GPL, AGPL, LGPL, SSPL) or no license are excluded from results.
+- **No** — Show all skills regardless of license, but require approval before installing restrictive-licensed skills.
+
+Store the user's choice for use in Steps 4-5 (filtering) and Step 8 (installation).
 
 ## Step 3 — Search GitHub for SKILL.md files
 
@@ -70,7 +79,7 @@ If a keyword was provided, add `--match=name,description` with the keyword. For 
 
 Combine results from 3a and 3b. Parse into `{owner, repo, path}` objects. Deduplicate by repository (keep the first match per repo). Exclude this repo (`JasonLo/skill-sommelier`) from results.
 
-## Step 4 — Validate candidates
+## Step 4 — Validate candidates and filter by license
 
 For each candidate, fetch the file content:
 
@@ -82,8 +91,28 @@ Base64-decode the content and check for:
 1. YAML frontmatter delimiters (`---`)
 2. A `name:` field
 3. A `description:` field
+4. An optional `license:` field
 
-Extract the `name` and `description` values. Skip files that fail validation. Stop once you have enough validated results (the max from Step 1).
+Extract the `name`, `description`, and `license` values (if present).
+
+**License filtering (based on Step 2 preference):**
+
+If the user chose to **only show permissive licenses** (default):
+1. If the skill has a `license` field in frontmatter:
+   - Check if it's permissive (MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense, CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0)
+   - If permissive → include in results
+   - If restrictive or unknown → skip this skill
+2. If no `license` field, fetch the repo license:
+   ```bash
+   gh api repos/{owner}/{repo}/license --jq '.license.spdx_id'
+   ```
+   - If permissive → include (with note to suggest adding `license:` field)
+   - If restrictive or no license → skip this skill
+
+If the user chose to **show all skills regardless of license**:
+- Include all skills that pass basic validation, store license info for Step 8
+
+Skip files that fail validation. Continue until you have enough validated results (the max from Step 2).
 
 ## Step 5 — Fetch repo metadata
 
@@ -124,19 +153,47 @@ Use `AskUserQuestion` to let the user choose:
 
 Before installing a skill, perform a security review:
 
-1. **List all files** in the skill's directory (not just SKILL.md):
+1. **Check license compliance (if user opted to see all licenses in Step 2):**
+
+   If the user chose to **only show permissive licenses** (default), all displayed skills already passed license filtering in Step 4. Skip license checking and proceed to file listing.
+
+   If the user chose to **show all skills regardless of license**, perform license check:
+
+   a. If the skill has a `license` field in its YAML frontmatter:
+      - Check if it's a permissive license: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense, CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0
+      - If permissive → proceed
+      - If restrictive (GPL-2.0, GPL-3.0, AGPL-3.0, SSPL, or any proprietary license) → warn user and require explicit confirmation
+      - If unknown/unrecognized → warn and ask user to verify
+
+   b. If the skill does NOT have a `license` field in frontmatter, fetch the repo's license:
+      ```bash
+      gh api repos/{owner}/{repo}/license --jq '{license: .license.spdx_id, url: .html_url}'
+      ```
+      - If repo has a permissive license → proceed (but suggest the skill author add `license:` field)
+      - If repo has restrictive license → warn and require confirmation
+      - If repo has no license → **warn that the code is "All Rights Reserved" by default** and require explicit user approval to proceed
+
+   **Permissive licenses (auto-approve):**
+   - MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense
+   - CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0
+
+   **Restrictive licenses (require confirmation):**
+   - GPL-2.0, GPL-3.0, LGPL-2.1, LGPL-3.0, AGPL-3.0, SSPL-1.0
+   - Any proprietary or source-available licenses
+
+2. **List all files** in the skill's directory (not just SKILL.md):
    ```bash
    gh api repos/{owner}/{repo}/contents/{skill_directory} --jq '.[].name'
    ```
 
-2. **Check for executable content** — look for `scripts/` directories, `.sh` files, `.py` files, or any non-markdown files.
+3. **Check for executable content** — look for `scripts/` directories, `.sh` files, `.py` files, or any non-markdown files.
 
-3. **If executables are found:**
+4. **If executables are found:**
    - Fetch and display the full content of each script to the user
    - Explain what the script does in plain language
    - Use `AskUserQuestion` to get explicit approval before proceeding
    - If the user declines, skip the executables and only install the SKILL.md
 
-4. **If no executables are found**, proceed with installation directly.
+5. **If no executables are found**, proceed with installation directly.
 
-5. **Install the skill** into `skills/<name>/`, then suggest running `sync-skills`.
+6. **Install the skill** into `skills/<name>/`, then suggest running `sync-skills`.
