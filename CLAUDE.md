@@ -52,6 +52,15 @@ Both project-level and global skills use a single directory symlink to the repo:
 - The sync repo path is stored in `~/.claude/.sync-repo`
 - GitHub Actions (`.github/workflows/claude.yml`) enables `@claude` mentions on issues/PRs
 
+## Post-Commit Doc Check
+
+After every commit, verify that related documentation is still accurate:
+- CLAUDE.md sections affected by the change
+- SKILL.md frontmatter (name, description, allowed-tools) matches actual behavior
+- README or references if they exist in the changed skill directory
+
+Flag any stale docs and offer to fix them before moving on.
+
 ## Post-Skill-Run Review
 
 After every skill execution, briefly review the run and suggest improvements in three areas:
