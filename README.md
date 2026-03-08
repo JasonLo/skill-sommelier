@@ -17,6 +17,7 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 |-------|-------------|
 | [design-postgres-tables](skills/design-postgres-tables/SKILL.md) | PostgreSQL table design reference: data types, constraints, indexes, JSONB patterns, partitioning, and best practices |
 | [discover-skills](skills/discover-skills/SKILL.md) | Search GitHub for trending Claude Code skills and present a personalized ranked table |
+| [init](skills/init/SKILL.md) | Bootstrap your Claude Code skill collection with personalized recommendations |
 | [make-slides](skills/make-slides/SKILL.md) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files |
 | [modern-python](skills/modern-python/SKILL.md) | Configure Python projects with modern tooling: uv, ruff, ty |
 | [python-to-chtc](skills/python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
