@@ -1,6 +1,12 @@
 ---
 name: simplify-repo
 description: Audit a repository for unnecessary complexity, critique overengineering, and propose concrete simplifications with user confirmation before applying changes.
+allowed-tools:
+  - Read
+  - Edit
+  - Bash
+  - Glob
+  - Grep
 ---
 
 Audit the current repository for unnecessary complexity — dead code, overengineered abstractions, redundant config, bloated dependencies, and anything that makes the codebase harder to understand than it needs to be. Propose simplifications, get user approval, then apply them.

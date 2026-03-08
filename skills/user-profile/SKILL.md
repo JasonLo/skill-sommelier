@@ -1,6 +1,11 @@
 ---
 name: user-profile
 description: Analyze Claude Code user history to build a rich profile — interests, tech stack, work patterns, preferences, and personality traits.
+allowed-tools:
+  - Read
+  - Bash
+  - Glob
+  - Grep
 ---
 
 Analyze the user's Claude Code history and project data to build a comprehensive personal profile. This helps Claude understand who the user is across sessions.
