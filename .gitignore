@@ -8,5 +8,4 @@ nohup.out
 /tmp
 .DS_Store
 .claude/*
-!.claude/skills/
-!.claude/skills/**
+!.claude/skills
