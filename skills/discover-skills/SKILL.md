@@ -82,8 +82,9 @@ Base64-decode the content and check for:
 1. YAML frontmatter delimiters (`---`)
 2. A `name:` field
 3. A `description:` field
+4. An optional `license:` field
 
-Extract the `name` and `description` values. Skip files that fail validation. Stop once you have enough validated results (the max from Step 1).
+Extract the `name`, `description`, and `license` values (if present). Skip files that fail validation. Stop once you have enough validated results (the max from Step 1).
 
 ## Step 5 — Fetch repo metadata
 
@@ -124,19 +125,45 @@ Use `AskUserQuestion` to let the user choose:
 
 Before installing a skill, perform a security review:
 
-1. **List all files** in the skill's directory (not just SKILL.md):
+1. **Check license compliance:**
+
+   a. If the skill has a `license` field in its YAML frontmatter:
+      - Check if it's a permissive license: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense, CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0
+      - If permissive → proceed
+      - If restrictive (GPL-2.0, GPL-3.0, AGPL-3.0, SSPL, or any proprietary license) → warn user and require explicit confirmation
+      - If unknown/unrecognized → warn and ask user to verify
+
+   b. If the skill does NOT have a `license` field in frontmatter, fetch the repo's license:
+      ```bash
+      gh api repos/{owner}/{repo}/license --jq '{license: .license.spdx_id, url: .html_url}'
+      ```
+      - If repo has a permissive license → proceed (but suggest the skill author add `license:` field)
+      - If repo has restrictive license → warn and require confirmation
+      - If repo has no license → **warn that the code is "All Rights Reserved" by default** and require explicit user approval to proceed
+
+   **Permissive licenses (auto-approve):**
+   - MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense
+   - CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0
+
+   **Restrictive licenses (require confirmation):**
+   - GPL-2.0, GPL-3.0, LGPL-2.1, LGPL-3.0, AGPL-3.0, SSPL-1.0
+   - Any proprietary or source-available licenses
+
+   **Important:** Never install skills with restrictive licenses without explicit user approval. This protects the user from licensing conflicts.
+
+2. **List all files** in the skill's directory (not just SKILL.md):
    ```bash
    gh api repos/{owner}/{repo}/contents/{skill_directory} --jq '.[].name'
    ```
 
-2. **Check for executable content** — look for `scripts/` directories, `.sh` files, `.py` files, or any non-markdown files.
+3. **Check for executable content** — look for `scripts/` directories, `.sh` files, `.py` files, or any non-markdown files.
 
-3. **If executables are found:**
+4. **If executables are found:**
    - Fetch and display the full content of each script to the user
    - Explain what the script does in plain language
    - Use `AskUserQuestion` to get explicit approval before proceeding
    - If the user declines, skip the executables and only install the SKILL.md
 
-4. **If no executables are found**, proceed with installation directly.
+5. **If no executables are found**, proceed with installation directly.
 
-5. **Install the skill** into `skills/<name>/`, then suggest running `sync-skills`.
+6. **Install the skill** into `skills/<name>/`, then suggest running `sync-skills`.
