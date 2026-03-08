@@ -179,14 +179,13 @@ what kind of developer/creator they are.
 - Inferred timezone: TZ
 ```
 
-## Step 4 — Present and offer next actions
+## Step 4 — Save and present
 
-Display the full profile, then offer:
+**Auto-save** the profile to `~/.claude/user-profile.md` without asking. This file is outside the repo and not git-tracked.
 
-1. **Save** — Write to `~/.claude/user-profile.md`
-2. **Refine** — User corrects or adds context, regenerate
-3. **Deep dive** — Expand any section with more analysis
-4. **Done** — End
+Display the full profile, then offer refinement options only if the user asks:
+- **Refine** — User corrects or adds context, regenerate
+- **Deep dive** — Expand any section with more analysis
 
 ## Privacy notes
 

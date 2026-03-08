@@ -1,10 +1,12 @@
 ---
 name: ss-discover-skills
 description: >-
-  Search GitHub for trending Claude Code skills and present a personalized ranked table.
-  Use when the user wants to find new skills, browse what's available, or explore the skills ecosystem.
+  Search GitHub for trending Claude Code skills, present a personalized ranked table,
+  and install selections. Use when the user wants to find new skills, browse what's available,
+  explore the skills ecosystem, or bootstrap their skill collection.
   Triggers on "find skills", "discover skills", "search for skills", "what skills exist",
-  "browse skills", "trending skills", "new skills".
+  "browse skills", "trending skills", "new skills", "init", "bootstrap skills",
+  "setup skills", "recommended skills".
 allowed-tools:
   - Bash
   - Read
@@ -12,48 +14,49 @@ allowed-tools:
   - Glob
   - Grep
   - Agent
-  - WebFetch
+  - AskUserQuestion
 ---
 
-Search GitHub for SKILL.md files that follow the Claude Code skill convention, validate them, and present a ranked table personalized to the user's profile. Optionally filter by keyword.
+Discover, rank, and install Claude Code skills from GitHub. Personalized to the user's profile.
 
 ## When to Use
 - Finding new Claude Code skills to install
 - Browsing what's trending in the skills ecosystem
 - Looking for skills for a specific domain or tool
+- Bootstrapping a skill collection for the first time
 
 ## When NOT to Use
 - Installing a skill you already know the URL for — just clone it directly
-- Searching for general GitHub repos — use `gh search` instead
+- Updating existing skills — use `ss-self-update` instead
 
-## Step 1 — Load user profile
+## Step 1 — Load or build user profile
 
-Read `~/.claude/user-profile.md`. If it exists, extract tech stack, interests, and project domains to use for ranking in Step 5.
+Read `~/.claude/user-profile.md`. If it exists, extract tech stack, interests, and project domains for ranking.
 
-If the file does not exist, run the `ss-user-profile` skill first (it will save the profile), then read the result.
+If the file does not exist, invoke the `ss-user-profile` skill to generate it (auto-saves to `~/.claude/user-profile.md`). Briefly summarize what you learned in 2-3 sentences.
 
-Store the profile context for use in ranking.
-
-## Step 2 — Parse arguments and license preference
+## Step 2 — Parse arguments and generate search queries
 
 `$ARGUMENTS` can contain:
 - A **keyword** (e.g., `python`, `docker`) — filters search results
 - A **number** — sets max results (default: 10)
 - Both (e.g., `python 20`)
-- Empty — no filter, 10 results
+- Empty — no filter, auto-generate queries from profile
 
-**Ask user for license filtering preference:**
+**If no keyword provided:** Synthesize **3 search queries** from the user profile:
+1. Primary tech stack (e.g., "python", "docker", "typescript")
+2. Work domain (e.g., "machine-learning", "web", "data")
+3. Tool preferences or patterns (e.g., "modern-tooling", "automation", "testing")
 
-Use `AskUserQuestion` to ask: "**License filtering:** Only show skills with permissive licenses (MIT, Apache, BSD, etc.)? This is recommended to avoid licensing conflicts."
+Briefly show the queries with one-line reasoning each.
 
-- **Default: Yes** (recommended) — Only permissive licenses are shown. Skills with restrictive licenses (GPL, AGPL, LGPL, SSPL) or no license are excluded from results.
-- **No** — Show all skills regardless of license, but require approval before installing restrictive-licensed skills.
+**If keyword provided:** Use that single keyword for search.
 
-Store the user's choice for use in Steps 4-5 (filtering) and Step 8 (installation).
+**License filtering:** Default to permissive licenses only (MIT, Apache, BSD, etc.) without asking. Skills with restrictive licenses (GPL, AGPL, LGPL, SSPL) or no license are excluded. Only ask about license preference if the user explicitly mentions wanting to see all licenses.
 
 ## Step 3 — Search GitHub for SKILL.md files
 
-Use **two complementary search strategies** and merge results:
+Use **two complementary search strategies** and merge results. If multiple queries were generated, run all searches in parallel.
 
 ### 3a — Code search (find SKILL.md files directly)
 
@@ -65,19 +68,17 @@ If a keyword was provided, add it to the query string.
 
 ### 3b — Topic search (find repos tagged with skill-related topics)
 
-Search for repos using GitHub topics:
-
 ```bash
 gh search repos --topic=claude-code-skills --sort=stars --limit 20 --json fullName,url
 gh search repos --topic=claude-skills --sort=stars --limit 20 --json fullName,url
 gh search repos --topic=agent-skills --sort=stars --limit 20 --json fullName,url
 ```
 
-If a keyword was provided, add `--match=name,description` with the keyword. For each topic-matched repo, check if it contains a SKILL.md by fetching the repo tree or contents.
+For each topic-matched repo, find SKILL.md files by fetching the repo tree.
 
 ### 3c — Merge and deduplicate
 
-Combine results from 3a and 3b. Parse into `{owner, repo, path}` objects. Deduplicate by repository (keep the first match per repo). Exclude this repo (`JasonLo/skill-sommelier`) from results.
+Combine results from all searches. Parse into `{owner, repo, path}` objects. Deduplicate by repository (keep first match per repo). Exclude this repo (`JasonLo/skill-sommelier`) from results.
 
 ## Step 4 — Validate candidates and filter by license
 
@@ -87,36 +88,20 @@ For each candidate, fetch the file content:
 gh api repos/{owner}/{repo}/contents/{path} --jq '.content'
 ```
 
-Base64-decode the content and check for:
+Base64-decode and check for:
 1. YAML frontmatter delimiters (`---`)
 2. A `name:` field
 3. A `description:` field
-4. An optional `license:` field
 
-Extract the `name`, `description`, and `license` values (if present).
+Extract `name`, `description`, and `license` values.
 
-**License filtering (based on Step 2 preference):**
-
-If the user chose to **only show permissive licenses** (default):
-1. If the skill has a `license` field in frontmatter:
-   - Check if it's permissive (MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense, CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0)
-   - If permissive → include in results
-   - If restrictive or unknown → skip this skill
-2. If no `license` field, fetch the repo license:
-   ```bash
-   gh api repos/{owner}/{repo}/license --jq '.license.spdx_id'
-   ```
-   - If permissive → include (with note to suggest adding `license:` field)
-   - If restrictive or no license → skip this skill
-
-If the user chose to **show all skills regardless of license**:
-- Include all skills that pass basic validation, store license info for Step 8
-
-Skip files that fail validation. Continue until you have enough validated results (the max from Step 2).
+**License filtering:**
+1. If skill has a `license` field in frontmatter — check if permissive (MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense, CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0). Skip if restrictive.
+2. If no `license` field, fetch repo license via `gh api repos/{owner}/{repo}/license --jq '.license.spdx_id'`. Skip if restrictive or no license.
 
 ## Step 5 — Fetch repo metadata
 
-For each validated skill's repo, fetch star count and last push date:
+For each validated skill's repo:
 
 ```bash
 gh api repos/{owner}/{repo} --jq '{stars: .stargazers_count, pushed: .pushed_at}'
@@ -126,74 +111,41 @@ If you hit a rate limit, present partial results with a note.
 
 ## Step 6 — Rank and display table
 
-Rank results using both popularity and **relevance to the user's profile**:
-1. **Relevance** (primary) — skills matching the user's tech stack, domains, and interests rank higher
+Rank by:
+1. **Relevance** (primary) — skills matching user's tech stack, domains, and interests rank higher
 2. **Stars** (secondary) — tiebreaker among equally relevant skills
 3. **Recency** — last push date as final tiebreaker
 
 Output a markdown table:
 
 ```
-| # | Skill | Repository | ⭐ | Relevance | Description |
-|---|-------|------------|----|-----------|-------------|
-| 1 | name  | [owner/repo](https://github.com/owner/repo) | 123 | high/med/low | One-line description |
+| # | Skill | Repository | Stars | Relevance | Description |
+|---|-------|------------|-------|-----------|-------------|
+| 1 | name  | owner/repo | 123   | high      | One-line description |
 ```
 
-The **Relevance** column reflects how well the skill matches the user's profile (high = directly matches tech stack or active domains, med = related area, low = unrelated but popular).
+## Step 7 — Select and install
 
-## Step 7 — Offer next actions
-
-Use `AskUserQuestion` to let the user choose:
-- **View** — show the full SKILL.md content for a specific skill
-- **Install** — download the SKILL.md (and any sibling files) into `skills/<name>/`, following the security review in Step 8
+Use `AskUserQuestion` to let the user choose skills by number. Offer:
+- **Install by number** — e.g., "1, 3, 5" or "all"
+- **View** — show full SKILL.md content for a specific skill
 - **Refine** — search again with different keywords
-- **Done** — end the session
+- **Done** — end
 
-## Step 8 — Security review (on install)
+For each selected skill, spawn a parallel Agent to:
+1. Fetch the full SKILL.md and all sibling files from GitHub
+2. Save to `skills/{name}/SKILL.md` (and `references/` if present)
 
-Before installing a skill, perform a security review:
+Before installing, perform security review:
+- **List all files** in the skill's directory
+- **If executable content found** (`.sh`, `.py`, scripts/) — show content and get explicit approval
+- **If no executables** — proceed directly
 
-1. **Check license compliance (if user opted to see all licenses in Step 2):**
+Report status for each installed skill.
 
-   If the user chose to **only show permissive licenses** (default), all displayed skills already passed license filtering in Step 4. Skip license checking and proceed to file listing.
+## Error Handling
 
-   If the user chose to **show all skills regardless of license**, perform license check:
-
-   a. If the skill has a `license` field in its YAML frontmatter:
-      - Check if it's a permissive license: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense, CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0
-      - If permissive → proceed
-      - If restrictive (GPL-2.0, GPL-3.0, AGPL-3.0, SSPL, or any proprietary license) → warn user and require explicit confirmation
-      - If unknown/unrecognized → warn and ask user to verify
-
-   b. If the skill does NOT have a `license` field in frontmatter, fetch the repo's license:
-      ```bash
-      gh api repos/{owner}/{repo}/license --jq '{license: .license.spdx_id, url: .html_url}'
-      ```
-      - If repo has a permissive license → proceed (but suggest the skill author add `license:` field)
-      - If repo has restrictive license → warn and require confirmation
-      - If repo has no license → **warn that the code is "All Rights Reserved" by default** and require explicit user approval to proceed
-
-   **Permissive licenses (auto-approve):**
-   - MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense
-   - CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0
-
-   **Restrictive licenses (require confirmation):**
-   - GPL-2.0, GPL-3.0, LGPL-2.1, LGPL-3.0, AGPL-3.0, SSPL-1.0
-   - Any proprietary or source-available licenses
-
-2. **List all files** in the skill's directory (not just SKILL.md):
-   ```bash
-   gh api repos/{owner}/{repo}/contents/{skill_directory} --jq '.[].name'
-   ```
-
-3. **Check for executable content** — look for `scripts/` directories, `.sh` files, `.py` files, or any non-markdown files.
-
-4. **If executables are found:**
-   - Fetch and display the full content of each script to the user
-   - Explain what the script does in plain language
-   - Use `AskUserQuestion` to get explicit approval before proceeding
-   - If the user declines, skip the executables and only install the SKILL.md
-
-5. **If no executables are found**, proceed with installation directly.
-
-6. **Install the skill** into `skills/<name>/`, then suggest running `sync-skills`.
+- If user profile fails (no history), use generic recommendations
+- If searches find fewer than 10 results, present what was found
+- If the user selects 0 skills, acknowledge and exit gracefully
+- If installation fails for a skill, report the error and continue with others
