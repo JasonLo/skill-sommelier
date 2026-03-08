@@ -1,141 +1,182 @@
 ---
 name: user-profile
-description: Analyze Claude Code user history to build a rich profile — interests, tech stack, work patterns, preferences, and personality traits.
+description: Analyze Claude Code user history to build a rich profile — interests, tech stack, work patterns, preferences, and personality traits. Use when the user wants to understand their coding habits, generate a developer profile, or review how they use Claude Code.
 allowed-tools:
   - Read
   - Bash
   - Glob
   - Grep
+  - Agent
 ---
 
 Analyze the user's Claude Code history and project data to build a comprehensive personal profile. This helps Claude understand who the user is across sessions.
 
-## Step 1 — Gather data from all available sources
+## Step 1 — Gather data from all sources (parallelize)
 
-Collect data from these locations (skip any that don't exist):
+Spawn an Agent to analyze prompt history while reading other sources in parallel. Skip any source that doesn't exist.
 
-### 1a — Prompt history
+### 1a — Prompt history (delegate to Agent)
 
-Read `~/.claude/history.jsonl`. Each line is JSON with keys: `display` (the user's prompt), `timestamp`, `project` (working directory path), `sessionId`.
+Spawn a general-purpose Agent to read and analyze `~/.claude/history.jsonl`. Each line is JSON with keys: `display` (the user's prompt), `timestamp`, `project` (working directory path), `sessionId`.
 
-Extract:
-- All unique project paths → infer project names and domains
-- All prompt texts → analyze topics, vocabulary, intent patterns
-- Timestamps → analyze activity patterns (time of day, frequency, streaks)
+The agent should produce a structured report covering:
 
-### 1b — Project memory files
+**Projects:** All unique project paths with prompt counts, sorted by frequency.
+
+**Timestamps:**
+- Date range (earliest to latest), total active days
+- Detect timezone by finding the sleep gap (hours with near-zero activity) and mapping to the most likely UTC offset. Report all times in the inferred local timezone, not UTC.
+- Activity by time of day (morning/afternoon/evening/night in local time)
+- Day of week distribution
+- Top 10 most active days
+
+**Prompts:**
+- Total count, questions vs instructions ratio
+- Prompt length distribution (short <50 chars, medium 50-200, long 200+)
+- Slash commands used (with counts)
+- Bang/shell commands used (with counts)
+- Top words and bigrams (excluding stopwords)
+- Communication style observations (verbosity, tone, politeness, casing)
+
+**Sessions:**
+- Total sessions, average/median prompts per session
+- Session size distribution and duration stats
+- Top 5 longest sessions with project and first prompt
+
+**Technology mentions:** Languages, frameworks, tools, platforms mentioned in prompts with counts.
+
+### 1b — /insights report (if available)
+
+Check for `~/.claude/usage-data/report.html`. If it exists, read it and extract:
+- Interaction style observations
+- Friction patterns and what works well
+- Suggested improvements and features to try
+- Impressive workflows identified
+
+Also check `~/.claude/usage-data/facets/` for structured JSON data. These provide richer personality and style analysis than raw history alone.
+
+### 1c — Project memory files
 
 Glob for `~/.claude/projects/*/memory/MEMORY.md` and read each one. These contain curated notes about per-project preferences and context.
 
-### 1c — CLAUDE.md files across projects
+### 1d — CLAUDE.md files across projects
 
-For each unique project path found in history, check if `{project}/CLAUDE.md` exists and read it. These describe the project's purpose and conventions.
+For each unique project path found in history (top 10 by frequency), check if `{project}/CLAUDE.md` exists and read it. These describe project purpose and conventions.
 
-### 1d — Settings and configuration
+### 1e — Settings and configuration
 
-Read `~/.claude/settings.json` for tool preferences and model settings.
+Read `~/.claude/settings.json` for tool preferences, model settings, and plugins.
 
-### 1e — Repo metadata (optional)
+### 1f — Git contribution stats
 
-For projects that are git repos, run `git -C {project} remote -v` and `git -C {project} log --oneline -5` to understand what each project is about.
+For each project that is a git repo, run in a single bash command:
+```bash
+git -C {project} remote -v 2>/dev/null | head -1
+git -C {project} log --oneline -3 2>/dev/null
+git -C {project} shortlog -sn --all --no-merges 2>/dev/null | head -3
+```
 
-## Step 2 — Analyze and categorize
+This reveals the user's commit patterns and whether they're the sole contributor or part of a team.
 
-Process all gathered data into these profile dimensions:
+## Step 2 — Analyze and synthesize
+
+Once all data is gathered, synthesize into these dimensions:
 
 ### Tech Stack
-- **Languages** — inferred from project types, prompts mentioning languages, file extensions
-- **Frameworks** — mentioned or used across projects (e.g., Astro, Docker, React)
-- **Tools** — CLI tools, editors, platforms referenced in prompts
-- **Infrastructure** — cloud, HPC, CI/CD, containers mentioned
+- **Languages** — inferred from project types, CLAUDE.md toolchains, and prompt mentions
+- **Frameworks & Libraries** — from CLAUDE.md dependencies and prompt context
+- **Dev Tools** — package managers, linters, editors, CLI tools (pay attention to `uv`, `bun`, `ruff`, etc.)
+- **Infrastructure** — cloud, HPC, CI/CD, containers, databases
 
-### Interests & Domains
-- What problem domains do their projects cover? (web dev, data science, research, DevOps, etc.)
-- What topics come up repeatedly in prompts?
-- Are there hobby/side projects vs. work projects?
+### Project Portfolio
+For each project, determine:
+- Domain (web dev, ML, data engineering, DevOps, tooling, etc.)
+- Work vs personal (GitHub org repos = work, personal handle = side projects)
+- Activity level (prompt count and recency)
+- Solo vs team (from git shortlog)
 
 ### Work Patterns
-- **Session frequency** — how often do they use Claude Code?
-- **Session depth** — do they tend toward quick one-off questions or deep multi-hour sessions?
-- **Time patterns** — when are they most active? (morning/evening/weekend)
-- **Project switching** — do they focus on one project or juggle many?
+- **Schedule** — when they work, in inferred local timezone
+- **Session style** — quick bursts vs deep sessions
+- **Project focus** — concentrated or scattered
+- **Weekday vs weekend** — work/life separation or blended
 
 ### Communication Style
-- How do they phrase requests? (terse commands vs. detailed explanations)
-- Do they use technical jargon freely or explain context?
-- Tone — formal, casual, playful?
-- Do they ask for opinions or just give instructions?
-
-### Preferences & Habits
-- Do they prefer certain workflows? (e.g., always commit+push, specific branching strategies)
-- Code style preferences visible in their instructions
-- Do they customize Claude's behavior heavily (CLAUDE.md, memory files)?
-- Any explicit preferences stated in memory files
+- Verbosity (median prompt length, short/long ratio)
+- Tone (imperative vs conversational, formal vs casual)
+- Autonomy preference (do they confirm or just say "go"?)
+- Slash command power-user level (count and variety)
 
 ### Personality Indicators
-- Risk tolerance — do they experiment boldly or proceed cautiously?
-- Autonomy preference — do they delegate fully or stay hands-on?
-- Learning orientation — do they ask "why" or just "how"?
-- Creativity — do they explore novel approaches or stick to established patterns?
+- Risk tolerance — bold experiments or careful steps?
+- Tool builder — do they create skills/tools or just use them?
+- Learning style — "why" questions vs "how" instructions?
+- Customization depth — CLAUDE.md complexity, memory files, settings
 
-## Step 3 — Build the profile document
+## Step 3 — Build the profile
 
-Compose a structured profile with these sections:
+Compose the profile in this format:
 
 ```markdown
 # User Profile
 
+> TLDR: A single sentence capturing who this person is.
+
 ## Quick Summary
-> A 2-3 sentence overview of who this person is as a developer/creator.
+2-3 sentences: role, primary domains, what makes them distinctive.
 
 ## Tech Identity
 | Dimension | Details |
 |-----------|---------|
-| Primary Languages | ... |
+| Languages | ... |
 | Frameworks | ... |
+| Dev Tools | ... |
 | Infrastructure | ... |
-| Tools | ... |
 
 ## Project Portfolio
-Brief description of each discovered project and its domain.
+| Project | Domain | Type | Activity |
+|---------|--------|------|----------|
+| name | domain | work/personal | prompt count |
 
-## Interests & Domains
-Ranked list of interests based on frequency and recency.
+Brief narrative about portfolio shape (what connects the projects).
 
-## Work Style
-- Activity pattern summary
-- Session behavior
-- Collaboration style with AI
+## Work Patterns
+- Schedule summary (timezone, peak hours, weekday/weekend)
+- Session style (burst vs marathon, median duration)
+- Project focus pattern
 
-## Communication & Preferences
-- How they interact with Claude
-- Explicit preferences found in memory/settings
+## Communication Style
+- How they talk to Claude (with specific examples from prompts)
+- Autonomy level and confirmation style
+- Notable habits (slash commands, bang commands, typo tolerance)
 
 ## Personality Sketch
-A short narrative paragraph synthesizing the personality indicators
-into a human portrait — what drives this person, how they think,
+A short narrative paragraph synthesizing personality indicators
+into a human portrait. What drives this person, how they think,
 what kind of developer/creator they are.
 
 ## Raw Stats
-- Total prompts analyzed: N
+- Total prompts: N
 - Unique projects: N
-- Date range: earliest to latest
-- Most active project: ...
-- Most common topics: ...
+- Date range: X to Y (N active days)
+- Sessions: N (median M prompts, median D minutes)
+- Most active project: name (N prompts)
+- Slash commands: N distinct
+- Inferred timezone: TZ
 ```
 
 ## Step 4 — Present and offer next actions
 
-Display the full profile to the user, then ask:
+Display the full profile, then offer:
 
-1. **Save** — Write the profile to `~/.claude/user-profile.md` for future reference
+1. **Save** — Write to `~/.claude/user-profile.md`
 2. **Refine** — User corrects or adds context, regenerate
-3. **Deep dive** — Expand on a specific section with more analysis
+3. **Deep dive** — Expand any section with more analysis
 4. **Done** — End
 
 ## Privacy notes
 
-- All analysis is local — no data leaves the machine
+- All analysis is local, no data leaves the machine
 - Only reads existing Claude Code metadata (history, memory, settings)
 - Does not read conversation transcripts or tool outputs, only user prompts
 - The profile can be deleted at any time by removing `~/.claude/user-profile.md`
