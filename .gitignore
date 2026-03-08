@@ -1,7 +1,3 @@
-__pycache__/
-.hypothesis/
-.pytest_cache/
-.ipynb_checkpoints
 .env
 .venv
 secret/
@@ -10,7 +6,6 @@ secrets/
 nohup.out
 *.tmp
 /tmp
-tmp.ipynb
 .DS_Store
 .claude/*
 !.claude/skills/
