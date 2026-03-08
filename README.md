@@ -23,6 +23,7 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 | [python-to-chtc](skills/python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
 | [search-first](skills/search-first/SKILL.md) | Research-before-coding workflow |
 | [self-evolve](skills/self-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
+| [self-update](skills/self-update/SKILL.md) | Check for plugin updates, show changelog, and apply them |
 | [simplify-repo](skills/simplify-repo/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
 | [skill-craft](skills/skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
 | [update-readme](skills/update-readme/SKILL.md) | Scan skills/ directories and update README.md skills table to match actual repo state |

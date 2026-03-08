@@ -41,6 +41,10 @@ For local development, a project-level symlink provides direct access to skills:
 - Skills should be self-contained — all references and scripts live inside the skill directory
 - GitHub Actions (`.github/workflows/claude.yml`) enables `@claude` mentions on issues/PRs
 
+## Update Checks
+
+When a user mentions updates, new skills, or staying current, suggest running the `self-update` skill to check for and apply plugin updates.
+
 ## Post-Commit Doc Check
 
 After every commit, verify that related documentation is still accurate:
