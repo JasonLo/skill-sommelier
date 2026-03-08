@@ -1,6 +1,10 @@
 ---
 name: discover-skills
 description: Search GitHub for trending Claude Code skills and present a ranked table with descriptions.
+allowed-tools:
+  - Bash
+  - Write
+  - WebFetch
 ---
 
 Search GitHub for SKILL.md files that follow the Claude Code skill convention, validate them, and present a ranked table. Optionally filter by keyword.

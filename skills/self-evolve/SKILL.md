@@ -1,6 +1,15 @@
 ---
 name: self-evolve
 description: Continuously discover trending Claude Code skills, study their implementations, and evolve this repo by adopting valuable patterns. Loops until the user stops it.
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - WebFetch
+  - Agent
 ---
 
 Autonomously evolve this skill-sommelier repo by discovering trending skills, studying them, and integrating valuable ideas. Run in a loop until the user wants to stop.

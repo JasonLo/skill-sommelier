@@ -1,6 +1,10 @@
 ---
 name: sync-skills
 description: Sync ~/.claude/skills/ to/from a git repo using symlinks. Push to save new skills, pull to symlink repo skills into ~/.claude/skills/.
+allowed-tools:
+  - Bash
+  - Read
+  - Write
 ---
 
 Sync your local `~/.claude/skills/` directory to or from a git repository using symlinks.
