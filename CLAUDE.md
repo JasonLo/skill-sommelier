@@ -22,10 +22,11 @@ skills/
 │   └── references/           # Optional: reference docs for the skill
 ```
 
-Skills are symlinked (not copied) into `~/.claude/skills/` so edits in either location take effect immediately. The symlink mapping is:
+The project-level `.claude/skills` is a symlink to `../skills`, so Claude Code automatically sees all skills when working in this repo. For global access, `~/.claude/skills/` is symlinked per-skill:
 
 ```
-~/.claude/skills/<name> → /path/to/this/repo/skills/<name>
+.claude/skills → ../skills                          # project-level (single symlink)
+~/.claude/skills/<name> → /path/to/this/repo/skills/<name>  # global (per-skill symlinks)
 ```
 
 ## Key Conventions
