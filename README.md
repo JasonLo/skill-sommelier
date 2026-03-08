@@ -19,10 +19,10 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 | [discover-skills](skills/discover-skills/SKILL.md) | Search GitHub for trending Claude Code skills and present a personalized ranked table |
 | [make-slides](skills/make-slides/SKILL.md) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files |
 | [modern-python](skills/modern-python/SKILL.md) | Configure Python projects with modern tooling: uv, ruff, ty |
-| [planning-with-files](skills/planning-with-files/SKILL.md) | Use persistent markdown files as working memory for complex multi-step tasks |
 | [python-to-chtc](skills/python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
 | [search-first](skills/search-first/SKILL.md) | Research-before-coding workflow |
 | [self-evolve](skills/self-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
+| [self-release](skills/self-release/SKILL.md) | Bump version, tag, and push to trigger the GitHub Actions release workflow |
 | [self-update](skills/self-update/SKILL.md) | Check for plugin updates, show changelog, and apply them |
 | [simplify-repo](skills/simplify-repo/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
 | [skill-craft](skills/skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
