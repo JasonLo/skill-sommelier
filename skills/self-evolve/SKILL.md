@@ -30,7 +30,7 @@ Autonomously evolve this skill-sommelier repo by discovering trending skills, st
 
 ## Step 1 — Read repo context
 
-1. Read `~/.claude/.sync-repo` to get the repo path. Set `SYNC_REPO` to that path and `SKILLS_DIR` to `$SYNC_REPO/skills/`.
+1. Use the current repo root as `SYNC_REPO` and set `SKILLS_DIR` to `$SYNC_REPO/skills/`.
 2. List all current skills in `$SKILLS_DIR` — note their names, descriptions (from SKILL.md frontmatter), and any supporting files (scripts/, references/).
 3. Read the repo's `CLAUDE.md` to understand current conventions and architecture.
 
@@ -69,7 +69,7 @@ For each proposed improvement:
 
 1. **Low-risk changes** (new skills, adding scripts/references to existing skills): proceed automatically. Create the skill directory, write the SKILL.md, and add any supporting files.
 2. **Medium-risk changes** (modifying existing SKILL.md instructions, changing CLAUDE.md conventions): show the proposed diff to the user and ask for approval before applying.
-3. **High-risk changes** (deleting skills, restructuring the repo, changing the symlink strategy): stop and ask the user for a decision. Do not proceed without explicit approval.
+3. **High-risk changes** (deleting skills, restructuring the repo, changing the plugin configuration): stop and ask the user for a decision. Do not proceed without explicit approval.
 
 After making changes:
 - Run `skill-status` to verify everything is consistent.
@@ -88,7 +88,7 @@ After completing one cycle:
 ## Guardrails
 
 - Never delete existing skills without explicit user approval.
-- Never modify the symlink strategy (skills/ -> ~/.claude/skills/) without asking.
+- Never modify the plugin distribution method without asking.
 - After adding a new feature or skill, commit and push (ask the user before pushing).
 - If a discovered skill conflicts with an existing one, always ask before proceeding.
 - Keep all new skills self-contained per repo conventions (SKILL.md + optional scripts/ and references/).

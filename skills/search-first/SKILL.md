@@ -67,7 +67,7 @@ go search on pkg.go.dev
 Check `~/.claude/settings.json` for installed MCP servers that might provide this functionality.
 
 ### 2d — Existing skills
-Check `~/.claude/skills/` for skills that already handle this.
+Check for installed skills or plugins that already handle this.
 
 ### 2e — GitHub
 Search for well-maintained implementations:

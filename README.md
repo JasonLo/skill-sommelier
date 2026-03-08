@@ -8,8 +8,8 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 
 1. **Harvest** — Scans GitHub for Claude Code skills (`SKILL.md` files) across public repos
 2. **Curate** — Ranks and recommends skills based on your personal preference profile
-3. **Install** — Symlinks curated skills into `~/.claude/skills/` so they're always up to date
-4. **Sync** — Keeps your skill collection portable across machines via this repo
+3. **Install** — Available as a Claude Code plugin via the marketplace
+4. **Update** — Stay current with `/plugin marketplace update`
 
 ## Skills
 
@@ -25,8 +25,6 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 | [self-evolve](skills/self-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
 | [simplify-repo](skills/simplify-repo/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
 | [skill-craft](skills/skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
-| [skill-status](skills/skill-status/SKILL.md) | Show all repo and local Claude Code skills, check symlink health, and detect sync issues |
-| [sync-skills](skills/sync-skills/SKILL.md) | Sync `~/.claude/skills/` to/from a git repo using symlinks |
 | [update-readme](skills/update-readme/SKILL.md) | Scan skills/ directories and update README.md skills table to match actual repo state |
 | [user-profile](skills/user-profile/SKILL.md) | Analyze Claude Code user history to build a rich profile |
 
@@ -46,11 +44,11 @@ Skills are namespaced as `/skill-sommelier:<skill-name>` (e.g., `/skill-sommelie
 ```bash
 git clone https://github.com/JasonLo/skill-sommelier.git
 cd skill-sommelier
-# Project-level skills work automatically via .claude/skills → ../skills symlink
+# Project-level skills work automatically via .claude/skills symlink
 ```
 
 ## Adding a Skill
 
 1. Create a directory under `skills/` with the skill name
 2. Add a `SKILL.md` file with frontmatter (`name`, `description`) and instructions
-3. It's immediately available in this project (via the `.claude/skills` symlink) — no restart needed
+3. It's immediately available in this project — no restart needed

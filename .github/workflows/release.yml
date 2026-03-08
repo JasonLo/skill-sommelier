@@ -29,6 +29,6 @@ jobs:
             /plugin marketplace add JasonLo/skill-sommelier
             ```
 
-            Or manually: `git clone https://github.com/JasonLo/skill-sommelier.git ~/.local/share/skill-sommelier && ln -sf ~/.local/share/skill-sommelier/skills ~/.claude/skills`
+            Or install directly: `/plugin install skill-sommelier@skill-sommelier`
 
             **${{ steps.skills.outputs.count }} skills** included in this release.
