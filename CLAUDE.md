@@ -11,8 +11,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **skill-sommelier** is a personal Claude Code skills manager that discovers, curates, and syncs [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) from GitHub. Skills are `SKILL.md` files that teach Claude Code new capabilities.
 
 The repo serves dual purposes:
-1. **Skills library** — stores curated skills under `skills/`
-2. **Self-managing** — includes skills (`sync-skills`, `sync-claude-settings`) that keep itself and `~/.claude/` in sync via symlinks
+1. **Skills library** — stores curated general-purpose skills under `skills/`
+2. **Self-managing** — includes meta skills (`sync-skills`, `sync-claude-settings`, `skill-craft`, etc.) that keep itself and `~/.claude/` in sync via symlinks
+
+Skills fall into two categories:
+- **Meta** — manage this repo and your Claude Code environment (discover-skills, self-evolve, skill-craft, skill-status, sync-claude-settings, sync-skills)
+- **Curated** — general-purpose skills for everyday workflows (make-slides, planning-with-files, python-to-chtc, search-first, simplify-repo, user-profile)
 
 ## Architecture
 
@@ -25,6 +29,8 @@ skills/
 │   └── scripts/              # Optional: supporting automation
 │   └── references/           # Optional: reference docs for the skill
 ```
+
+All skill directories are flat under `skills/` — Claude Code does not discover skills recursively.
 
 Both project-level and global skills use a single directory symlink to the repo:
 
