@@ -41,7 +41,7 @@ Fetch the latest remote state without modifying the local clone.
 
 Compare local HEAD against remote HEAD.
 
-1. If local SHA == remote SHA → report "skill-sommelier is up to date" with the current SHA short hash and **stop**
+1. If local SHA == remote SHA → report "skill-sommelier is up to date" with the current SHA short hash, show days since last commit using `git -C "$PLUGIN_DIR" log -1 --format="%cr"`, and **stop**
 2. If different, get the changelog:
    ```
    git -C "$PLUGIN_DIR" log --oneline HEAD..origin/main
