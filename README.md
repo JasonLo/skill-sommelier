@@ -15,6 +15,7 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 
 | Skill | Audience | Description |
 |-------|----------|-------------|
+| [design-postgres-tables](skills/design-postgres-tables/SKILL.md) | everyone | PostgreSQL table design reference: data types, indexes, constraints, JSONB, partitioning |
 | [discover-skills](skills/discover-skills/SKILL.md) | everyone | Search GitHub for trending Claude Code skills and present a ranked table |
 | [make-slides](skills/make-slides/SKILL.md) | everyone | Create animation-rich HTML presentations from scratch or convert PowerPoint files |
 | [planning-with-files](skills/planning-with-files/SKILL.md) | everyone | Use persistent markdown files as working memory for complex multi-step tasks |
