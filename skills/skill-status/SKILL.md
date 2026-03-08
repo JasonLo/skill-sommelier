@@ -1,6 +1,10 @@
 ---
 name: skill-status
 description: Show all repo and local Claude Code skills, compare duplicates with diff.
+allowed-tools:
+  - Bash
+  - Read
+  - Glob
 ---
 
 Compare skills across three locations: the repo's canonical `skills/` directory, the repo's `.claude/skills/` (project-level), and `~/.claude/skills/` (global). Identify sync issues between any of them.

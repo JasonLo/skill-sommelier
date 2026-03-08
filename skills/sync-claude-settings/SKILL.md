@@ -1,6 +1,10 @@
 ---
 name: sync-claude-settings
 description: Sync ~/.claude settings (settings.json, statusline script, keybindings, global skills) to/from a git repo for cross-machine portability. Push to save, pull to restore on a new machine.
+allowed-tools:
+  - Bash
+  - Read
+  - Write
 ---
 
 Sync your local `~/.claude/` configuration files to or from a git repository.
