@@ -36,16 +36,19 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 
 ```
 /plugin marketplace add JasonLo/skill-sommelier
+/plugin install skill-sommelier@skill-sommelier
 ```
 
-**Manual install** — clone and symlink:
+Skills are namespaced as `/skill-sommelier:<skill-name>` (e.g., `/skill-sommelier:discover-skills`).
+
+**Manual install** — clone and symlink (skills available without namespace):
 
 ```bash
 git clone https://github.com/JasonLo/skill-sommelier.git ~/.local/share/skill-sommelier
 ln -sf ~/.local/share/skill-sommelier/skills ~/.claude/skills
 ```
 
-**Update** to latest skills: `/sync-skills update`
+**Update** to latest skills: `/sync-skills update` or `/plugin marketplace update`
 
 ## Development
 
