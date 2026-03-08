@@ -1,6 +1,13 @@
 ---
 name: python-to-chtc
 description: Convert Python scripts into production-ready Docker and Apptainer/Singularity containers with Pixi dependency management, automatic detection, multi-stage builds, and best practices. Supports GPU/CUDA configurations, multi-environment setups (CPU/GPU), HTCondor/SLURM integration, and .sif conversion for HPC. Use when users need to containerize Python applications, create Dockerfiles, generate Apptainer images, package Python code for deployment, need container configuration for Python projects, or want GPU-accelerated applications for HPC environments. Supports Pixi and pip workflows. Handles scripts, web apps, workers, services, and ML/data science workloads on Docker, Apptainer, and HPC systems.
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Glob
+  - Grep
 ---
 
 # Python to CHTC

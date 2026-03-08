@@ -31,7 +31,13 @@ The project-level `.claude/skills` is a symlink to `../skills`, so Claude Code a
 
 ## Key Conventions
 
-- Every skill directory must contain a `SKILL.md` with `name` and `description` in YAML frontmatter
+- Skills follow the [Agent Skills specification](https://agentskills.io/specification)
+- Every skill directory must contain a `SKILL.md` with required YAML frontmatter:
+  - `name` (required): lowercase, hyphens only, must match directory name
+  - `description` (required): what the skill does AND when to trigger it
+  - `allowed-tools` (recommended): space-delimited list of tools the skill uses
+  - `license`, `compatibility`, `metadata` (optional): per the spec
+- Keep SKILL.md under 500 lines; move detailed content to `references/`
 - Skills should be self-contained — all references and scripts live inside the skill directory
 - The sync repo path is stored in `~/.claude/.sync-repo`
 - GitHub Actions (`.github/workflows/claude.yml`) enables `@claude` mentions on issues/PRs
