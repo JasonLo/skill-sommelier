@@ -11,6 +11,15 @@ allowed-tools:
 
 Analyze the user's Claude Code history and project data to build a comprehensive personal profile. This helps Claude understand who the user is across sessions.
 
+## When to Use
+- Understanding your coding habits and patterns
+- Generating a developer profile for personalization
+- Informing other skills (discover-skills uses this for relevance ranking)
+
+## When NOT to Use
+- Shared machines where history contains multiple users' data
+- When you need real-time stats — this is a point-in-time snapshot
+
 ## Step 1 — Gather data from all sources (parallelize)
 
 Spawn an Agent to analyze prompt history while reading other sources in parallel. Skip any source that doesn't exist.

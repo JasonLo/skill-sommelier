@@ -9,6 +9,15 @@ allowed-tools:
 
 Compare skills across three locations: the repo's canonical `skills/` directory, the repo's `.claude/skills/` (project-level), and `~/.claude/skills/` (global). Identify sync issues.
 
+## When to Use
+- Checking if skills are properly synced across locations
+- Diagnosing broken or missing symlinks
+- After installing or removing skills
+
+## When NOT to Use
+- Syncing skills — use `sync-skills` instead
+- Browsing available skills — use `discover-skills`
+
 ## Step 1 — Determine paths
 
 Read `~/.claude/.sync-repo` for the repo path. If missing, use `AskUserQuestion` to ask for it. Define:

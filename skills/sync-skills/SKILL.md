@@ -13,6 +13,16 @@ allowed-tools:
 
 Sync your local `~/.claude/skills/` to or from a git repository using a single directory symlink.
 
+## When to Use
+- Setting up skill-sommelier on a new machine (install)
+- Saving new skills to the repo (push)
+- Restoring skills from the repo (pull)
+- Getting latest skills from remote (update)
+
+## When NOT to Use
+- Syncing non-skill Claude config (settings.json, keybindings) — manage those separately
+- Browsing or discovering new skills — use `discover-skills`
+
 ## Arguments
 
 `$ARGUMENTS` may be `install`, `push`, `pull`, `update`, or empty. If empty, ask the user.

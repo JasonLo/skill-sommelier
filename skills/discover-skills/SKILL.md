@@ -13,6 +13,15 @@ allowed-tools:
 
 Search GitHub for SKILL.md files that follow the Claude Code skill convention, validate them, and present a ranked table personalized to the user's profile. Optionally filter by keyword.
 
+## When to Use
+- Finding new Claude Code skills to install
+- Browsing what's trending in the skills ecosystem
+- Looking for skills for a specific domain or tool
+
+## When NOT to Use
+- Installing a skill you already know the URL for — just clone it directly
+- Searching for general GitHub repos — use `gh search` instead
+
 ## Step 1 — Load user profile
 
 Read `~/.claude/user-profile.md`. If it exists, extract tech stack, interests, and project domains to use for ranking in Step 5.

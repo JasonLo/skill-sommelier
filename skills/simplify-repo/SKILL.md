@@ -11,6 +11,16 @@ allowed-tools:
 
 Audit the current repository for unnecessary complexity — dead code, overengineered abstractions, redundant config, bloated dependencies, and anything that makes the codebase harder to understand than it needs to be. Propose simplifications, get user approval, then apply them.
 
+## When to Use
+- Repository feels harder to navigate than it should
+- Suspecting dead code, unused dependencies, or premature abstractions
+- After a big refactor or feature removal — cleaning up leftovers
+
+## When NOT to Use
+- Active feature development — simplify after, not during
+- Repos you don't own — suggest changes via PR instead
+- Performance optimization — this is about code clarity, not speed
+
 ## Step 1 — Scan the repository
 
 Perform a broad audit across these dimensions:

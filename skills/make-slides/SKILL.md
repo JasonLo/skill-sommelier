@@ -13,6 +13,15 @@ allowed-tools:
 
 Create zero-dependency, animation-rich HTML presentations that run entirely in the browser.
 
+## When to Use
+- Building a presentation from scratch
+- Converting PowerPoint/PPTX to a web-based format
+- Creating slides for a talk, pitch, or lecture
+
+## When NOT to Use
+- Slidev/reveal.js projects — use those tools directly
+- Documents or reports — this is for slide decks only
+
 ## Core Philosophy
 
 1. **Zero Dependencies** — Single HTML files with inline CSS/JS. No npm, no build tools.

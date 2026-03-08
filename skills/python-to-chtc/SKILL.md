@@ -14,6 +14,17 @@ allowed-tools:
 
 Convert Python applications into production-ready Docker containers with Pixi dependency management, intelligent analysis, optimized multi-stage builds, GPU/CUDA support, and comprehensive configuration.
 
+## When to Use
+- Containerizing a Python script or application for HPC
+- Creating Dockerfiles or Apptainer definitions for CHTC/HTCondor
+- Packaging Python code with GPU/CUDA support
+- Converting pip/conda projects to Pixi-managed containers
+
+## When NOT to Use
+- Non-Python applications — this is Python-specific
+- Local Docker development without HPC — use standard Docker practices
+- Kubernetes deployments — this targets HTCondor/SLURM
+
 ## Quick Start
 
 For simple containerization requests (uses Pixi by default):

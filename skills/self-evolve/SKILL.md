@@ -14,6 +14,15 @@ allowed-tools:
 
 Autonomously evolve this skill-sommelier repo by discovering trending skills, studying them, and integrating valuable ideas. Run in a loop until the user wants to stop.
 
+## When to Use
+- Periodic maintenance to keep the repo current with the skills ecosystem
+- Looking for inspiration from trending skills
+- Bulk-improving existing skills based on community patterns
+
+## When NOT to Use
+- Targeted skill creation — use `skill-craft` instead
+- Just browsing skills without intent to change the repo — use `discover-skills`
+
 ## Step 1 — Read repo context
 
 1. Read `~/.claude/.sync-repo` to get the repo path. Set `SYNC_REPO` to that path and `SKILLS_DIR` to `$SYNC_REPO/skills/`.
