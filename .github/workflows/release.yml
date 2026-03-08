@@ -25,10 +25,10 @@ jobs:
           body: |
             ## Install
 
-            Open Claude Code and say:
+            ```
+            /plugin marketplace add JasonLo/skill-sommelier
+            ```
 
-            > Clone https://github.com/JasonLo/skill-sommelier and symlink `~/.claude/skills` to its `skills/` directory.
-
-            Or use the built-in skill: `/sync-skills install`
+            Or manually: `git clone https://github.com/JasonLo/skill-sommelier.git ~/.local/share/skill-sommelier && ln -sf ~/.local/share/skill-sommelier/skills ~/.claude/skills`
 
             **${{ steps.skills.outputs.count }} skills** included in this release.

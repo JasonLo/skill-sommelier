@@ -32,15 +32,20 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 
 ## Install
 
-Open Claude Code and say:
+**Plugin install** (recommended):
 
-> Clone https://github.com/JasonLo/skill-sommelier and symlink `~/.claude/skills` to its `skills/` directory.
+```
+/plugin marketplace add JasonLo/skill-sommelier
+```
 
-Or if you already have skill-sommelier installed somewhere, use the built-in skill:
+**Manual install** — clone and symlink:
 
-> `/sync-skills install`
+```bash
+git clone https://github.com/JasonLo/skill-sommelier.git ~/.local/share/skill-sommelier
+ln -sf ~/.local/share/skill-sommelier/skills ~/.claude/skills
+```
 
-To update to latest skills: `/sync-skills update`
+**Update** to latest skills: `/sync-skills update`
 
 ## Development
 
