@@ -3,13 +3,25 @@ name: discover-skills
 description: Search GitHub for trending Claude Code skills and present a ranked table with descriptions.
 allowed-tools:
   - Bash
+  - Read
   - Write
+  - Glob
+  - Grep
+  - Agent
   - WebFetch
 ---
 
-Search GitHub for SKILL.md files that follow the Claude Code skill convention, validate them, and present a ranked table. Optionally filter by keyword.
+Search GitHub for SKILL.md files that follow the Claude Code skill convention, validate them, and present a ranked table personalized to the user's profile. Optionally filter by keyword.
 
-## Step 1 — Parse arguments
+## Step 1 — Load user profile
+
+Read `~/.claude/user-profile.md`. If it exists, extract tech stack, interests, and project domains to use for ranking in Step 5.
+
+If the file does not exist, run the `user-profile` skill first (it will save the profile), then read the result.
+
+Store the profile context for use in ranking.
+
+## Step 2 — Parse arguments
 
 `$ARGUMENTS` can contain:
 - A **keyword** (e.g., `python`, `docker`) — filters search results
@@ -17,11 +29,11 @@ Search GitHub for SKILL.md files that follow the Claude Code skill convention, v
 - Both (e.g., `python 20`)
 - Empty — no filter, 10 results
 
-## Step 2 — Search GitHub for SKILL.md files
+## Step 3 — Search GitHub for SKILL.md files
 
 Use **two complementary search strategies** and merge results:
 
-### 2a — Code search (find SKILL.md files directly)
+### 3a — Code search (find SKILL.md files directly)
 
 ```bash
 gh search code 'filename:SKILL.md "name:" "description:"' --limit 30 --json repository,path
@@ -29,7 +41,7 @@ gh search code 'filename:SKILL.md "name:" "description:"' --limit 30 --json repo
 
 If a keyword was provided, add it to the query string.
 
-### 2b — Topic search (find repos tagged with skill-related topics)
+### 3b — Topic search (find repos tagged with skill-related topics)
 
 Search for repos using GitHub topics:
 
@@ -41,11 +53,11 @@ gh search repos --topic=agent-skills --sort=stars --limit 20 --json fullName,url
 
 If a keyword was provided, add `--match=name,description` with the keyword. For each topic-matched repo, check if it contains a SKILL.md by fetching the repo tree or contents.
 
-### 2c — Merge and deduplicate
+### 3c — Merge and deduplicate
 
-Combine results from 2a and 2b. Parse into `{owner, repo, path}` objects. Deduplicate by repository (keep the first match per repo). Exclude this repo (`JasonLo/skill-sommelier`) from results.
+Combine results from 3a and 3b. Parse into `{owner, repo, path}` objects. Deduplicate by repository (keep the first match per repo). Exclude this repo (`JasonLo/skill-sommelier`) from results.
 
-## Step 3 — Validate candidates
+## Step 4 — Validate candidates
 
 For each candidate, fetch the file content:
 
@@ -60,7 +72,7 @@ Base64-decode the content and check for:
 
 Extract the `name` and `description` values. Skip files that fail validation. Stop once you have enough validated results (the max from Step 1).
 
-## Step 4 — Fetch repo metadata
+## Step 5 — Fetch repo metadata
 
 For each validated skill's repo, fetch star count and last push date:
 
@@ -70,27 +82,32 @@ gh api repos/{owner}/{repo} --jq '{stars: .stargazers_count, pushed: .pushed_at}
 
 If you hit a rate limit, present partial results with a note.
 
-## Step 5 — Build and display table
+## Step 6 — Rank and display table
 
-Sort results by stars (descending), then by last push date (most recent first).
+Rank results using both popularity and **relevance to the user's profile**:
+1. **Relevance** (primary) — skills matching the user's tech stack, domains, and interests rank higher
+2. **Stars** (secondary) — tiebreaker among equally relevant skills
+3. **Recency** — last push date as final tiebreaker
 
 Output a markdown table:
 
 ```
-| # | Skill | Repository | ⭐ | Description |
-|---|-------|------------|----|-------------|
-| 1 | name  | [owner/repo](https://github.com/owner/repo) | 123 | One-line description |
+| # | Skill | Repository | ⭐ | Relevance | Description |
+|---|-------|------------|----|-----------|-------------|
+| 1 | name  | [owner/repo](https://github.com/owner/repo) | 123 | high/med/low | One-line description |
 ```
 
-## Step 6 — Offer next actions
+The **Relevance** column reflects how well the skill matches the user's profile (high = directly matches tech stack or active domains, med = related area, low = unrelated but popular).
+
+## Step 7 — Offer next actions
 
 Use `AskUserQuestion` to let the user choose:
 - **View** — show the full SKILL.md content for a specific skill
-- **Install** — download the SKILL.md (and any sibling files) into `skills/<name>/`, following the security review in Step 7
+- **Install** — download the SKILL.md (and any sibling files) into `skills/<name>/`, following the security review in Step 8
 - **Refine** — search again with different keywords
 - **Done** — end the session
 
-## Step 7 — Security review (on install)
+## Step 8 — Security review (on install)
 
 Before installing a skill, perform a security review:
 
