@@ -22,6 +22,8 @@ Skills have two audiences:
 
 There is no build system, test suite, or application code. The repo is a pure documentation library where each skill is a `SKILL.md` with YAML frontmatter (`name`, `description`) and procedural instructions.
 
+**Skills only — no scripts.** All functionality must be implemented as skills (SKILL.md files), not shell scripts, Python scripts, or any other executable code. If a new capability is needed (install, update, automation), create or extend a skill for it.
+
 ```
 skills/
 ├── <skill-name>/SKILL.md
