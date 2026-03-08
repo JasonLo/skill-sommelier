@@ -15,20 +15,20 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 
 | Skill | Description |
 |-------|-------------|
-| [design-postgres-tables](skills/design-postgres-tables/SKILL.md) | PostgreSQL table design reference: data types, constraints, indexes, JSONB patterns, partitioning, and best practices |
-| [discover-skills](skills/discover-skills/SKILL.md) | Search GitHub for trending Claude Code skills and present a personalized ranked table |
-| [init](skills/init/SKILL.md) | Bootstrap your Claude Code skill collection with personalized recommendations |
-| [make-slides](skills/make-slides/SKILL.md) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files |
-| [modern-python](skills/modern-python/SKILL.md) | Configure Python projects with modern tooling: uv, ruff, ty |
-| [python-to-chtc](skills/python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
-| [search-first](skills/search-first/SKILL.md) | Research-before-coding workflow |
-| [self-evolve](skills/self-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
-| [self-release](skills/self-release/SKILL.md) | Bump version, tag, and push to trigger the GitHub Actions release workflow |
-| [self-update](skills/self-update/SKILL.md) | Check for plugin updates, show changelog, and apply them |
-| [simplify-repo](skills/simplify-repo/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
-| [skill-craft](skills/skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
-| [update-readme](skills/update-readme/SKILL.md) | Scan skills/ directories and update README.md skills table to match actual repo state |
-| [user-profile](skills/user-profile/SKILL.md) | Analyze Claude Code user history to build a rich profile |
+| [ss-design-postgres-tables](skills/ss-design-postgres-tables/SKILL.md) | PostgreSQL table design reference: data types, constraints, indexes, JSONB patterns, partitioning, and best practices |
+| [ss-discover-skills](skills/ss-discover-skills/SKILL.md) | Search GitHub for trending Claude Code skills and present a personalized ranked table |
+| [ss-init](skills/ss-init/SKILL.md) | Bootstrap your Claude Code skill collection with personalized recommendations |
+| [ss-make-slides](skills/ss-make-slides/SKILL.md) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files |
+| [ss-modern-python](skills/ss-modern-python/SKILL.md) | Configure Python projects with modern tooling: uv, ruff, ty |
+| [ss-python-to-chtc](skills/ss-python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
+| [ss-search-first](skills/ss-search-first/SKILL.md) | Research-before-coding workflow |
+| [ss-self-evolve](skills/ss-self-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
+| [ss-self-release](skills/ss-self-release/SKILL.md) | Bump version, tag, and push to trigger the GitHub Actions release workflow |
+| [ss-self-update](skills/ss-self-update/SKILL.md) | Check for plugin updates, show changelog, and apply them |
+| [ss-simplify-repo](skills/ss-simplify-repo/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
+| [ss-skill-craft](skills/ss-skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
+| [ss-update-readme](skills/ss-update-readme/SKILL.md) | Scan skills/ directories and update README.md skills table to match actual repo state |
+| [ss-user-profile](skills/ss-user-profile/SKILL.md) | Analyze Claude Code user history to build a rich profile |
 
 ## Install
 

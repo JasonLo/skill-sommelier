@@ -1,5 +1,5 @@
 ---
-name: user-profile
+name: ss-user-profile
 description: >-
   Analyze Claude Code user history to build a rich profile: interests, tech stack, work patterns,
   preferences, and personality traits. Use when the user wants to understand their coding habits,

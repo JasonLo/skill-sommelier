@@ -1,5 +1,5 @@
 ---
-name: discover-skills
+name: ss-discover-skills
 description: >-
   Search GitHub for trending Claude Code skills and present a personalized ranked table.
   Use when the user wants to find new skills, browse what's available, or explore the skills ecosystem.
@@ -30,7 +30,7 @@ Search GitHub for SKILL.md files that follow the Claude Code skill convention, v
 
 Read `~/.claude/user-profile.md`. If it exists, extract tech stack, interests, and project domains to use for ranking in Step 5.
 
-If the file does not exist, run the `user-profile` skill first (it will save the profile), then read the result.
+If the file does not exist, run the `ss-user-profile` skill first (it will save the profile), then read the result.
 
 Store the profile context for use in ranking.
 

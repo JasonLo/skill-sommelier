@@ -1,5 +1,5 @@
 ---
-name: init
+name: ss-init
 description: >-
   Bootstrap your Claude Code skill collection. Analyzes your profile, discovers
   personalized skills, and installs your selections. Use when users want to
@@ -26,9 +26,9 @@ Bootstrap your Claude Code skill collection with personalized recommendations.
 - Finding skills that match your workflow
 
 ## When NOT to Use
-- When you already know which specific skill you want — use `discover-skills` directly
-- Updating existing skills — use `self-update` instead
-- Browsing all available skills — use `discover-skills` without filtering
+- When you already know which specific skill you want — use `ss-discover-skills` directly
+- Updating existing skills — use `ss-self-update` instead
+- Browsing all available skills — use `ss-discover-skills` without filtering
 
 ## Phase 1 — Analyze User Profile
 
@@ -38,7 +38,7 @@ Bootstrap your Claude Code skill collection with personalized recommendations.
 
 Say: "I'll analyze your Claude Code usage history to understand your preferences and recommend skills tailored to your workflow. This happens locally on your machine and no data leaves your system."
 
-Then invoke the `user-profile` skill to generate or update the user profile.
+Then invoke the `ss-user-profile` skill to generate or update the user profile.
 
 Wait for the profile to complete, then briefly summarize what you learned in 2-3 sentences (e.g., "You're a Python developer who works on ML projects, prefers modern tooling, and has an active workflow").
 
@@ -63,10 +63,10 @@ Present the 3 queries to the user and explain the reasoning behind each one.
 
 **Entry:** 3 search queries ready
 
-Execute the `discover-skills` skill **3 times in parallel**, once for each query. Use the Skill tool to invoke:
-- `/discover-skills {query1}`
-- `/discover-skills {query2}`
-- `/discover-skills {query3}`
+Execute the `ss-discover-skills` skill **3 times in parallel**, once for each query. Use the Skill tool to invoke:
+- `/ss-discover-skills {query1}`
+- `/ss-discover-skills {query2}`
+- `/ss-discover-skills {query3}`
 
 Wait for all three searches to complete, then merge and deduplicate the results (same repo = same skill).
 
@@ -93,7 +93,7 @@ Use `AskUserQuestion` to get the user's selections.
 
 For each selected skill, spawn a background agent using the Agent tool to:
 1. Fetch the full SKILL.md content from GitHub
-2. Invoke the `skill-craft` skill in "improve" mode to review and fix quality issues
+2. Invoke the `ss-skill-craft` skill in "improve" mode to review and fix quality issues
 3. Save the improved SKILL.md to `skills/{name}/SKILL.md`
 
 All N agents should run **in parallel** for speed.
@@ -125,16 +125,16 @@ All skills are now available in your `skills/` directory.
 Remind the user that:
 - Skills are immediately available (no restart needed)
 - They can run any skill with its name as a command
-- They can run `self-update` to check for updates later
-- They can run `discover-skills` anytime to find more
+- They can run `ss-self-update` to check for updates later
+- They can run `ss-discover-skills` anytime to find more
 
 **Exit:** Setup complete.
 
 ## Error Handling
 
-- If `user-profile` fails (no history), explain that you'll use generic recommendations instead
-- If `discover-skills` finds fewer than 10 results total, present what was found
-- If a skill-craft refinement fails, install the original SKILL.md without changes
+- If `ss-user-profile` fails (no history), explain that you'll use generic recommendations instead
+- If `ss-discover-skills` finds fewer than 10 results total, present what was found
+- If a ss-skill-craft refinement fails, install the original SKILL.md without changes
 - If the user selects 0 skills, acknowledge and exit gracefully
 
 ## Privacy Notes

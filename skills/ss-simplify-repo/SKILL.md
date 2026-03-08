@@ -1,5 +1,5 @@
 ---
-name: simplify-repo
+name: ss-simplify-repo
 description: >-
   Audit a repository for unnecessary complexity and propose concrete simplifications.
   Use when the repo feels bloated, after a big refactor, or to find dead code and overengineering.
