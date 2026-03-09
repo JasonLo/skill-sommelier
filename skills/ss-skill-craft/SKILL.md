@@ -76,6 +76,8 @@ description: >-
 allowed-tools:
   - Tool1
   - Tool2
+metadata:                      # optional
+  depends-on: ss-other-skill   # space-delimited, only if this skill invokes others
 ---
 ```
 
@@ -90,6 +92,7 @@ allowed-tools:
 - Imperative voice ("Run the command", not "You should run")
 - All trigger info in `description` — it controls activation
 - Only list tools the skill actually uses in `allowed-tools`
+- Add `metadata.depends-on` if the skill invokes or delegates to other skills
 - Self-contained: scripts in `scripts/`, references in `references/`
 
 **Exit:** SKILL.md written and passes self-review.
@@ -227,6 +230,8 @@ description: >-
   What. When. Trigger phrases.
 allowed-tools:
   - Tool1
+metadata:                      # optional
+  depends-on: ss-other-skill   # space-delimited
 ---
 
 # Skill Name

@@ -15,6 +15,8 @@ allowed-tools:
   - Grep
   - WebFetch
   - Agent
+metadata:
+  depends-on: ss-discover-skills ss-validate-skills
 ---
 
 Autonomously evolve this skill-sommelier repo by discovering trending skills, studying them, and integrating valuable ideas. Run in a loop until the user wants to stop.

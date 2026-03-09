@@ -72,6 +72,9 @@ If the SKILL.md body mentions `references/` or `scripts/`, verify those director
 ### Check 10 — Trigger phrase overlap (WARN if found)
 Compare each skill's `description:` trigger phrases against all other skills. Warn if two skills share significant trigger keywords that could cause ambiguous activation. List the overlapping pair and the shared phrases.
 
+### Check 11 — `metadata.depends-on` targets exist (FAIL if broken)
+If frontmatter contains `metadata.depends-on:`, verify each space-delimited skill name corresponds to an existing directory under `skills/`.
+
 **Exit:** All checks run for all skills. Results collected.
 
 ## Phase 3 — Report
@@ -83,10 +86,10 @@ Output a report in this format:
 ```
 ## Skill Validation Report
 
-| Skill | SKILL.md | name | description | name=dir | ss- prefix | allowed-tools | <500 lines | refs exist | triggers | Status |
-|-------|----------|------|-------------|----------|------------|---------------|------------|------------|----------|--------|
-| ss-foo | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
-| ss-bar | PASS | PASS | PASS | PASS | PASS | WARN | PASS | N/A | WARN | WARN |
+| Skill | SKILL.md | name | description | name=dir | ss- prefix | allowed-tools | <500 lines | refs exist | triggers | meta.depends-on | Status |
+|-------|----------|------|-------------|----------|------------|---------------|------------|------------|----------|-----------------|--------|
+| ss-foo | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS |
+| ss-bar | PASS | PASS | PASS | PASS | PASS | WARN | PASS | N/A | WARN | PASS | WARN |
 
 ### Summary
 - Total skills: N

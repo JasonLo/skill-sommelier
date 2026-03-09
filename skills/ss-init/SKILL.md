@@ -7,6 +7,8 @@ description: >-
   "what skills should I have", "recommended skills for me".
 allowed-tools:
   - Skill
+metadata:
+  depends-on: ss-discover-skills
 ---
 
 # Init

@@ -15,6 +15,8 @@ allowed-tools:
   - Grep
   - Agent
   - AskUserQuestion
+metadata:
+  depends-on: ss-user-profile
 ---
 
 Discover, rank, and install Claude Code skills from GitHub. Personalized to the user's profile.
