@@ -36,23 +36,49 @@ Autonomously evolve this skill-sommelier repo by discovering trending skills, st
 
 ## Step 2 — Discover trending skills
 
-1. Invoke the `ss-discover-skills` skill to search GitHub for trending Claude Code skills.
-2. Collect the results — skill names, descriptions, repo URLs, and star counts.
+Search GitHub directly using `gh` CLI (faster than invoking `ss-discover-skills` interactively):
 
-## Step 3 — Deep study of promising candidates
+1. Run code search and topic searches in parallel via a single Agent:
+   - `gh search code 'filename:SKILL.md "name:" "description:"' --limit 30 --json repository,path`
+   - `gh search repos --topic=claude-code-skills --sort=stars --limit 20 --json fullName,url`
+   - `gh search repos --topic=claude-skills --sort=stars --limit 20 --json fullName,url`
+   - `gh search repos --topic=agent-skills --sort=stars --limit 20 --json fullName,url`
+2. Merge, deduplicate, exclude this repo (`JasonLo/skill-sommelier`).
+3. For each candidate, fetch the SKILL.md content and extract name, description, license. Fetch repo stars and last push date.
+4. Filter to permissive licenses only. Sort by stars descending.
 
-For each trending skill that looks potentially valuable (not already in the repo, and relevant to a personal skills manager):
+## Step 3 — Deep study and diff against existing skills
 
-1. Use `WebFetch` to read the skill's SKILL.md or README from its GitHub repo (use raw URLs).
-2. Study the implementation details: frontmatter structure, step-by-step instructions, supporting scripts, reference files.
-3. Note any patterns, conventions, or techniques that differ from or improve upon what this repo does.
+For each trending skill, classify it as **new** (no equivalent in repo) or **overlapping** (similar to an existing skill):
+
+### 3a — New skill candidates
+For skills with no equivalent in the repo:
+1. Fetch the full SKILL.md via `gh api` (raw content, base64-decode).
+2. Study implementation: frontmatter, phases, supporting files.
+3. Assess fit: does it complement the existing collection?
+
+### 3b — Diff overlapping skills against existing ones
+For skills that overlap with an existing repo skill:
+1. Fetch the external SKILL.md content.
+2. Read the corresponding local skill's SKILL.md.
+3. **Produce a structured diff** comparing the two side-by-side across these dimensions:
+
+| Dimension | Local skill | External skill | Gap |
+|-----------|-------------|----------------|-----|
+| Scan/audit sections | What it covers | What it covers | Missing sections or techniques |
+| Phases/steps | Count + names | Count + names | Missing phases or exit criteria |
+| Tool usage | Listed tools | Listed tools | Tools used externally but not locally |
+| Trigger phrases | Description keywords | Description keywords | Missing trigger terms |
+| Supporting files | scripts/, references/ | scripts/, references/ | Missing reference material |
+
+4. For each gap found, draft a **specific, line-level enhancement** — not just "adopt X pattern" but the actual content to add/change.
 
 ## Step 4 — Analyze and plan improvements
 
 Based on what was discovered, identify improvements in these categories:
 
 1. **New skills to add** — trending skills that would be valuable in this repo, adapted to fit the repo's conventions.
-2. **Existing skill enhancements** — ideas from trending skills that could improve skills already in the repo (better instructions, missing steps, useful scripts).
+2. **Existing skill enhancements** — specific line-level changes derived from the Step 3b diff. Each enhancement must include: the target file, the section to modify, and the proposed content.
 3. **Repo-level improvements** — patterns seen across popular skills that suggest changes to CLAUDE.md, directory structure, or conventions.
 
 Present a summary table to the user:
@@ -60,7 +86,7 @@ Present a summary table to the user:
 | Category | Item | Source | Rationale |
 |----------|------|--------|-----------|
 | New skill | ... | repo/skill | Why it fits |
-| Enhancement | ... | repo/skill | What it improves |
+| Enhancement | target-skill: section | repo/skill | Specific gap from diff |
 | Repo improvement | ... | repo/skill | What pattern it follows |
 
 ## Step 5 — Decide and act
