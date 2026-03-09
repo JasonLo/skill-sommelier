@@ -1,0 +1,44 @@
+name: Weekly Self-Evolve
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Every Monday at 9 AM UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  self-evolve:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Self-Evolve
+        id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            You are running as a weekly automated self-evolve job for the skill-sommelier repo.
+
+            Run the /ss-self-evolve skill with these constraints:
+            - Run exactly ONE iteration (do not loop)
+            - Discover trending Claude Code skills from GitHub
+            - Study interesting finds and compare with existing skills
+            - Apply only low-risk improvements automatically (new skills, minor enhancements)
+            - Skip any medium/high-risk changes
+            - After making changes, commit them to this branch
+            - Keep changes focused and reviewable in a single PR
+
+            Important context:
+            - This repo is at: ${{ github.repository }}
+            - Current branch: ${{ github.ref_name }}
+            - All skills must follow the ss- prefix naming convention
+            - Skills live in skills/<skill-name>/SKILL.md
+          claude_args: "--allowedTools Bash,Read,Write,Edit,Glob,Grep,WebFetch,WebSearch"
