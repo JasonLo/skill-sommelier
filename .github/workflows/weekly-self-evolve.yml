@@ -39,6 +39,5 @@ jobs:
             - All skills must follow the ss- prefix naming convention
             - Skills live in skills/<skill-name>/SKILL.md
             - Read CLAUDE.md for repo conventions before making changes
-          show_full_output: true
           claude_args: |
             --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebFetch,WebSearch"
