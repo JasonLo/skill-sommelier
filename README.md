@@ -33,6 +33,7 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 | [ss-skill-craft](skills/ss-skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
 | [ss-update-readme](skills/ss-update-readme/SKILL.md) | Scan skills/ directories and update README.md skills table to match actual repo state |
 | [ss-user-profile](skills/ss-user-profile/SKILL.md) | Analyze Claude Code user history to build a rich profile |
+| [ss-validate-skills](skills/ss-validate-skills/SKILL.md) | Validate all skills for frontmatter correctness, naming conventions, and structural rules |
 
 ## Install
 
