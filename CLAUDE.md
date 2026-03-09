@@ -33,7 +33,7 @@ For local development, a project-level symlink provides direct access to skills:
 
 - Skills follow the [Agent Skills specification](https://agentskills.io/specification)
 - Every skill directory must contain a `SKILL.md` with required YAML frontmatter:
-  - `name` (required): lowercase, hyphens only, must match directory name
+  - `name` (required): lowercase, hyphens only, **must start with `ss-`**, must match directory name
   - `description` (required): what the skill does AND when to trigger it
   - `allowed-tools` (recommended): space-delimited list of tools the skill uses
   - `license`, `compatibility`, `metadata` (optional): per the spec

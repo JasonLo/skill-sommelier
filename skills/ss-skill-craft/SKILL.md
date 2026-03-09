@@ -64,9 +64,12 @@ Create a new skill from scratch or from conversation context.
 Follow repo conventions:
 
 **Required frontmatter:**
+
+> All skills in this repo must use the `ss-` prefix in their name.
+
 ```yaml
 ---
-name: skill-name
+name: ss-skill-name
 description: >-
   What the skill does AND when to trigger it. Be specific about trigger
   phrases. Err on the side of "pushy" — Claude tends to under-trigger.
@@ -219,7 +222,7 @@ Design multi-step workflow skills with reliable structure.
 
 ```markdown
 ---
-name: skill-name
+name: ss-skill-name
 description: >-
   What. When. Trigger phrases.
 allowed-tools:

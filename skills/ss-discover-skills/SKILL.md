@@ -134,7 +134,8 @@ Use `AskUserQuestion` to let the user choose skills by number. Offer:
 
 For each selected skill, spawn a parallel Agent to:
 1. Fetch the full SKILL.md and all sibling files from GitHub
-2. Save to `skills/{name}/SKILL.md` (and `references/` if present)
+2. **Enforce `ss-` prefix:** If the skill's `name` doesn't already start with `ss-`, prefix it — directory becomes `skills/ss-{name}/` and update the `name:` field in the saved SKILL.md frontmatter to `ss-{name}`. Tell the user: "Installing as `ss-{name}` per repo naming convention."
+3. Save to `skills/{name}/SKILL.md` (and `references/` if present)
 
 Before installing, perform security review:
 - **List all files** in the skill's directory
