@@ -12,6 +12,7 @@ allowed-tools:
   - Bash
   - Glob
   - Grep
+  - AskUserQuestion
 ---
 
 Audit the current repository for unnecessary complexity — dead code, overengineered abstractions, redundant config, bloated dependencies, and anything that makes the codebase harder to understand than it needs to be. Propose simplifications, get user approval, then apply them.
@@ -27,6 +28,8 @@ Audit the current repository for unnecessary complexity — dead code, overengin
 - Performance optimization — this is about code clarity, not speed
 
 ## Step 1 — Scan the repository
+
+**Maximize parallelism:** Run all independent reads and searches in parallel. For example, read all config files, SKILL.md frontmatter, and run all grep searches in a single batch of tool calls rather than sequentially. This dramatically reduces scan time on larger repos.
 
 Perform a broad audit across these dimensions:
 

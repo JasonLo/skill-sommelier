@@ -75,6 +75,9 @@ Compare each skill's `description:` trigger phrases against all other skills. Wa
 ### Check 11 — `metadata.depends-on` targets exist (FAIL if broken)
 If frontmatter contains `metadata.depends-on:`, verify each space-delimited skill name corresponds to an existing directory under `skills/`.
 
+### Check 12 — `metadata.related-skills` targets exist (WARN if broken)
+If frontmatter contains `metadata.related-skills:`, verify each comma-separated skill name (trimmed) corresponds to an existing directory under `skills/`. Warn on missing targets — these are cross-references, not hard dependencies.
+
 **Exit:** All checks run for all skills. Results collected.
 
 ## Phase 3 — Report
@@ -86,10 +89,10 @@ Output a report in this format:
 ```
 ## Skill Validation Report
 
-| Skill | SKILL.md | name | description | name=dir | ss- prefix | allowed-tools | <500 lines | refs exist | triggers | meta.depends-on | Status |
-|-------|----------|------|-------------|----------|------------|---------------|------------|------------|----------|-----------------|--------|
-| ss-foo | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS |
-| ss-bar | PASS | PASS | PASS | PASS | PASS | WARN | PASS | N/A | WARN | PASS | WARN |
+| Skill | SKILL.md | name | description | name=dir | ss- prefix | allowed-tools | <500 lines | refs exist | triggers | meta.depends-on | meta.related-skills | Status |
+|-------|----------|------|-------------|----------|------------|---------------|------------|------------|----------|-----------------|---------------------|--------|
+| ss-foo | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | N/A | PASS |
+| ss-bar | PASS | PASS | PASS | PASS | PASS | WARN | PASS | N/A | WARN | PASS | WARN | WARN |
 
 ### Summary
 - Total skills: N
@@ -186,6 +189,29 @@ jobs:
             lines=$(wc -l < "$skill_file")
             if [ "$lines" -gt 500 ]; then
               echo "WARN: $skill_name — $lines lines (over 500)"
+            fi
+
+            # Check 11: depends-on targets exist
+            depends_on=$(echo "$frontmatter" | grep 'depends-on:' | sed 's/.*depends-on:[[:space:]]*//')
+            if [ -n "$depends_on" ]; then
+              for dep in $depends_on; do
+                if [ ! -d "skills/$dep" ]; then
+                  echo "FAIL: $skill_name — depends-on target '$dep' not found"
+                  exit_code=1
+                fi
+              done
+            fi
+
+            # Check 12: related-skills targets exist
+            related=$(echo "$frontmatter" | grep 'related-skills:' | sed 's/.*related-skills:[[:space:]]*//')
+            if [ -n "$related" ]; then
+              IFS=',' read -ra rels <<< "$related"
+              for rel in "${rels[@]}"; do
+                rel=$(echo "$rel" | xargs)  # trim whitespace
+                if [ -n "$rel" ] && [ ! -d "skills/$rel" ]; then
+                  echo "WARN: $skill_name — related-skills target '$rel' not found"
+                fi
+              done
             fi
 
             echo "OK: $skill_name"
