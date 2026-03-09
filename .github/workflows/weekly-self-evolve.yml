@@ -25,20 +25,19 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
-            You are running as a weekly automated self-evolve job for the skill-sommelier repo.
+            REPO: ${{ github.repository }}
 
-            Run the /ss-self-evolve skill with these constraints:
-            - Run exactly ONE iteration (do not loop)
-            - Discover trending Claude Code skills from GitHub
-            - Study interesting finds and compare with existing skills
-            - Apply only low-risk improvements automatically (new skills, minor enhancements)
-            - Skip any medium/high-risk changes
-            - After making changes, commit them to this branch
-            - Keep changes focused and reviewable in a single PR
+            You are running as a weekly automated self-evolve job for the skill-sommelier repo.
+            Follow the instructions in skills/ss-self-evolve/SKILL.md with these constraints:
+
+            - Run exactly ONE iteration (do NOT loop or ask to continue — stop after Step 5)
+            - In Step 5, apply only low-risk changes automatically (new skills, minor enhancements)
+            - Skip any medium/high-risk changes entirely
+            - After making changes, create a branch, commit, and open a PR for review
 
             Important context:
-            - This repo is at: ${{ github.repository }}
-            - Current branch: ${{ github.ref_name }}
             - All skills must follow the ss- prefix naming convention
             - Skills live in skills/<skill-name>/SKILL.md
-          claude_args: "--allowedTools Bash,Read,Write,Edit,Glob,Grep,WebFetch,WebSearch"
+            - Read CLAUDE.md for repo conventions before making changes
+          claude_args: |
+            --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebFetch,WebSearch"
