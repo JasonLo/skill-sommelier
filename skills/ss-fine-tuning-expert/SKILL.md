@@ -1,6 +1,13 @@
 ---
 name: ss-fine-tuning-expert
 description: "Use when fine-tuning LLMs, training custom models, or adapting foundation models for specific tasks. Invoke for configuring LoRA/QLoRA adapters, preparing JSONL training datasets, setting hyperparameters for fine-tuning runs, adapter training, transfer learning, finetuning with Hugging Face PEFT, OpenAI fine-tuning, instruction tuning, RLHF, DPO, or quantizing and deploying fine-tuned models. Trigger terms include: LoRA, QLoRA, PEFT, finetuning, fine-tuning, adapter tuning, LLM training, model training, custom model."
+allowed-tools:
+  - Bash
+  - Read
+  - Edit
+  - Write
+  - Glob
+  - Grep
 license: MIT
 metadata:
   author: https://github.com/Jeffallan
