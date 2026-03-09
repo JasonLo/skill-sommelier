@@ -11,13 +11,7 @@ allowed-tools:
 license: MIT
 metadata:
   author: https://github.com/Jeffallan
-  version: "1.1.0"
-  domain: devops
-  triggers: DevOps, CI/CD, deployment, Docker, Kubernetes, Terraform, GitHub Actions, infrastructure, platform engineering, incident response, on-call, self-service
-  role: engineer
-  scope: implementation
-  output-format: code
-  related-skills: 
+  related-skills: ss-database-optimizer
 ---
 
 # DevOps Engineer

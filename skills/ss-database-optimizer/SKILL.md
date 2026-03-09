@@ -11,13 +11,7 @@ allowed-tools:
 license: MIT
 metadata:
   author: https://github.com/Jeffallan
-  version: "1.1.0"
-  domain: infrastructure
-  triggers: database optimization, slow query, query performance, database tuning, index optimization, execution plan, EXPLAIN ANALYZE, database performance, PostgreSQL optimization, MySQL optimization
-  role: specialist
-  scope: optimization
-  output-format: analysis-and-code
-  related-skills: devops-engineer
+  related-skills: ss-devops-engineer, ss-design-postgres-tables
 ---
 
 # Database Optimizer

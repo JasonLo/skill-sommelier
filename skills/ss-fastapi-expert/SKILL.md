@@ -11,13 +11,7 @@ allowed-tools:
 license: MIT
 metadata:
   author: https://github.com/Jeffallan
-  version: "1.1.0"
-  domain: backend
-  triggers: FastAPI, Pydantic, async Python, Python API, REST API Python, SQLAlchemy async, JWT authentication, OpenAPI, Swagger Python
-  role: specialist
-  scope: implementation
-  output-format: code
-  related-skills: fullstack-guardian, django-expert, test-master
+  related-skills: ss-database-optimizer
 ---
 
 # FastAPI Expert

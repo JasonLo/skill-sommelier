@@ -21,7 +21,6 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 | [ss-discover-skills](skills/ss-discover-skills/SKILL.md) | Search GitHub for trending Claude Code skills and present a personalized ranked table |
 | [ss-fastapi-expert](skills/ss-fastapi-expert/SKILL.md) | Build high-performance async Python APIs with FastAPI and Pydantic V2 |
 | [ss-fine-tuning-expert](skills/ss-fine-tuning-expert/SKILL.md) | Fine-tune LLMs, train custom models, and adapt foundation models for specific tasks |
-| [ss-init](skills/ss-init/SKILL.md) | Bootstrap your Claude Code skill collection with personalized recommendations |
 | [ss-make-slides](skills/ss-make-slides/SKILL.md) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files |
 | [ss-modern-python](skills/ss-modern-python/SKILL.md) | Configure Python projects with modern tooling: uv, ruff, ty |
 | [ss-python-to-chtc](skills/ss-python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
@@ -46,6 +45,10 @@ Skills are namespaced as `/skill-sommelier:<skill-name>` (e.g., `/skill-sommelie
 
 **Update** to latest skills: `/plugin marketplace update`
 
+## Quickstart
+
+Use `/ss-discover-skills` to find and install skills.
+
 ## Development
 
 ```bash
@@ -53,9 +56,3 @@ git clone https://github.com/JasonLo/skill-sommelier.git
 cd skill-sommelier
 # Project-level skills work automatically via .claude/skills symlink
 ```
-
-## Adding a Skill
-
-1. Create a directory under `skills/` with the skill name
-2. Add a `SKILL.md` file with frontmatter (`name`, `description`) and instructions
-3. It's immediately available in this project — no restart needed

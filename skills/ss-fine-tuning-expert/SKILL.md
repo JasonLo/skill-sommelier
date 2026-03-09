@@ -11,13 +11,7 @@ allowed-tools:
 license: MIT
 metadata:
   author: https://github.com/Jeffallan
-  version: "1.1.0"
-  domain: data-ml
-  triggers: fine-tuning, fine tuning, finetuning, LoRA, QLoRA, PEFT, adapter tuning, transfer learning, model training, custom model, LLM training, instruction tuning, RLHF, model optimization, quantization
-  role: expert
-  scope: implementation
-  output-format: code
-  related-skills: devops-engineer
+  related-skills: ss-devops-engineer
 ---
 
 # Fine-Tuning Expert

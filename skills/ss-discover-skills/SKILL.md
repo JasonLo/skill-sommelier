@@ -4,9 +4,11 @@ description: >-
   Search GitHub for trending Claude Code skills, present a personalized ranked table,
   and install selections. Use when the user wants to find new skills, browse what's available,
   explore the skills ecosystem, or bootstrap their skill collection.
+  Also serves as the "init" / bootstrap command — when called with no arguments,
+  auto-generates personalized search queries from the user's profile.
   Triggers on "find skills", "discover skills", "search for skills", "what skills exist",
   "browse skills", "trending skills", "new skills", "init", "bootstrap skills",
-  "setup skills", "recommended skills".
+  "setup skills", "recommended skills", "get started with skills", "what skills should I have".
 allowed-tools:
   - Bash
   - Read
