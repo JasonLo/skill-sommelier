@@ -20,9 +20,11 @@ allowed-tools:
 Autonomously evolve this skill-sommelier repo by discovering trending skills, studying them, and integrating valuable ideas. Run in a loop until the user wants to stop.
 
 ## When to Use
-- Periodic maintenance to keep the repo current with the skills ecosystem
+- Periodic manual maintenance to keep the repo current with the skills ecosystem
 - Looking for inspiration from trending skills
 - Bulk-improving existing skills based on community patterns
+
+> **Note:** This skill runs manually on demand. A previous weekly GitHub Action schedule was removed due to compatibility issues with claude-code-action.
 
 ## When NOT to Use
 - Targeted skill creation — use `ss-skill-craft` instead
@@ -98,7 +100,7 @@ For each proposed improvement:
 3. **High-risk changes** (deleting skills, restructuring the repo, changing the plugin configuration): stop and ask the user for a decision. Do not proceed without explicit approval.
 
 After making changes:
-- Run `skill-status` to verify everything is consistent.
+- Run `ss-validate-skills` to verify frontmatter and conventions are consistent.
 - Commit and push the changes (ask the user before pushing).
 
 ## Step 6 — Loop
