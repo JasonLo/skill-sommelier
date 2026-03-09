@@ -1,10 +1,11 @@
 ---
 name: ss-simplify-repo
 description: >-
-  Audit a repository for unnecessary complexity and propose concrete simplifications.
-  Use when the repo feels bloated, after a big refactor, or to find dead code and overengineering.
+  Audit a repository for unnecessary complexity, dead code, outdated dependencies, and
+  stale TODOs, then propose concrete simplifications. Use when the repo feels bloated,
+  after a big refactor, or to find dead code and overengineering.
   Triggers on "simplify", "clean up this repo", "reduce complexity", "find dead code",
-  "audit complexity", "overengineered", "too complex".
+  "audit complexity", "overengineered", "too complex", "code health", "tech debt".
 allowed-tools:
   - Read
   - Edit
@@ -36,26 +37,42 @@ Perform a broad audit across these dimensions:
 - Files that duplicate each other or could be merged?
 - Orphaned files not referenced by anything?
 
-### 1b — Code complexity
+### 1b — Dead code detection
+Systematically identify code with no live references:
+- **Unused imports** — imported modules/symbols never referenced in the file
+- **Unused variables & functions** — declared but never called or read
+- **Commented-out code blocks** — stale code left behind after changes
+- **Unreachable branches** — conditions that can never be true, dead `else` paths
+- **Unused exports** — symbols exported but not imported anywhere in the project
+Verify each finding to avoid false positives from dynamic imports, reflection, or plugin architectures.
+
+### 1c — Code complexity
 - Premature abstractions — wrappers, helpers, or utilities used only once
 - Over-parameterized functions with options/flags that are never varied
 - Unnecessary indirection (layers that just pass through to the next layer)
-- Dead code — unused exports, unreachable branches, commented-out blocks
 - Overly generic solutions for specific problems
+- Long functions, deep nesting, and code duplication
 
-### 1c — Dependencies & tooling
-- Unused dependencies in package.json, requirements.txt, Cargo.toml, etc.
+### 1d — Dependencies & tooling
+- **Unused dependencies** in package.json, requirements.txt, Cargo.toml, etc.
+- **Outdated dependencies** — check for major version drift or known vulnerabilities (run `npm audit`, `pip-audit`, `cargo audit`, or equivalent if available)
 - Dependencies that duplicate built-in functionality
 - Overly complex build/CI configuration for what the project actually does
 - Lock files, generated files, or artifacts that shouldn't be committed
 
-### 1d — Configuration & boilerplate
+### 1e — Configuration & boilerplate
 - Config files copied from templates but never customized
 - Excessive linting/formatting rules beyond what the team uses
 - README sections that are aspirational rather than accurate
 - Unnecessary GitHub Actions, hooks, or automation
 
-### 1e — Documentation vs reality
+### 1f — TODO/FIXME audit
+- Scan for all `TODO`, `FIXME`, `HACK`, and `XXX` comments
+- Check if each references a tracked issue (e.g., `TODO(#123)` or a link)
+- Flag stale TODOs that have no issue reference and appear older than the last few commits
+- Flag TODOs whose referenced issue is already closed
+
+### 1g — Documentation vs reality
 - Do docs describe features that don't exist?
 - Are there TODOs or FIXMEs that are stale?
 - Is the project structure documented accurately?
