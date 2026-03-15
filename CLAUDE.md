@@ -40,7 +40,7 @@ For local development, a project-level symlink provides direct access to skills:
   - `license`, `compatibility`, `metadata` (optional): per the spec
 - Keep SKILL.md under 500 lines; move detailed content to `references/`
 - Skills should be self-contained — all references and scripts live inside the skill directory
-- GitHub Actions (`.github/workflows/claude.yml`) enables `@claude` mentions on issues/PRs
+- The Claude GitHub App handles `@claude` mentions on issues/PRs
 
 ## Update Checks
 
