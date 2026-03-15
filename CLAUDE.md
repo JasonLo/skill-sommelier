@@ -54,15 +54,3 @@ After every commit, verify that related documentation is still accurate:
 - README or references if they exist in the changed skill directory
 
 Flag any stale docs and offer to fix them before moving on.
-
-## Post-Skill-Run Review
-
-After every skill execution, briefly review the run and suggest improvements in three areas:
-
-1. **Speed** — Could fewer tool calls, parallel execution, or simpler logic make this skill run faster?
-2. **Usefulness** — One small, concrete enhancement that would make the output more valuable without adding complexity.
-3. **Overlap** — Does this skill duplicate functionality with another skill in the repo? If so, recommend consolidation.
-
-Keep each suggestion to one sentence. Skip any area where there's nothing actionable.
-
-Ask user whether they want to improve the skill based on the review.

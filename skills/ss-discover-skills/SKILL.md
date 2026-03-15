@@ -80,13 +80,20 @@ gh search repos --topic=agent-skills --sort=stars --limit 20 --json fullName,url
 
 For each topic-matched repo, find SKILL.md files by fetching the repo tree.
 
-### 3c — Merge and deduplicate
+### 3c — Merge, deduplicate, and pre-filter
 
-Combine results from all searches. Parse into `{owner, repo, path}` objects. Deduplicate by repository (keep first match per repo). Exclude this repo (`JasonLo/skill-sommelier`) from results.
+Combine results from all searches. Parse into `{owner, repo, path}` objects. Deduplicate by repository. Exclude this repo (`JasonLo/skill-sommelier`) from results.
 
-## Step 4 — Validate candidates and filter by license
+**Pre-filter for speed** (critical for repos with hundreds of skills):
+1. Check repo license first via `gh api repos/{owner}/{repo}/license --jq '.license.spdx_id'`. Skip the entire repo if restrictive or no license.
+2. For repos with many SKILL.md files (>20), filter paths by keyword relevance to the user's search queries and profile before fetching content. Only fetch the top 5 most relevant paths per repo.
+3. For repos with ≤20 SKILL.md files, fetch all.
 
-For each candidate, fetch the file content:
+This avoids the performance trap of validating thousands of skills from large repos.
+
+## Step 4 — Validate candidates
+
+For each pre-filtered candidate, fetch the file content:
 
 ```bash
 gh api repos/{owner}/{repo}/contents/{path} --jq '.content'
@@ -97,11 +104,7 @@ Base64-decode and check for:
 2. A `name:` field
 3. A `description:` field
 
-Extract `name`, `description`, and `license` values.
-
-**License filtering:**
-1. If skill has a `license` field in frontmatter — check if permissive (MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Unlicense, CC0-1.0, CC-BY-4.0, CC-BY-SA-4.0). Skip if restrictive.
-2. If no `license` field, fetch repo license via `gh api repos/{owner}/{repo}/license --jq '.license.spdx_id'`. Skip if restrictive or no license.
+Extract `name`, `description`, and `license` values. If a skill-level `license` field overrides the repo license with a restrictive license, skip it.
 
 ## Step 5 — Fetch repo metadata
 
@@ -114,6 +117,8 @@ gh api repos/{owner}/{repo} --jq '{stars: .stargazers_count, pushed: .pushed_at}
 If you hit a rate limit, present partial results with a note.
 
 ## Step 6 — Rank and display table
+
+**Filter already-installed skills:** Before ranking, read the list of existing skill directories under `skills/` and exclude any skill whose base name (without `ss-` prefix) matches an installed skill. Flag near-duplicates (e.g., similar name or overlapping description) with a note rather than silently excluding.
 
 Rank by:
 1. **Relevance** (primary) — skills matching user's tech stack, domains, and interests rank higher
