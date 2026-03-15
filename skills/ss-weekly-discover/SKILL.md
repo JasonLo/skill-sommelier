@@ -1,24 +1,22 @@
 ---
 name: ss-weekly-discover
 description: >-
-  Automated weekly skill discovery for GitHub Actions. Searches GitHub for new
-  Claude Code skills, filters against installed skills and user profile, and
-  creates a GitHub issue with recommendations. Triggers on "weekly discover",
-  "automated discovery", "skill recommendations".
+  Automated weekly skill discovery for GitHub Actions. Uses claude-code-action
+  to search GitHub for new Claude Code skills, filter against installed skills
+  and user profile, and create a GitHub issue with recommendations. Triggers on
+  "weekly discover", "automated discovery", "skill recommendations".
 allowed-tools:
-  - Bash
   - Read
-  - Glob
 metadata:
   depends-on: ss-discover-skills
 ---
 
-Automated weekly skill discovery that runs as a GitHub Actions cron job. The workflow searches GitHub for new Claude Code skills, filters them against your installed skills and user profile, and creates a GitHub issue with checkbox-based recommendations.
+Automated weekly skill discovery that runs as a GitHub Actions cron job. The workflow uses `claude-code-action` to search GitHub for new Claude Code skills, filter them against your installed skills and user profile, and create a GitHub issue with checkbox-based recommendations.
 
 ## How It Works
 
 1. **Cron fires** (Sunday 2 PM UTC) via `.github/workflows/weekly-discover.yml`
-2. **`discover.sh`** runs with only `GITHUB_TOKEN` — no Claude API needed
+2. **claude-code-action** runs with a discovery prompt — searches GitHub, validates candidates, ranks by relevance
 3. **Issue created** with checkbox list of recommended skills
 4. **User reviews** and checks desired skills
 5. **User comments** `@claude install the checked skills from this issue`
@@ -34,6 +32,5 @@ Edit `.github/user-profile.md` to customize discovery keywords. The profile cont
 
 ## Files
 
-- `scripts/discover.sh` — headless discovery script (bash + `gh` CLI)
-- `.github/workflows/weekly-discover.yml` — cron workflow
+- `.github/workflows/weekly-discover.yml` — cron workflow using claude-code-action
 - `.github/user-profile.md` — user profile for keyword matching
