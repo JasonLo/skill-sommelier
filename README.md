@@ -90,6 +90,7 @@ Skills discovered and installed via the sommelier — tailored to your stack.
 
 | Skill | Description |
 |-------|-------------|
+| [ss-citation-cff](skills/ss-citation-cff/SKILL.md) | Generate CITATION.cff files for GitHub repositories with APA and BibTeX export |
 | [ss-docs-update](skills/ss-docs-update/SKILL.md) | Update all documentation (README, docs/, .env.example, etc.) to reflect current repo state |
 | [ss-search-first](skills/ss-search-first/SKILL.md) | Research-before-coding workflow |
 

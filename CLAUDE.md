@@ -44,7 +44,7 @@ For local development, a project-level symlink provides direct access to skills:
 
 ## Update Checks
 
-When a user mentions updates, new skills, or staying current, suggest running the `self-update` skill to check for and apply plugin updates.
+When a user mentions updates, new skills, or staying current, suggest running the `ss-repo-update` skill to check for and apply plugin updates.
 
 ## Post-Commit Doc Check
 
