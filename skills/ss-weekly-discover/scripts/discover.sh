@@ -96,10 +96,14 @@ endlog
 log "Processing candidates"
 
 RESULTS_FILE=$(mktemp)
+DEDUPED_FILE=$(mktemp)
 COUNT=0
+MAX_FETCH=$((MAX_RECOMMENDATIONS * 3))
 
-# Deduplicate by repo+path
-sort -u "$CANDIDATES_FILE" | while IFS=$'\t' read -r repo_full path; do
+# Deduplicate by repo+path into a file (avoids broken pipe from sort|while+break)
+sort -u "$CANDIDATES_FILE" > "$DEDUPED_FILE"
+
+while IFS=$'\t' read -r repo_full path; do
   # Skip self
   [[ "$repo_full" == "$SELF_REPO" ]] && continue
 
@@ -111,7 +115,7 @@ sort -u "$CANDIDATES_FILE" | while IFS=$'\t' read -r repo_full path; do
   echo "$skill_key" >> "$SEEN_FILE"
 
   # Respect rate limits — stop if we've hit enough
-  if [[ $COUNT -ge $((MAX_RECOMMENDATIONS * 3)) ]]; then
+  if [[ $COUNT -ge $MAX_FETCH ]]; then
     break
   fi
 
@@ -167,7 +171,7 @@ sort -u "$CANDIDATES_FILE" | while IFS=$'\t' read -r repo_full path; do
   echo "${relevance}|${stars}|${days_ago}|${skill_name}|${repo_full}|${path}|${skill_desc}|${age_label}" >> "$RESULTS_FILE"
 
   COUNT=$((COUNT + 1))
-done
+done < "$DEDUPED_FILE"
 
 endlog
 
@@ -181,7 +185,7 @@ CANDIDATE_LINES=$(grep -v '^INSTALLED:' "$RESULTS_FILE" 2>/dev/null || true)
 
 if [[ -z "$CANDIDATE_LINES" ]]; then
   echo "No new skill candidates found. Skipping issue creation."
-  rm -f "$CANDIDATES_FILE" "$SEEN_FILE" "$RESULTS_FILE"
+  rm -f "$CANDIDATES_FILE" "$SEEN_FILE" "$RESULTS_FILE" "$DEDUPED_FILE"
   exit 0
 fi
 
@@ -232,4 +236,4 @@ echo "Issue created successfully."
 endlog
 
 # Cleanup
-rm -f "$CANDIDATES_FILE" "$SEEN_FILE" "$RESULTS_FILE"
+rm -f "$CANDIDATES_FILE" "$SEEN_FILE" "$RESULTS_FILE" "$DEDUPED_FILE"
