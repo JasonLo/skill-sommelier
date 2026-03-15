@@ -1,5 +1,5 @@
 ---
-name: ss-self-evolve
+name: ss-repo-evolve
 description: >-
   Discover trending Claude Code skills, study their implementations, and evolve this repo
   by adopting valuable patterns. Runs in a loop until stopped. Use when the user wants to
@@ -16,7 +16,7 @@ allowed-tools:
   - WebFetch
   - Agent
 metadata:
-  depends-on: ss-discover-skills ss-validate-skills
+  depends-on: ss-skill-discover ss-skill-validate
 ---
 
 Autonomously evolve this skill-sommelier repo by discovering trending skills, studying them, and integrating valuable ideas. Run in a loop until the user wants to stop.
@@ -26,11 +26,11 @@ Autonomously evolve this skill-sommelier repo by discovering trending skills, st
 - Looking for inspiration from trending skills
 - Bulk-improving existing skills based on community patterns
 
-> **Note:** This skill runs manually on demand. For automated weekly discovery, see `ss-weekly-discover` which uses a pure-bash GitHub Action to create recommendation issues (no Claude API needed in CI).
+> **Note:** This skill runs manually on demand. For automated weekly discovery, see `ss-skill-weekly-discover` which uses a pure-bash GitHub Action to create recommendation issues (no Claude API needed in CI).
 
 ## When NOT to Use
 - Targeted skill creation — use `ss-skill-craft` instead
-- Just browsing skills without intent to change the repo — use `ss-discover-skills`
+- Just browsing skills without intent to change the repo — use `ss-skill-discover`
 
 ## Step 1 — Read repo context
 
@@ -40,7 +40,7 @@ Autonomously evolve this skill-sommelier repo by discovering trending skills, st
 
 ## Step 2 — Discover trending skills
 
-Search GitHub directly using `gh` CLI (faster than invoking `ss-discover-skills` interactively):
+Search GitHub directly using `gh` CLI (faster than invoking `ss-skill-discover` interactively):
 
 1. Run code search and topic searches in parallel via a single Agent:
    - `gh search code 'filename:SKILL.md "name:" "description:"' --limit 30 --json repository,path`
@@ -102,7 +102,7 @@ For each proposed improvement:
 3. **High-risk changes** (deleting skills, restructuring the repo, changing the plugin configuration): stop and ask the user for a decision. Do not proceed without explicit approval.
 
 After making changes:
-- Run `ss-validate-skills` to verify frontmatter and conventions are consistent.
+- Run `ss-skill-validate` to verify frontmatter and conventions are consistent.
 - Commit and push the changes (ask the user before pushing).
 
 ## Step 6 — Loop

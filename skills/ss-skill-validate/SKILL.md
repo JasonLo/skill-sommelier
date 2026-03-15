@@ -1,5 +1,5 @@
 ---
-name: ss-validate-skills
+name: ss-skill-validate
 description: >-
   Validate all skills in this repo for frontmatter correctness, naming conventions,
   and structural rules. Use when adding a new skill, before releases, or in CI.
@@ -24,7 +24,7 @@ Run automated checks against every skill in `skills/` and produce a pass/fail re
 
 ## When NOT to Use
 - To improve skill content quality — use `ss-skill-craft` improve mode instead
-- To find dead code or complexity — use `ss-simplify-repo` instead
+- To find dead code or complexity — use `ss-repo-simplify` instead
 
 ## Phase 1 — Discover Skills
 

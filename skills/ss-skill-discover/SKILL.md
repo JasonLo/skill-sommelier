@@ -1,5 +1,5 @@
 ---
-name: ss-discover-skills
+name: ss-skill-discover
 description: >-
   Search GitHub for trending Claude Code skills, present a personalized ranked table,
   and install selections. Use when the user wants to find new skills, browse what's available,
@@ -31,7 +31,7 @@ Discover, rank, and install Claude Code skills from GitHub. Personalized to the 
 
 ## When NOT to Use
 - Installing a skill you already know the URL for — just clone it directly
-- Updating existing skills — use `ss-self-update` instead
+- Updating existing skills — use `ss-repo-update` instead
 
 ## Step 1 — Load or build user profile
 

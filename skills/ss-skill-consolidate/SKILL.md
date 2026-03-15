@@ -20,7 +20,7 @@ allowed-tools:
   - Agent
   - AskUserQuestion
 metadata:
-  depends-on: ss-validate-skills
+  depends-on: ss-skill-validate
 ---
 
 # Skill Consolidate
@@ -44,7 +44,7 @@ If unclear, default to **Full**.
 
 ## When NOT to Use
 - Improving a single skill's quality — use `ss-skill-craft` improve mode
-- Auditing repo complexity broadly — use `ss-simplify-repo`
+- Auditing repo complexity broadly — use `ss-repo-simplify`
 - Skills are genuinely distinct but related — cross-reference with `metadata.related-skills` instead
 
 ## Phase 1 — Inventory All Skills
@@ -185,7 +185,7 @@ For each approved merge:
 
 **Entry:** Merges executed from Phase 5.
 
-1. Run `ss-validate-skills` to verify repo consistency
+1. Run `ss-skill-validate` to verify repo consistency
 2. Show a `git diff --stat` summary
 3. Present final report:
 

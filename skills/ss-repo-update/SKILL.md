@@ -1,5 +1,5 @@
 ---
-name: ss-self-update
+name: ss-repo-update
 description: >-
   Check for skill-sommelier plugin updates and apply them. Compares installed
   plugin git HEAD against remote, shows changelog, and pulls updates. Use when

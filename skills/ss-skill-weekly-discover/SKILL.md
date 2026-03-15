@@ -1,5 +1,5 @@
 ---
-name: ss-weekly-discover
+name: ss-skill-weekly-discover
 description: >-
   Automated weekly skill discovery for GitHub Actions. Uses claude-code-action
   to search GitHub for new Claude Code skills, filter against installed skills
@@ -8,7 +8,7 @@ description: >-
 allowed-tools:
   - Read
 metadata:
-  depends-on: ss-discover-skills
+  depends-on: ss-skill-discover
 ---
 
 Automated weekly skill discovery that runs as a GitHub Actions cron job. The workflow uses `claude-code-action` to search GitHub for new Claude Code skills, filter them against your installed skills and user profile, and create a GitHub issue with checkbox-based recommendations.

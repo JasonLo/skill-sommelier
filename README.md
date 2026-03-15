@@ -15,25 +15,33 @@ This repo contains zero application code — no Python, no JavaScript, no progra
 
 | Skill | Description |
 |-------|-------------|
+| [ss-arxiv-database](skills/ss-arxiv-database/SKILL.md) | Search and retrieve preprints from arXiv via the Atom API |
+| [ss-claude-api](skills/ss-claude-api/SKILL.md) | Build apps with the Claude API or Anthropic SDK |
 | [ss-database-optimizer](skills/ss-database-optimizer/SKILL.md) | Optimizes database queries and improves performance across PostgreSQL and MySQL systems |
 | [ss-design-postgres-tables](skills/ss-design-postgres-tables/SKILL.md) | PostgreSQL table design reference: data types, constraints, indexes, JSONB patterns, partitioning, and best practices |
 | [ss-devops-engineer](skills/ss-devops-engineer/SKILL.md) | Creates Dockerfiles, configures CI/CD pipelines, writes Kubernetes manifests, and generates Terraform/Pulumi infrastructure templates |
-| [ss-discover-skills](skills/ss-discover-skills/SKILL.md) | Search GitHub for trending Claude Code skills and present a personalized ranked table |
+| [ss-docs-update](skills/ss-docs-update/SKILL.md) | Update all documentation (README, docs/, .env.example, etc.) to reflect current repo state |
 | [ss-fastapi-expert](skills/ss-fastapi-expert/SKILL.md) | Build high-performance async Python APIs with FastAPI and Pydantic V2 |
+| [ss-fastapi-templates](skills/ss-fastapi-templates/SKILL.md) | Create production-ready FastAPI projects with async patterns and dependency injection |
 | [ss-fine-tuning-expert](skills/ss-fine-tuning-expert/SKILL.md) | Fine-tune LLMs, train custom models, and adapt foundation models for specific tasks |
+| [ss-huggingface-accelerate](skills/ss-huggingface-accelerate/SKILL.md) | Distributed training API for DeepSpeed/FSDP/Megatron/DDP with automatic device placement |
 | [ss-make-slides](skills/ss-make-slides/SKILL.md) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files |
 | [ss-modern-python](skills/ss-modern-python/SKILL.md) | Configure Python projects with modern tooling: uv, ruff, ty |
 | [ss-python-to-chtc](skills/ss-python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
+| [ss-pytorch-lightning](skills/ss-pytorch-lightning/SKILL.md) | High-level PyTorch framework with Trainer, distributed training, and callbacks |
+| [ss-repo-evolve](skills/ss-repo-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
+| [ss-repo-release](skills/ss-repo-release/SKILL.md) | Bump version, tag, and push to trigger the GitHub Actions release workflow |
+| [ss-repo-simplify](skills/ss-repo-simplify/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
+| [ss-repo-update](skills/ss-repo-update/SKILL.md) | Check for plugin updates, show changelog, and apply them |
 | [ss-search-first](skills/ss-search-first/SKILL.md) | Research-before-coding workflow |
-| [ss-self-evolve](skills/ss-self-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
-| [ss-self-release](skills/ss-self-release/SKILL.md) | Bump version, tag, and push to trigger the GitHub Actions release workflow |
-| [ss-self-update](skills/ss-self-update/SKILL.md) | Check for plugin updates, show changelog, and apply them |
-| [ss-simplify-repo](skills/ss-simplify-repo/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
+| [ss-skill-consolidate](skills/ss-skill-consolidate/SKILL.md) | Identify and merge overlapping skills to reduce redundancy |
 | [ss-skill-craft](skills/ss-skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
-| [ss-update-readme](skills/ss-update-readme/SKILL.md) | Scan skills/ directories and update README.md skills table to match actual repo state |
+| [ss-skill-discover](skills/ss-skill-discover/SKILL.md) | Search GitHub for trending Claude Code skills and present a personalized ranked table |
+| [ss-skill-tune](skills/ss-skill-tune/SKILL.md) | Self-improving skill optimization using the Karpathy autoresearch pattern |
+| [ss-skill-validate](skills/ss-skill-validate/SKILL.md) | Validate all skills for frontmatter correctness, naming conventions, and structural rules |
+| [ss-skill-weekly-discover](skills/ss-skill-weekly-discover/SKILL.md) | Automated weekly skill discovery via GitHub Actions — creates issues with checkbox recommendations |
 | [ss-user-profile](skills/ss-user-profile/SKILL.md) | Analyze Claude Code user history to build a rich profile |
-| [ss-validate-skills](skills/ss-validate-skills/SKILL.md) | Validate all skills for frontmatter correctness, naming conventions, and structural rules |
-| [ss-weekly-discover](skills/ss-weekly-discover/SKILL.md) | Automated weekly skill discovery via GitHub Actions — creates issues with checkbox recommendations |
+| [ss-web-artifacts-builder](skills/ss-web-artifacts-builder/SKILL.md) | Create elaborate HTML artifacts with React, Tailwind CSS, and shadcn/ui |
 
 ## Install
 
@@ -48,7 +56,7 @@ Skills are namespaced as `/skill-sommelier:<skill-name>` (e.g., `/skill-sommelie
 
 ## Quickstart
 
-Use `/ss-discover-skills` to find and install skills.
+Use `/ss-skill-discover` to find and install skills.
 
 ## Development
 
