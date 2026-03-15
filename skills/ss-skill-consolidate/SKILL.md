@@ -6,9 +6,10 @@ description: >-
   skills that share trigger phrases, functionality, or domain. Use when the
   skill collection feels bloated, two skills seem to do the same thing, or
   after adding many skills and wanting to deduplicate.
+  Supports a quick mode (trigger overlap only) and full mode (deep analysis).
   Triggers on "consolidate skills", "merge skills", "deduplicate skills",
   "combine skills", "overlapping skills", "too many similar skills",
-  "reduce skill count", "skill overlap".
+  "reduce skill count", "skill overlap", "quick overlap check".
 allowed-tools:
   - Read
   - Edit
@@ -31,6 +32,15 @@ Identify similar or overlapping skills and merge them into fewer, more coherent 
 - After a growth spurt of new skills — time to deduplicate
 - Skill validation warns about trigger phrase overlap
 - Users report confusion about which skill to use for a task
+
+## Mode Selection
+
+| Signal | Mode |
+|--------|------|
+| "quick", "check overlap", "scan" | **Quick** — Phase 1 + Phase 2a only (trigger overlap). Fast triage, no merging. |
+| "consolidate", "merge", "deduplicate" | **Full** — All phases. Deep analysis + merge execution. |
+
+If unclear, default to **Full**.
 
 ## When NOT to Use
 - Improving a single skill's quality — use `ss-skill-craft` improve mode
@@ -91,6 +101,8 @@ Group skills by domain (e.g., "skill management", "code quality", "infrastructur
 ```
 
 **Exit:** Overlap report generated with concrete merge recommendations.
+
+> **Quick mode stops here.** Present the overlap report and exit. Do not proceed to Phase 3.
 
 ## Phase 3 — Propose Merge Plan
 
