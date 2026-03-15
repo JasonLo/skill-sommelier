@@ -1,0 +1,20 @@
+name: Weekly Skill Discovery
+
+on:
+  schedule:
+    - cron: "0 14 * * 0" # Sunday 2 PM UTC
+  workflow_dispatch:
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run discovery
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash skills/ss-weekly-discover/scripts/discover.sh

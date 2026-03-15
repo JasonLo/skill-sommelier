@@ -26,7 +26,7 @@ Autonomously evolve this skill-sommelier repo by discovering trending skills, st
 - Looking for inspiration from trending skills
 - Bulk-improving existing skills based on community patterns
 
-> **Note:** This skill runs manually on demand. A previous weekly GitHub Action schedule was removed due to compatibility issues with claude-code-action.
+> **Note:** This skill runs manually on demand. For automated weekly discovery, see `ss-weekly-discover` which uses a pure-bash GitHub Action to create recommendation issues (no Claude API needed in CI).
 
 ## When NOT to Use
 - Targeted skill creation — use `ss-skill-craft` instead
