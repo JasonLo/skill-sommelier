@@ -9,6 +9,8 @@ Karpathy autoresearch pattern applied to any Claude Code skill:
 4. Mutate the SKILL.md to fix weaknesses
 5. Repeat
 
+Uses the `claude` CLI (your current session auth) — no API key needed.
+
 Usage:
     python3 autoresearch.py config.json              # Run to max_cycles
     python3 autoresearch.py config.json --once        # Single cycle
@@ -17,7 +19,7 @@ Usage:
 
 import argparse
 import json
-import os
+import subprocess
 import sys
 import time
 import traceback
@@ -108,29 +110,61 @@ def save_state(data_dir: Path, state: dict):
     state_file.write_text(json.dumps(state, indent=2))
 
 
-# ─── Generation (Claude SDK) ────────────────────────────────────────────────
+# ─── Claude CLI helper ────────────────────────────────────────────────────────
 
 
-def generate_one(client, skill_content: str, test_prompt: str, model: str) -> str | None:
-    """Run Claude with skill content as system context + test prompt."""
+def claude_cli(
+    prompt: str,
+    system_prompt: str | None = None,
+    model: str = "sonnet",
+    max_tokens: int = 4096,
+) -> str | None:
+    """Call claude CLI in print mode using the user's current session auth."""
+    cmd = [
+        "claude",
+        "-p",
+        "--output-format", "text",
+        "--model", model,
+        "--tools", "",
+        "--no-session-persistence",
+    ]
+    if system_prompt:
+        cmd.extend(["--system-prompt", system_prompt])
+
     try:
-        response = client.messages.create(
-            model=model,
-            max_tokens=4096,
-            system=f"You are a Claude Code skill. Follow these instructions exactly:\n\n{skill_content}",
-            messages=[{"role": "user", "content": test_prompt}],
+        result = subprocess.run(
+            cmd,
+            input=prompt,
+            capture_output=True,
+            text=True,
+            timeout=300,
         )
-        return response.content[0].text
+        if result.returncode != 0:
+            print(f"    CLI ERROR (rc={result.returncode}): {result.stderr[:200]}")
+            return None
+        return result.stdout.strip()
+    except subprocess.TimeoutExpired:
+        print("    CLI ERROR: timeout (300s)")
+        return None
     except Exception as e:
-        print(f"    GEN ERROR: {e}")
+        print(f"    CLI ERROR: {e}")
         return None
 
 
-# ─── Evaluation (Claude SDK) ────────────────────────────────────────────────
+# ─── Generation ───────────────────────────────────────────────────────────────
+
+
+def generate_one(skill_content: str, test_prompt: str, model: str) -> str | None:
+    """Run Claude with skill content as system context + test prompt."""
+    system = f"You are a Claude Code skill. Follow these instructions exactly:\n\n{skill_content}"
+    return claude_cli(test_prompt, system_prompt=system, model=model)
+
+
+# ─── Evaluation ───────────────────────────────────────────────────────────────
 
 
 def evaluate_one(
-    client, output: str, test_prompt: str, criteria: list[dict], model: str
+    output: str, test_prompt: str, criteria: list[dict], model: str
 ) -> dict | None:
     """Evaluate a single output against binary criteria."""
     criteria_block = "\n".join(
@@ -149,12 +183,9 @@ def evaluate_one(
     )
 
     try:
-        response = client.messages.create(
-            model=model,
-            max_tokens=512,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        text = response.content[0].text.strip()
+        text = claude_cli(prompt, model=model, max_tokens=512)
+        if not text:
+            return None
         # Extract JSON from response (handle markdown fences)
         if "```" in text:
             text = text.split("```")[1]
@@ -167,11 +198,10 @@ def evaluate_one(
         return None
 
 
-# ─── Mutation (Claude SDK) ──────────────────────────────────────────────────
+# ─── Mutation ─────────────────────────────────────────────────────────────────
 
 
 def mutate_skill(
-    client,
     current_content: str,
     criteria: list[dict],
     eval_results: list[dict],
@@ -208,27 +238,23 @@ def mutate_skill(
         failures=failures_text,
     )
 
-    response = client.messages.create(
-        model=model,
-        max_tokens=8192,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    return response.content[0].text.strip()
+    result = claude_cli(prompt, model=model, max_tokens=8192)
+    return result or current_content  # Fallback to current if CLI fails
 
 
 # ─── Main Cycle ──────────────────────────────────────────────────────────────
 
 
-def run_cycle(client, config: dict, state: dict) -> dict:
+def run_cycle(config: dict, state: dict) -> dict:
     """Run one autoresearch optimization cycle."""
     data_dir = config["_data_dir"]
     skill_path = config["_skill_path"]
     criteria = config["eval_criteria"]
     test_prompts = config["test_prompts"]
     batch_size = config.get("batch_size", len(test_prompts))
-    eval_model = config.get("eval_model", "claude-sonnet-4-6")
-    mutate_model = config.get("mutate_model", "claude-sonnet-4-6")
-    gen_model = config.get("gen_model", "claude-sonnet-4-6")
+    eval_model = config.get("eval_model", "sonnet")
+    mutate_model = config.get("mutate_model", "sonnet")
+    gen_model = config.get("gen_model", "sonnet")
 
     run_num = state["run_number"] + 1
     state["run_number"] = run_num
@@ -256,7 +282,7 @@ def run_cycle(client, config: dict, state: dict) -> dict:
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {}
         for i, prompt in enumerate(prompts):
-            f = pool.submit(generate_one, client, skill_content, prompt, gen_model)
+            f = pool.submit(generate_one, skill_content, prompt, gen_model)
             futures[f] = (i, prompt)
 
         for f in as_completed(futures):
@@ -291,7 +317,7 @@ def run_cycle(client, config: dict, state: dict) -> dict:
     with ThreadPoolExecutor(max_workers=max_eval_workers) as pool:
         futures = {}
         for i, prompt, output in successful:
-            f = pool.submit(evaluate_one, client, output, prompt, criteria, eval_model)
+            f = pool.submit(evaluate_one, output, prompt, criteria, eval_model)
             futures[f] = (i, prompt)
 
         for f in as_completed(futures):
@@ -358,7 +384,7 @@ def run_cycle(client, config: dict, state: dict) -> dict:
         print("\n  Mutating SKILL.md...")
         base_content = best_skill_path.read_text() if best_skill_path.exists() else skill_content
         new_content = mutate_skill(
-            client, base_content, criteria, eval_results, state["best_score"], mutate_model
+            base_content, criteria, eval_results, state["best_score"], mutate_model
         )
         skill_path.write_text(new_content)
         print(f"  New SKILL.md written ({len(new_content)} chars)")
@@ -393,19 +419,19 @@ def main():
         print(f"ERROR: Skill not found: {config['_skill_path']}", file=sys.stderr)
         sys.exit(1)
 
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        print("ERROR: ANTHROPIC_API_KEY not set", file=sys.stderr)
+    # Verify claude CLI is available
+    try:
+        subprocess.run(["claude", "--version"], capture_output=True, check=True)
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        print("ERROR: 'claude' CLI not found or not working. Install Claude Code first.", file=sys.stderr)
         sys.exit(1)
 
-    import anthropic
-    client = anthropic.Anthropic(api_key=api_key)
     state = load_state(data_dir)
 
     cycle_seconds = config.get("cycle_seconds", 120)
     max_cycles_config = config.get("max_cycles", 10)
 
-    print("Autoresearch — Skill Optimizer")
+    print("Autoresearch — Skill Optimizer (using claude CLI)")
     print(f"  Target:     {config['_skill_path']}")
     print(f"  Criteria:   {len(config['eval_criteria'])}")
     print(f"  Prompts:    {len(config['test_prompts'])}")
@@ -414,7 +440,7 @@ def main():
     print(f"  State:      run {state['run_number']}, best {state['best_score']}")
 
     if args.once:
-        run_cycle(client, config, state)
+        run_cycle(config, state)
         return
 
     max_cycles = args.cycles or max_cycles_config
@@ -424,7 +450,7 @@ def main():
     for i in range(max_cycles):
         start = time.time()
         try:
-            state = run_cycle(client, config, state)
+            state = run_cycle(config, state)
         except Exception as e:
             print(f"\n  CYCLE ERROR: {e}")
             traceback.print_exc()

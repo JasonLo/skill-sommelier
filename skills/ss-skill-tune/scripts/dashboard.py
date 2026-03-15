@@ -6,8 +6,8 @@ Reads results.jsonl from any autoresearch data directory and serves a
 live-updating dashboard.
 
 Usage:
-    python3 dashboard.py skills/<name>/autoresearch/data
-    python3 dashboard.py skills/<name>/autoresearch/data --port 8501
+    python3 dashboard.py skills/ss-skill-tune/runs/<name>/data
+    python3 dashboard.py skills/ss-skill-tune/runs/<name>/data --port 8501
 """
 
 import argparse

@@ -86,10 +86,10 @@ Good test prompts:
 
 **Entry:** Criteria and test prompts confirmed.
 
-1. Create the config file at the target skill's directory:
+1. Create the config and data directories under the skill-tune skill:
 
 ```
-skills/<target-skill>/autoresearch/
+skills/ss-skill-tune/runs/<target-skill>/
   config.json        # Criteria, test prompts, settings
   data/
     state.json       # Run number, best score
@@ -117,8 +117,8 @@ skills/<target-skill>/autoresearch/
   "batch_size": 5,
   "cycle_seconds": 120,
   "max_cycles": 10,
-  "eval_model": "claude-sonnet-4-6",
-  "mutate_model": "claude-sonnet-4-6"
+  "eval_model": "sonnet",
+  "mutate_model": "sonnet"
 }
 ```
 
@@ -133,7 +133,7 @@ skills/<target-skill>/autoresearch/
 Run the autoresearch script:
 
 ```bash
-python3 skills/ss-skill-tune/scripts/autoresearch.py skills/<target-skill>/autoresearch/config.json
+python3 skills/ss-skill-tune/scripts/autoresearch.py skills/ss-skill-tune/runs/<target-skill>/config.json
 ```
 
 Options:
@@ -142,7 +142,7 @@ Options:
 - No flag — run until `max_cycles` from config
 
 Each cycle:
-1. **Generate** — Run Claude with the target SKILL.md as context + each test prompt via the Anthropic SDK. Save raw outputs.
+1. **Generate** — Run Claude with the target SKILL.md as context + each test prompt via `claude -p` CLI (uses your current session auth, no API key needed). Save raw outputs.
 2. **Evaluate** — For each output, ask Claude to judge against every binary criterion. Score = total PASSes across all outputs × all criteria.
 3. **Compare** — If score > best_score, keep this SKILL.md version as the new best. Otherwise discard.
 4. **Mutate** — Feed Claude the current best SKILL.md, the scores per criterion, and common failures. Claude rewrites the skill instructions to fix weaknesses. Save as the new candidate.
@@ -175,7 +175,7 @@ Each cycle:
 If the user wants live monitoring during the loop:
 
 ```bash
-python3 skills/ss-skill-tune/scripts/dashboard.py skills/<target-skill>/autoresearch/data --port 8501
+python3 skills/ss-skill-tune/scripts/dashboard.py skills/ss-skill-tune/runs/<target-skill>/data --port 8501
 ```
 
 Serves a live dashboard at `http://localhost:8501` with:

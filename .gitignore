@@ -7,5 +7,6 @@ nohup.out
 *.tmp
 /tmp
 .DS_Store
+skills/ss-skill-tune/runs/
 .claude/*
 !.claude/skills
