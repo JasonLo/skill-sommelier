@@ -180,7 +180,7 @@ endlog
 log "Building issue body"
 
 # Separate installed skills and candidates
-INSTALLED_LIST=$(grep '^INSTALLED:' "$RESULTS_FILE" 2>/dev/null | sed 's/^INSTALLED://' | sort -u | tr '\n' ', ' | sed 's/,$//')
+INSTALLED_LIST=$(grep '^INSTALLED:' "$RESULTS_FILE" 2>/dev/null | sed 's/^INSTALLED://' | sort -u | tr '\n' ', ' | sed 's/,$//' || true)
 CANDIDATE_LINES=$(grep -v '^INSTALLED:' "$RESULTS_FILE" 2>/dev/null || true)
 
 if [[ -z "$CANDIDATE_LINES" ]]; then
