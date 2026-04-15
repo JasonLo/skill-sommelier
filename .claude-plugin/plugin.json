@@ -1,7 +1,7 @@
 {
   "name": "skill-sommelier",
   "description": "Curated collection of Claude Code skills for Python, ML, data engineering, and developer productivity",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Jason Lo",
     "email": "jasonlo@users.noreply.github.com"
