@@ -86,6 +86,32 @@ Skills discovered and installed via the sommelier — tailored to your stack.
 | [ss-web-artifacts-builder](skills/ss-web-artifacts-builder/SKILL.md) | Create elaborate HTML artifacts with React, Tailwind CSS, and shadcn/ui |
 | [ss-make-slides](skills/ss-make-slides/SKILL.md) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files |
 
+#### Engineering Discipline
+
+| Skill | Description |
+|-------|-------------|
+| [ss-diagnose](skills/ss-diagnose/SKILL.md) | Disciplined diagnosis loop for hard bugs and perf regressions: build a feedback loop, hypothesise, instrument, fix, regression-test |
+| [ss-tdd](skills/ss-tdd/SKILL.md) | Test-driven development with red-green-refactor and tracer-bullet vertical slices |
+| [ss-improve-architecture](skills/ss-improve-architecture/SKILL.md) | Find deepening opportunities — refactors that turn shallow modules into deep ones |
+| [ss-zoom-out](skills/ss-zoom-out/SKILL.md) | Get a higher-level map of relevant modules and callers when an area is unfamiliar |
+| [ss-grill](skills/ss-grill/SKILL.md) | Relentless interview about a plan — lite (Q&A only) or with-docs (updates `CONTEXT.md`/ADRs inline) |
+
+#### Workflow & Issue Tracking
+
+| Skill | Description |
+|-------|-------------|
+| [ss-to-prd](skills/ss-to-prd/SKILL.md) | Synthesise the current conversation context into a PRD and publish it to the issue tracker |
+| [ss-to-issues](skills/ss-to-issues/SKILL.md) | Break a plan or PRD into independently-grabbable tracer-bullet issues |
+| [ss-triage](skills/ss-triage/SKILL.md) | Move issues through a triage state machine (bug/enhancement × needs-triage/needs-info/ready-for-agent/etc.) |
+
+#### JS/TS Tooling
+
+| Skill | Description |
+|-------|-------------|
+| [ss-setup-pre-commit](skills/ss-setup-pre-commit/SKILL.md) | Set up Husky pre-commit hooks with lint-staged, Prettier, typecheck, and tests |
+| [ss-migrate-shoehorn](skills/ss-migrate-shoehorn/SKILL.md) | Migrate TS test files from `as` assertions to `@total-typescript/shoehorn` |
+| [ss-git-guardrails](skills/ss-git-guardrails/SKILL.md) | Install a PreToolUse hook that blocks dangerous git commands in Claude Code |
+
 #### Productivity
 
 | Skill | Description |
@@ -94,6 +120,8 @@ Skills discovered and installed via the sommelier — tailored to your stack.
 | [ss-docs-update](skills/ss-docs-update/SKILL.md) | Update all documentation (README, docs/, .env.example, etc.) to reflect current repo state |
 | [ss-cli2task](skills/ss-cli2task/SKILL.md) | Generate VS Code tasks.json from Python CLI commands (typer, click, argparse) |
 | [ss-search-first](skills/ss-search-first/SKILL.md) | Research-before-coding workflow |
+| [ss-edit-article](skills/ss-edit-article/SKILL.md) | Restructure and tighten article drafts, treating information as a DAG so prerequisites come first |
+| [ss-caveman](skills/ss-caveman/SKILL.md) | Ultra-compressed reply mode that drops filler while keeping technical accuracy |
 
 ## Install
 
@@ -118,3 +146,7 @@ git clone https://github.com/JasonLo/skill-sommelier.git
 cd skill-sommelier
 # Project-level skills work automatically via .claude/skills symlink
 ```
+
+## Credits
+
+Several skills are adapted from [mattpocock/skills](https://github.com/mattpocock/skills) (MIT). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the full list and license text.
