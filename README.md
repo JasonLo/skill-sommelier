@@ -78,6 +78,7 @@ Skills discovered and installed via the sommelier — tailored to your stack.
 |-------|-------------|
 | [ss-devops-engineer](skills/ss-devops-engineer/SKILL.md) | Creates Dockerfiles, configures CI/CD pipelines, writes Kubernetes manifests, and generates Terraform/Pulumi infrastructure templates |
 | [ss-python-to-chtc](skills/ss-python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
+| [ss-create-release-script](skills/ss-create-release-script/SKILL.md) | Scaffold a uv-based Python release script with guards (clean tree, on-main, synced), lint+tests, atomic push, rollback, and `gh release create` |
 
 #### Frontend
 
