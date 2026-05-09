@@ -10,3 +10,4 @@ nohup.out
 skills/ss-skill-tune/runs/
 .claude/*
 !.claude/skills
+!.claude/skills/**

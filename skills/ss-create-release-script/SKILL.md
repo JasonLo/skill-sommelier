@@ -47,7 +47,7 @@ When invoked as `uv run scripts/release.py [patch|minor|major|alpha|beta|rc|post
 
 - Target project uses Poetry / hatch / setuptools-scm — the `uv version --bump` call won't work. Tell the user and stop.
 - Target project isn't a Python project — wrong tool.
-- For releasing **this** plugin (skill-sommelier), use `ss-repo-release` instead — that one bumps `plugin.json` / `marketplace.json`, not `pyproject.toml`.
+- Target project bumps version through a non-`pyproject.toml` source (e.g. a `plugin.json` / `marketplace.json` in a Claude Code plugin repo) — wrong tool.
 
 ## Phase 1 — Detect project state
 

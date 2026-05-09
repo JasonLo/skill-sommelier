@@ -22,7 +22,6 @@ Skills that manage the collection itself — discovery, quality, and evolution.
 | Skill | Description |
 |-------|-------------|
 | [ss-skill-discover](skills/ss-skill-discover/SKILL.md) | Search GitHub for trending Claude Code skills and present a personalized ranked table |
-| [ss-skill-weekly-discover](skills/ss-skill-weekly-discover/SKILL.md) | Automated weekly skill discovery via GitHub Actions — creates issues with checkbox recommendations |
 | [ss-user-profile](skills/ss-user-profile/SKILL.md) | Analyze Claude Code user history to build a rich profile |
 
 #### Quality
@@ -30,18 +29,26 @@ Skills that manage the collection itself — discovery, quality, and evolution.
 | Skill | Description |
 |-------|-------------|
 | [ss-skill-craft](skills/ss-skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
-| [ss-skill-validate](skills/ss-skill-validate/SKILL.md) | Validate all skills for frontmatter correctness, naming conventions, and structural rules |
-| [ss-skill-consolidate](skills/ss-skill-consolidate/SKILL.md) | Identify and merge overlapping skills to reduce redundancy |
 | [ss-skill-tune](skills/ss-skill-tune/SKILL.md) | Self-improving skill optimization using the Karpathy autoresearch pattern |
 
 #### Repo Management
 
 | Skill | Description |
 |-------|-------------|
-| [ss-repo-evolve](skills/ss-repo-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
-| [ss-repo-release](skills/ss-repo-release/SKILL.md) | Bump version, tag, and push to trigger the GitHub Actions release workflow |
 | [ss-repo-simplify](skills/ss-repo-simplify/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
 | [ss-repo-update](skills/ss-repo-update/SKILL.md) | Check for plugin updates, show changelog, and apply them |
+
+### Maintainer-only skills
+
+These live under `maintainer-skills/` and exist purely to maintain *this* repo. Claude Code only auto-loads skills under a plugin's `skills/` directory, so they are **not distributed** when end users install via `/plugin marketplace add` — only contributors with a working clone of the repo can run them.
+
+| Skill | Description |
+|-------|-------------|
+| [ss-repo-evolve](maintainer-skills/ss-repo-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
+| [ss-repo-release](maintainer-skills/ss-repo-release/SKILL.md) | Bump version, tag, and push to trigger the GitHub Actions release workflow |
+| [ss-skill-validate](maintainer-skills/ss-skill-validate/SKILL.md) | Validate all skills for frontmatter correctness, naming conventions, and structural rules |
+| [ss-skill-consolidate](maintainer-skills/ss-skill-consolidate/SKILL.md) | Identify and merge overlapping skills to reduce redundancy |
+| [ss-skill-weekly-discover](maintainer-skills/ss-skill-weekly-discover/SKILL.md) | Automated weekly skill discovery via GitHub Actions — creates issues with checkbox recommendations |
 
 ### My Collection
 
@@ -145,7 +152,8 @@ Skills are namespaced as `/skill-sommelier:<skill-name>` (e.g., `/skill-sommelie
 ```bash
 git clone https://github.com/JasonLo/skill-sommelier.git
 cd skill-sommelier
-# Project-level skills work automatically via .claude/skills symlink
+# Project-level skills work automatically via the .claude/skills/ directory of symlinks
+# (see CLAUDE.md for the rebuild command if you add or move a skill)
 ```
 
 ## Credits

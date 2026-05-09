@@ -17,16 +17,34 @@ There is no build system, test suite, or application code. The repo is a pure do
 **Skills only — no standalone scripts.** All functionality must be implemented as skills (SKILL.md files). Supporting scripts inside a skill directory (e.g., `scripts/`) are fine, but top-level or standalone scripts are not. If a new capability is needed (install, update, automation), create or extend a skill for it.
 
 ```
-skills/
-├── <skill-name>/SKILL.md
+skills/                  # public — distributed via the marketplace
 ├── <skill-name>/SKILL.md
 └── ...
+maintainer-skills/       # local-only — NOT distributed; for repo upkeep
+├── ss-repo-evolve/
+├── ss-repo-release/
+├── ss-skill-validate/
+├── ss-skill-consolidate/
+└── ss-skill-weekly-discover/
 ```
 
-For local development, a project-level symlink provides direct access to skills:
+### Public vs maintainer-only skills
 
-```
-.claude/skills → ../skills                          # project-level dev symlink
+Claude Code only auto-loads skills under a plugin's `skills/` directory. Anything in `maintainer-skills/` is invisible to end users who install via `/plugin marketplace add`. Use that directory for skills that exist purely to maintain *this* repo (release automation, frontmatter validation, the weekly-discover GitHub Action, etc.) and have no value outside it.
+
+When adding a new skill, decide upfront:
+- Useful to anyone authoring skills or working with arbitrary repos? → `skills/`.
+- Only meaningful when run against this repo's contents or release process? → `maintainer-skills/`.
+
+### Local dev access
+
+`.claude/skills/` is a real directory of relative symlinks — one per skill, drawn from both `skills/*` and `maintainer-skills/*`. When the maintainer's CWD is the repo, Claude Code's project-level skill discovery picks up all of them. After adding, removing, or moving a skill, rebuild it:
+
+```bash
+rm -rf .claude/skills && mkdir -p .claude/skills
+for d in skills/*/ maintainer-skills/*/; do
+  ln -s "../../$d" ".claude/skills/$(basename "$d")"
+done
 ```
 
 ## Key Conventions
