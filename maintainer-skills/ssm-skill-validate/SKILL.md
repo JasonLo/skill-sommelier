@@ -1,5 +1,5 @@
 ---
-name: ss-skill-validate
+name: ssm-skill-validate
 description: >-
   Validate all skills in this repo for frontmatter correctness, naming conventions,
   and structural rules. Use when adding a new skill, before releases, or in CI.

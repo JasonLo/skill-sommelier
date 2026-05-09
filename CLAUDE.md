@@ -21,11 +21,11 @@ skills/                  # public — distributed via the marketplace
 ├── <skill-name>/SKILL.md
 └── ...
 maintainer-skills/       # local-only — NOT distributed; for repo upkeep
-├── ss-repo-evolve/
-├── ss-repo-release/
-├── ss-skill-validate/
-├── ss-skill-consolidate/
-└── ss-skill-weekly-discover/
+├── ssm-repo-evolve/
+├── ssm-repo-release/
+├── ssm-skill-validate/
+├── ssm-skill-consolidate/
+└── ssm-skill-weekly-discover/
 ```
 
 ### Public vs maintainer-only skills
@@ -51,7 +51,7 @@ done
 
 - Skills follow the [Agent Skills specification](https://agentskills.io/specification)
 - Every skill directory must contain a `SKILL.md` with required YAML frontmatter:
-  - `name` (required): lowercase, hyphens only, **must start with `ss-`**, must match directory name
+  - `name` (required): lowercase, hyphens only, must match directory name. Use the **`ss-` prefix for public skills under `skills/`**, and the **`ssm-` prefix for maintainer-only skills under `maintainer-skills/`** (the `m` marks "maintainer" — invisible to end users)
   - `description` (required): what the skill does AND when to trigger it
   - `allowed-tools` (recommended): list of tools the skill uses
   - `metadata.depends-on` (recommended): space-delimited list of skills this skill invokes or delegates to

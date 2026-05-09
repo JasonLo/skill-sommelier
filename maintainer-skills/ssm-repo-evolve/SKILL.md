@@ -1,5 +1,5 @@
 ---
-name: ss-repo-evolve
+name: ssm-repo-evolve
 description: >-
   Discover trending Claude Code skills, study their implementations, and evolve this repo
   by adopting valuable patterns. Runs in a loop until stopped. Use when the user wants to
@@ -16,7 +16,7 @@ allowed-tools:
   - WebFetch
   - Agent
 metadata:
-  depends-on: ss-skill-discover ss-skill-validate
+  depends-on: ss-skill-discover ssm-skill-validate
 ---
 
 Autonomously evolve this skill-sommelier repo by discovering trending skills, studying them, and integrating valuable ideas. Run in a loop until the user wants to stop.
@@ -26,7 +26,7 @@ Autonomously evolve this skill-sommelier repo by discovering trending skills, st
 - Looking for inspiration from trending skills
 - Bulk-improving existing skills based on community patterns
 
-> **Note:** This skill runs manually on demand. For automated weekly discovery, see `ss-skill-weekly-discover` which uses a pure-bash GitHub Action to create recommendation issues (no Claude API needed in CI).
+> **Note:** This skill runs manually on demand. For automated weekly discovery, see `ssm-skill-weekly-discover` which uses a pure-bash GitHub Action to create recommendation issues (no Claude API needed in CI).
 
 ## When NOT to Use
 - Targeted skill creation — use `ss-skill-craft` instead
@@ -102,7 +102,7 @@ For each proposed improvement:
 3. **High-risk changes** (deleting skills, restructuring the repo, changing the plugin configuration): stop and ask the user for a decision. Do not proceed without explicit approval.
 
 After making changes:
-- Run `ss-skill-validate` to verify frontmatter and conventions are consistent.
+- Run `ssm-skill-validate` to verify frontmatter and conventions are consistent.
 - Commit and push the changes (ask the user before pushing).
 
 ## Step 6 — Loop

@@ -1,5 +1,5 @@
 ---
-name: ss-repo-release
+name: ssm-repo-release
 description: >-
   Create a new versioned release: bump version, tag, and push to trigger the
   release workflow. Use when the user says "release", "new version",

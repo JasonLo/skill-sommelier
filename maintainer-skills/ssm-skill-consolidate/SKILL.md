@@ -1,5 +1,5 @@
 ---
-name: ss-skill-consolidate
+name: ssm-skill-consolidate
 description: >-
   Identify similar or overlapping skills in this repo and merge them into one
   coherent skill. Reduces maintenance burden by eliminating redundancy across
@@ -20,7 +20,7 @@ allowed-tools:
   - Agent
   - AskUserQuestion
 metadata:
-  depends-on: ss-skill-validate
+  depends-on: ssm-skill-validate
 ---
 
 # Skill Consolidate
@@ -184,7 +184,7 @@ For each approved merge:
 
 **Entry:** Merges executed from Phase 5.
 
-1. Run `ss-skill-validate` to verify repo consistency
+1. Run `ssm-skill-validate` to verify repo consistency
 2. Show a `git diff --stat` summary
 3. Present final report:
 

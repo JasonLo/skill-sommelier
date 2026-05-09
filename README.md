@@ -42,11 +42,11 @@ These live under `maintainer-skills/` and exist purely to maintain *this* repo. 
 
 | Skill | Description |
 |-------|-------------|
-| [ss-repo-evolve](maintainer-skills/ss-repo-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
-| [ss-repo-release](maintainer-skills/ss-repo-release/SKILL.md) | Bump version, tag, and push to trigger the GitHub Actions release workflow |
-| [ss-skill-validate](maintainer-skills/ss-skill-validate/SKILL.md) | Validate all skills for frontmatter correctness, naming conventions, and structural rules |
-| [ss-skill-consolidate](maintainer-skills/ss-skill-consolidate/SKILL.md) | Identify and merge overlapping skills to reduce redundancy |
-| [ss-skill-weekly-discover](maintainer-skills/ss-skill-weekly-discover/SKILL.md) | Automated weekly skill discovery via GitHub Actions — creates issues with checkbox recommendations |
+| [ssm-repo-evolve](maintainer-skills/ssm-repo-evolve/SKILL.md) | Discover trending Claude Code skills, study their implementations, and evolve this repo |
+| [ssm-repo-release](maintainer-skills/ssm-repo-release/SKILL.md) | Bump version, tag, and push to trigger the GitHub Actions release workflow |
+| [ssm-skill-validate](maintainer-skills/ssm-skill-validate/SKILL.md) | Validate all skills for frontmatter correctness, naming conventions, and structural rules |
+| [ssm-skill-consolidate](maintainer-skills/ssm-skill-consolidate/SKILL.md) | Identify and merge overlapping skills to reduce redundancy |
+| [ssm-skill-weekly-discover](maintainer-skills/ssm-skill-weekly-discover/SKILL.md) | Automated weekly skill discovery via GitHub Actions — creates issues with checkbox recommendations |
 
 ### My Collection
 

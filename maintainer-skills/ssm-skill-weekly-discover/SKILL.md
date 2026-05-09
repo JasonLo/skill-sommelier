@@ -1,5 +1,5 @@
 ---
-name: ss-skill-weekly-discover
+name: ssm-skill-weekly-discover
 description: >-
   Automated weekly skill discovery for GitHub Actions. Uses claude-code-action
   to search GitHub for new Claude Code skills, filter against installed skills
