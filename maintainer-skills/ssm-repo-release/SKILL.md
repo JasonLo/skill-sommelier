@@ -23,7 +23,7 @@ Bump the version, create an annotated git tag, and push to trigger the GitHub Ac
 ## When NOT to Use
 
 - User just wants to commit — use normal git workflow instead
-- User wants to update the installed plugin — use `ss-repo-update` instead
+- User wants to update the installed plugin — use `ss-update` instead
 - User wants to preview changes without releasing — just review the git log
 
 ## Phase 1 — Preflight

@@ -47,5 +47,5 @@ Keep SKILL.md under 500 lines; move long content to `references/` inside the ski
 
 - Commit + push when a feature is complete — ask the user first.
 - After every commit, verify related docs are still accurate (CLAUDE.md, README, frontmatter of changed skills) and offer to fix anything stale.
-- When the user mentions updates, new skills, or staying current, suggest the `ss-repo-update` skill.
+- When the user mentions updates, new skills, or staying current, suggest the `ss-update` skill.
 - The `claude.yml` workflow handles `@claude` mentions on issues/PRs.
