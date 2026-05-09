@@ -34,7 +34,6 @@ Skills that manage the collection itself — discovery, quality, and evolution.
 
 | Skill | Description |
 |-------|-------------|
-| [ss-repo-simplify](skills/ss-repo-simplify/SKILL.md) | Audit a repository for unnecessary complexity and propose concrete simplifications |
 | [ss-repo-update](skills/ss-repo-update/SKILL.md) | Check for plugin updates, show changelog, and apply them |
 
 ### Maintainer-only skills
@@ -53,43 +52,12 @@ These live under `maintainer-skills/` and exist purely to maintain *this* repo. 
 
 Skills discovered and installed via the sommelier — tailored to your stack.
 
-#### Python & APIs
+#### Python & Containers
 
 | Skill | Description |
 |-------|-------------|
 | [ss-modern-python](skills/ss-modern-python/SKILL.md) | Configure Python projects with modern tooling: uv, ruff, ty |
-| [ss-fastapi-templates](skills/ss-fastapi-templates/SKILL.md) | Create production-ready FastAPI projects with async patterns and dependency injection |
-
-#### ML & Training
-
-| Skill | Description |
-|-------|-------------|
-| [ss-fine-tuning-expert](skills/ss-fine-tuning-expert/SKILL.md) | Fine-tune LLMs, train custom models, and adapt foundation models for specific tasks |
-| [ss-pytorch-lightning](skills/ss-pytorch-lightning/SKILL.md) | High-level PyTorch framework with Trainer, distributed training, and callbacks |
-| [ss-huggingface-accelerate](skills/ss-huggingface-accelerate/SKILL.md) | Distributed training API for DeepSpeed/FSDP/Megatron/DDP with automatic device placement |
-
-#### Data & Research
-
-| Skill | Description |
-|-------|-------------|
-| [ss-database-optimizer](skills/ss-database-optimizer/SKILL.md) | Optimizes database queries and improves performance across PostgreSQL and MySQL systems |
-| [ss-design-postgres-tables](skills/ss-design-postgres-tables/SKILL.md) | PostgreSQL table design reference: data types, constraints, indexes, JSONB patterns, partitioning, and best practices |
-| [ss-arxiv-database](skills/ss-arxiv-database/SKILL.md) | Search and retrieve preprints from arXiv via the Atom API |
-
-#### DevOps & Containers
-
-| Skill | Description |
-|-------|-------------|
-| [ss-devops-engineer](skills/ss-devops-engineer/SKILL.md) | Creates Dockerfiles, configures CI/CD pipelines, writes Kubernetes manifests, and generates Terraform/Pulumi infrastructure templates |
-| [ss-python-to-chtc](skills/ss-python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers |
-| [ss-create-release-script](skills/ss-create-release-script/SKILL.md) | Scaffold a uv-based Python release script with guards (clean tree, on-main, synced), lint+tests, atomic push, rollback, and `gh release create` |
-
-#### Frontend
-
-| Skill | Description |
-|-------|-------------|
-| [ss-web-artifacts-builder](skills/ss-web-artifacts-builder/SKILL.md) | Create elaborate HTML artifacts with React, Tailwind CSS, and shadcn/ui |
-| [ss-make-slides](skills/ss-make-slides/SKILL.md) | Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files |
+| [ss-python-to-chtc](skills/ss-python-to-chtc/SKILL.md) | Convert Python scripts into production-ready Docker and Apptainer/Singularity containers (incl. CHTC/HPC) |
 
 #### Engineering Discipline
 
@@ -99,28 +67,6 @@ Skills discovered and installed via the sommelier — tailored to your stack.
 | [ss-tdd](skills/ss-tdd/SKILL.md) | Test-driven development with red-green-refactor and tracer-bullet vertical slices |
 | [ss-improve-architecture](skills/ss-improve-architecture/SKILL.md) | Find deepening opportunities — refactors that turn shallow modules into deep ones |
 | [ss-grill](skills/ss-grill/SKILL.md) | Relentless interview about a plan — lite (Q&A only) or with-docs (updates `CONTEXT.md`/ADRs inline) |
-
-#### Workflow & Issue Tracking
-
-| Skill | Description |
-|-------|-------------|
-| [ss-to-prd](skills/ss-to-prd/SKILL.md) | Synthesise the current conversation context into a PRD and publish it to the issue tracker |
-| [ss-to-issues](skills/ss-to-issues/SKILL.md) | Break a plan or PRD into independently-grabbable tracer-bullet issues |
-| [ss-triage](skills/ss-triage/SKILL.md) | Move issues through a triage state machine (bug/enhancement × needs-triage/needs-info/ready-for-agent/etc.) |
-
-#### JS/TS Tooling
-
-| Skill | Description |
-|-------|-------------|
-| [ss-setup-pre-commit](skills/ss-setup-pre-commit/SKILL.md) | Set up Husky pre-commit hooks with lint-staged, Prettier, typecheck, and tests |
-| [ss-git-guardrails](skills/ss-git-guardrails/SKILL.md) | Install a PreToolUse hook that blocks dangerous git commands in Claude Code |
-
-#### Productivity
-
-| Skill | Description |
-|-------|-------------|
-| [ss-docs-update](skills/ss-docs-update/SKILL.md) | Update all documentation (README, docs/, .env.example, etc.) to reflect current repo state |
-| [ss-search-first](skills/ss-search-first/SKILL.md) | Research-before-coding workflow |
 
 ## Install
 

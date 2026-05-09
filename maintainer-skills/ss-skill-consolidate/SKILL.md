@@ -44,7 +44,6 @@ If unclear, default to **Full**.
 
 ## When NOT to Use
 - Improving a single skill's quality — use `ss-skill-craft` improve mode
-- Auditing repo complexity broadly — use `ss-repo-simplify`
 - Skills are genuinely distinct but related — cross-reference with `metadata.related-skills` instead
 
 ## Phase 1 — Inventory All Skills

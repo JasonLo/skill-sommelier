@@ -24,7 +24,6 @@ Run automated checks against every skill in `skills/` and produce a pass/fail re
 
 ## When NOT to Use
 - To improve skill content quality — use `ss-skill-craft` improve mode instead
-- To find dead code or complexity — use `ss-repo-simplify` instead
 
 ## Phase 1 — Discover Skills
 
