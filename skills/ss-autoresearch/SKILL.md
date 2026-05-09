@@ -17,7 +17,7 @@ allowed-tools:
   - WebSearch
 metadata:
   source: K-Dense-AI/claude-scientific-skills
-  depends-on: ss-ml-paper-writing ss-arxiv-database
+  depends-on: ss-arxiv-database
 ---
 
 # AutoResearch — Autonomous AI Research Loop
@@ -109,10 +109,6 @@ Create `research/report.md` containing:
 
 ### Presentation (optional)
 If the user wants slides, invoke `ss-make-slides` with `research/report.md` as input.
-
-### Paper (optional)
-If the user wants a publication-ready draft, invoke `ss-ml-paper-writing` with
-the report and experiment data.
 
 ---
 

@@ -1,14 +1,17 @@
 ---
 name: ss-skill-discover
 description: >-
-  Search GitHub for trending Claude Code skills, present a personalized ranked table,
-  and install selections. Use when the user wants to find new skills, browse what's available,
-  explore the skills ecosystem, or bootstrap their skill collection.
-  Also serves as the "init" / bootstrap command — when called with no arguments,
-  auto-generates personalized search queries from the user's profile.
-  Triggers on "find skills", "discover skills", "search for skills", "what skills exist",
-  "browse skills", "trending skills", "new skills", "init", "bootstrap skills",
-  "setup skills", "recommended skills", "get started with skills", "what skills should I have".
+  Build a developer profile from local Claude Code history, then search GitHub
+  for trending Claude Code skills, present a personalized ranked table, and
+  install selections. Use when the user wants to find new skills, browse
+  what's available, bootstrap their skill collection, or just inspect their
+  own coding profile. Also serves as the "init" / bootstrap command — when
+  called with no arguments, builds (or refreshes) the profile and
+  auto-generates personalized search queries.
+  Triggers on "find skills", "discover skills", "search for skills",
+  "trending skills", "init", "bootstrap skills", "recommended skills",
+  "what skills should I have", "my profile", "who am I", "analyze my usage",
+  "developer profile", "coding habits".
 allowed-tools:
   - Bash
   - Read
@@ -17,145 +20,168 @@ allowed-tools:
   - Grep
   - Agent
   - AskUserQuestion
-metadata:
-  depends-on: ss-user-profile
 ---
 
-Discover, rank, and install Claude Code skills from GitHub. Personalized to the user's profile.
+Discover, rank, and install Claude Code skills from GitHub, personalised to a
+local developer profile this skill builds and caches.
 
-## When to Use
-- Finding new Claude Code skills to install
-- Browsing what's trending in the skills ecosystem
-- Looking for skills for a specific domain or tool
-- Bootstrapping a skill collection for the first time
+## Modes
 
-## When NOT to Use
-- Installing a skill you already know the URL for — just clone it directly
-- Updating existing skills — use `ss-repo-update` instead
+- **Profile-only** — triggered by "my profile" / "who am I" / "developer
+  profile" / "coding habits". Run Step 1, present, stop.
+- **Discover** (default) — Step 1 (cached) → Steps 2–7.
 
-## Step 1 — Load or build user profile
+## Step 1 — Load or build the profile
 
-Read `~/.claude/user-profile.md`. If it exists, extract tech stack, interests, and project domains for ranking.
+Cache lives at `~/.claude/user-profile.md` (outside the repo, not git-tracked).
 
-If the file does not exist, invoke the `ss-user-profile` skill to generate it (auto-saves to `~/.claude/user-profile.md`). Briefly summarize what you learned in 2-3 sentences.
+- **Cache hit, Discover mode:** read it, extract tech stack / interests /
+  domains, proceed to Step 2.
+- **Cache hit, Profile-only mode:** display, offer refresh / deep-dive /
+  switch-to-discover.
+- **Cache miss or refresh:** build via 1a–1f, then 1g.
 
-## Step 2 — Parse arguments and generate search queries
+### 1a — Prompt history (Agent)
 
-`$ARGUMENTS` can contain:
-- A **keyword** (e.g., `python`, `docker`) — filters search results
-- A **number** — sets max results (default: 10)
-- Both (e.g., `python 20`)
-- Empty — no filter, auto-generate queries from profile
+Spawn a general-purpose Agent on `~/.claude/history.jsonl` (each line: `display`,
+`timestamp`, `project`, `sessionId`). Ask it to report:
 
-**If no keyword provided:** Synthesize **3 search queries** from the user profile:
-1. Primary tech stack (e.g., "python", "docker", "typescript")
-2. Work domain (e.g., "machine-learning", "web", "data")
-3. Tool preferences or patterns (e.g., "modern-tooling", "automation", "testing")
+- **Projects** — unique paths, prompt counts, sorted.
+- **Time** — date range, active days; infer local TZ from the sleep gap and
+  report all hours in local time; activity by time-of-day and weekday; top 10
+  active days.
+- **Prompts** — total, question/instruction ratio, length distribution
+  (<50/50–200/200+), slash + bang commands with counts, top words and bigrams,
+  tone/verbosity observations.
+- **Sessions** — count, mean/median size, duration stats, top 5 longest with
+  project + first prompt.
+- **Tech mentions** — languages, frameworks, tools, platforms with counts.
 
-Briefly show the queries with one-line reasoning each.
+### 1b — Insights data (if present)
 
-**If keyword provided:** Use that single keyword for search.
+Read `~/.claude/usage-data/report.html` and any JSON under
+`~/.claude/usage-data/facets/`. These give richer style/personality signal than
+raw history.
 
-**License filtering:** Default to permissive licenses only (MIT, Apache, BSD, etc.) without asking. Skills with restrictive licenses (GPL, AGPL, LGPL, SSPL) or no license are excluded. Only ask about license preference if the user explicitly mentions wanting to see all licenses.
+### 1c — Memory + project docs
 
-## Step 3 — Search GitHub for SKILL.md files
+Glob `~/.claude/projects/*/memory/MEMORY.md`. For the top 10 projects from 1a,
+read `{project}/CLAUDE.md` if present. Read `~/.claude/settings.json` for tool
+prefs and plugins.
 
-Use **two complementary search strategies** and merge results. If multiple queries were generated, run all searches in parallel.
+### 1d — Git stats per top project
 
-### 3a — Code search (find SKILL.md files directly)
-
+For each project that's a git repo:
 ```bash
-gh search code 'filename:SKILL.md "name:" "description:"' --limit 30 --json repository,path
+git -C {project} remote -v 2>/dev/null | head -1
+git -C {project} log --oneline -3 2>/dev/null
+git -C {project} shortlog -sn --all --no-merges 2>/dev/null | head -3
 ```
+Reveals solo-vs-team and recency.
 
-If a keyword was provided, add it to the query string.
+### 1g — Synthesise and save
 
-### 3b — Topic search (find repos tagged with skill-related topics)
+Synthesise into these dimensions: **Tech Stack** (languages, frameworks, dev
+tools — note `uv`/`bun`/`ruff` etc. — infrastructure), **Project Portfolio**
+(per project: domain, work vs personal, activity, solo vs team), **Work
+Patterns** (schedule in local TZ, session style, focus, weekday vs weekend),
+**Communication Style** (verbosity, tone, autonomy preference, slash-command
+power-user level), **Personality Indicators** (risk tolerance, builder vs user,
+learning style, customisation depth).
+
+Write to `~/.claude/user-profile.md` with sections: TLDR, Quick Summary, Tech
+Identity (table), Project Portfolio (table), Work Patterns, Communication
+Style, Personality Sketch, Raw Stats. Auto-save without asking. Display in
+chat.
+
+In Profile-only mode, stop and offer: refine, deep-dive, or proceed to discover.
+
+**Privacy:** all local; only reads existing Claude Code metadata (history,
+memory, settings — never transcripts or tool output); delete the file to forget.
+
+---
+
+## Step 2 — Parse args, generate queries
+
+`$ARGUMENTS` may contain a keyword, a number (max results, default 10), both,
+or neither.
+
+- **No keyword:** synthesise 3 queries from the profile (primary stack, work
+  domain, tool patterns). Show them with one-line reasoning each.
+- **Keyword given:** use it directly.
+
+License filter defaults to permissive (MIT/Apache/BSD); skills with restrictive
+or missing licences are excluded. Only override if the user asks.
+
+## Step 3 — Search GitHub
+
+Run in parallel and merge:
 
 ```bash
+# Code search — direct SKILL.md hits
+gh search code 'filename:SKILL.md "name:" "description:"' --limit 30 --json repository,path
+# Topic search — repos tagged for skills
 gh search repos --topic=claude-code-skills --sort=stars --limit 20 --json fullName,url
 gh search repos --topic=claude-skills --sort=stars --limit 20 --json fullName,url
 gh search repos --topic=agent-skills --sort=stars --limit 20 --json fullName,url
 ```
 
-For each topic-matched repo, find SKILL.md files by fetching the repo tree.
+If a keyword is set, append it to the code search. For topic-matched repos,
+fetch the tree to find SKILL.md files.
 
-### 3c — Merge, deduplicate, and pre-filter
-
-Combine results from all searches. Parse into `{owner, repo, path}` objects. Deduplicate by repository. Exclude this repo (`JasonLo/skill-sommelier`) from results.
-
-**Pre-filter for speed** (critical for repos with hundreds of skills):
-1. Check repo license first via `gh api repos/{owner}/{repo}/license --jq '.license.spdx_id'`. Skip the entire repo if restrictive or no license.
-2. For repos with many SKILL.md files (>20), filter paths by keyword relevance to the user's search queries and profile before fetching content. Only fetch the top 5 most relevant paths per repo.
-3. For repos with ≤20 SKILL.md files, fetch all.
-
-This avoids the performance trap of validating thousands of skills from large repos.
+**Merge + pre-filter:** dedup by repo, exclude `JasonLo/skill-sommelier`. Check
+each repo's licence (`gh api repos/{owner}/{repo}/license --jq '.license.spdx_id'`)
+and skip if restrictive. For repos with >20 SKILL.md files, keep only the top 5
+paths most relevant to the user's queries/profile before fetching content.
 
 ## Step 4 — Validate candidates
 
-For each pre-filtered candidate, fetch the file content:
-
+For each surviving path, fetch and base64-decode:
 ```bash
 gh api repos/{owner}/{repo}/contents/{path} --jq '.content'
 ```
+Require `---` frontmatter, `name:`, and `description:`. Extract `name`,
+`description`, and any skill-level `license` (skip if it overrides the repo
+licence with a restrictive one).
 
-Base64-decode and check for:
-1. YAML frontmatter delimiters (`---`)
-2. A `name:` field
-3. A `description:` field
-
-Extract `name`, `description`, and `license` values. If a skill-level `license` field overrides the repo license with a restrictive license, skip it.
-
-## Step 5 — Fetch repo metadata
-
-For each validated skill's repo:
+## Step 5 — Repo metadata
 
 ```bash
 gh api repos/{owner}/{repo} --jq '{stars: .stargazers_count, pushed: .pushed_at}'
 ```
+On rate-limit, present partial results with a note.
 
-If you hit a rate limit, present partial results with a note.
+## Step 6 — Rank and display
 
-## Step 6 — Rank and display table
-
-**Filter already-installed skills:** Before ranking, read the list of existing skill directories under `skills/` and exclude any skill whose base name (without `ss-` prefix) matches an installed skill. Flag near-duplicates (e.g., similar name or overlapping description) with a note rather than silently excluding.
-
-Rank by:
-1. **Relevance** (primary) — skills matching user's tech stack, domains, and interests rank higher
-2. **Stars** (secondary) — tiebreaker among equally relevant skills
-3. **Recency** — last push date as final tiebreaker
-
-Output a markdown table:
+Exclude already-installed skills (compare base name without `ss-` prefix
+against existing `skills/` dirs). Flag near-duplicates with a note instead of
+silently dropping. Rank by relevance (primary), stars (tiebreak), pushed-at
+(final tiebreak). Output:
 
 ```
 | # | Skill | Repository | Stars | Relevance | Description |
-|---|-------|------------|-------|-----------|-------------|
-| 1 | name  | owner/repo | 123   | high      | One-line description |
 ```
 
 ## Step 7 — Select and install
 
-Use `AskUserQuestion` to let the user choose skills by number. Offer:
-- **Install by number** — e.g., "1, 3, 5" or "all"
-- **View** — show full SKILL.md content for a specific skill
-- **Refine** — search again with different keywords
-- **Done** — end
+Ask via `AskUserQuestion`: install by number ("1, 3, 5" or "all"), view full
+SKILL.md, refine, or done.
 
-For each selected skill, spawn a parallel Agent to:
-1. Fetch the full SKILL.md and all sibling files from GitHub
-2. **Enforce `ss-` prefix:** If the skill's `name` doesn't already start with `ss-`, prefix it — directory becomes `skills/ss-{name}/` and update the `name:` field in the saved SKILL.md frontmatter to `ss-{name}`. Tell the user: "Installing as `ss-{name}` per repo naming convention."
-3. Save to `skills/{name}/SKILL.md` (and `references/` if present)
+For each selection, spawn a parallel Agent that:
+1. Fetches SKILL.md and any sibling files from GitHub.
+2. **Enforces `ss-` prefix** — if `name` doesn't start with `ss-`, prefix it
+   (directory becomes `skills/ss-{name}/`, frontmatter `name:` updated). Tell
+   the user: "Installing as `ss-{name}` per repo naming convention."
+3. Saves to `skills/{name}/SKILL.md` (and `references/` if present).
 
-Before installing, perform security review:
-- **List all files** in the skill's directory
-- **If executable content found** (`.sh`, `.py`, scripts/) — show content and get explicit approval
-- **If no executables** — proceed directly
+**Security gate before save:** list files; if any executables (`.sh`, `.py`,
+`scripts/`), show contents and require explicit approval. Otherwise proceed.
 
-Report status for each installed skill.
+Report status per skill.
 
-## Error Handling
+## Errors
 
-- If user profile fails (no history), use generic recommendations
-- If searches find fewer than 10 results, present what was found
-- If the user selects 0 skills, acknowledge and exit gracefully
-- If installation fails for a skill, report the error and continue with others
+- Profile build fails (no history) → fall back to generic recommendations.
+- <10 search hits → present what was found.
+- 0 selected → exit gracefully.
+- Per-skill install failure → report and continue with the rest.

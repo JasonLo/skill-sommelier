@@ -12,7 +12,6 @@ The following skills in this repository are adapted from `mattpocock/skills` (wi
 |---|---|
 | `skills/ss-diagnose/` | `skills/engineering/diagnose/` |
 | `skills/ss-grill/` | consolidation of `skills/engineering/grill-with-docs/` and `skills/productivity/grill-me/` |
-| `skills/ss-improve-architecture/` | `skills/engineering/improve-codebase-architecture/` |
 | `skills/ss-tdd/` | `skills/engineering/tdd/` |
 
 ### License
