@@ -29,7 +29,6 @@ Skills that manage the collection itself — discovery, quality, and evolution.
 | Skill | Description |
 |-------|-------------|
 | [ss-skill-craft](skills/ss-skill-craft/SKILL.md) | Create, improve, and design Claude Code skills |
-| [ss-skill-tune](skills/ss-skill-tune/SKILL.md) | Self-improving skill optimization using the Karpathy autoresearch pattern |
 
 #### Repo Management
 
@@ -59,9 +58,7 @@ Skills discovered and installed via the sommelier — tailored to your stack.
 | Skill | Description |
 |-------|-------------|
 | [ss-modern-python](skills/ss-modern-python/SKILL.md) | Configure Python projects with modern tooling: uv, ruff, ty |
-| [ss-fastapi-expert](skills/ss-fastapi-expert/SKILL.md) | Build high-performance async Python APIs with FastAPI and Pydantic V2 |
 | [ss-fastapi-templates](skills/ss-fastapi-templates/SKILL.md) | Create production-ready FastAPI projects with async patterns and dependency injection |
-| [ss-claude-api](skills/ss-claude-api/SKILL.md) | Build apps with the Claude API or Anthropic SDK |
 
 #### ML & Training
 
@@ -101,7 +98,6 @@ Skills discovered and installed via the sommelier — tailored to your stack.
 | [ss-diagnose](skills/ss-diagnose/SKILL.md) | Disciplined diagnosis loop for hard bugs and perf regressions: build a feedback loop, hypothesise, instrument, fix, regression-test |
 | [ss-tdd](skills/ss-tdd/SKILL.md) | Test-driven development with red-green-refactor and tracer-bullet vertical slices |
 | [ss-improve-architecture](skills/ss-improve-architecture/SKILL.md) | Find deepening opportunities — refactors that turn shallow modules into deep ones |
-| [ss-zoom-out](skills/ss-zoom-out/SKILL.md) | Get a higher-level map of relevant modules and callers when an area is unfamiliar |
 | [ss-grill](skills/ss-grill/SKILL.md) | Relentless interview about a plan — lite (Q&A only) or with-docs (updates `CONTEXT.md`/ADRs inline) |
 
 #### Workflow & Issue Tracking
@@ -117,19 +113,14 @@ Skills discovered and installed via the sommelier — tailored to your stack.
 | Skill | Description |
 |-------|-------------|
 | [ss-setup-pre-commit](skills/ss-setup-pre-commit/SKILL.md) | Set up Husky pre-commit hooks with lint-staged, Prettier, typecheck, and tests |
-| [ss-migrate-shoehorn](skills/ss-migrate-shoehorn/SKILL.md) | Migrate TS test files from `as` assertions to `@total-typescript/shoehorn` |
 | [ss-git-guardrails](skills/ss-git-guardrails/SKILL.md) | Install a PreToolUse hook that blocks dangerous git commands in Claude Code |
 
 #### Productivity
 
 | Skill | Description |
 |-------|-------------|
-| [ss-citation-cff](skills/ss-citation-cff/SKILL.md) | Generate CITATION.cff files for GitHub repositories with APA and BibTeX export |
 | [ss-docs-update](skills/ss-docs-update/SKILL.md) | Update all documentation (README, docs/, .env.example, etc.) to reflect current repo state |
-| [ss-cli2task](skills/ss-cli2task/SKILL.md) | Generate VS Code tasks.json from Python CLI commands (typer, click, argparse) |
 | [ss-search-first](skills/ss-search-first/SKILL.md) | Research-before-coding workflow |
-| [ss-edit-article](skills/ss-edit-article/SKILL.md) | Restructure and tighten article drafts, treating information as a DAG so prerequisites come first |
-| [ss-caveman](skills/ss-caveman/SKILL.md) | Ultra-compressed reply mode that drops filler while keeping technical accuracy |
 
 ## Install
 

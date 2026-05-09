@@ -12,7 +12,6 @@ license: MIT
 metadata:
   author: https://github.com/wshobson
   source: https://github.com/wshobson/agents
-  depends-on: ss-fastapi-expert
 ---
 
 # FastAPI Project Templates

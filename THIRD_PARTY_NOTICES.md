@@ -17,12 +17,8 @@ The following skills in this repository are adapted from `mattpocock/skills` (wi
 | `skills/ss-to-issues/` | `skills/engineering/to-issues/` |
 | `skills/ss-to-prd/` | `skills/engineering/to-prd/` |
 | `skills/ss-triage/` | `skills/engineering/triage/` |
-| `skills/ss-zoom-out/` | `skills/engineering/zoom-out/` |
 | `skills/ss-git-guardrails/` | `skills/misc/git-guardrails-claude-code/` |
-| `skills/ss-migrate-shoehorn/` | `skills/misc/migrate-to-shoehorn/` |
 | `skills/ss-setup-pre-commit/` | `skills/misc/setup-pre-commit/` |
-| `skills/ss-edit-article/` | `skills/personal/edit-article/` |
-| `skills/ss-caveman/` | `skills/productivity/caveman/` |
 
 ### License
 
