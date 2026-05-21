@@ -13,13 +13,14 @@ set -eu
 REPO="git+https://github.com/USER/PROJECT.git"
 CONFIG_DIR="$HOME/.config/PROJECT_NAME"
 ENV_FILE="$CONFIG_DIR/.env"
+PYTHON_VERSION="3.13"
 
 echo "=== PROJECT_NAME installer ==="
 echo
 
 # Install as a uv tool
 echo "Installing PROJECT_NAME..."
-uv tool install "$REPO" --python 3.14
+uv tool install "$REPO" --python "$PYTHON_VERSION"
 echo
 
 # Set up configuration (if needed)
