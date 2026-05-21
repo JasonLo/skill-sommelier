@@ -44,8 +44,9 @@ Maintainer-only skills under `maintainer-skills/` are not distributed via the ma
 ```bash
 git clone https://github.com/JasonLo/skill-sommelier.git
 cd skill-sommelier
-# Project-level skills work via the .claude/skills/ symlink farm
-# (see CLAUDE.md for the rebuild command after adding/removing a skill)
+# Project-level skills work via the .claude/skills/ symlink farm.
+# After adding, removing, or moving a skill, rebuild it:
+bash maintainer-skills/ssm-skill-validate/scripts/sync-skills.sh
 ```
 
 ## Credits

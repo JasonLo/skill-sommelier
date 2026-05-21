@@ -23,14 +23,21 @@ Claude Code only auto-loads skills under a plugin's `skills/`. Anything in `main
 
 ## Local dev — rebuild the symlink farm
 
-After adding, removing, or moving a skill:
+After adding, removing, or moving a skill, run:
 
 ```bash
-rm -rf .claude/skills && mkdir -p .claude/skills
-for d in skills/*/ maintainer-skills/*/; do
-  ln -s "../../$d" ".claude/skills/$(basename "$d")"
-done
+bash maintainer-skills/ssm-skill-validate/scripts/sync-skills.sh
 ```
+
+The script is idempotent and rebuilds `.claude/skills/` from `skills/` + `maintainer-skills/`. Commit the resulting symlink changes.
+
+To auto-sync on every commit that touches `skills/` or `maintainer-skills/`, opt in once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The `.githooks/pre-commit` hook then runs the sync script and stages any farm changes automatically.
 
 ## SKILL.md conventions
 

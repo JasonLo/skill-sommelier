@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Pre-commit hook: when a commit touches skills/ or maintainer-skills/,
+# rebuild .claude/skills/ and stage the result so the symlink farm stays
+# in sync with the source tree.
+#
+# Opt in once per clone:  git config core.hooksPath .githooks
+
+set -euo pipefail
+
+if ! git diff --cached --name-only --diff-filter=ACDR \
+    | grep -Eq '^(skills|maintainer-skills)/'; then
+  exit 0
+fi
+
+repo_root="$(git rev-parse --show-toplevel)"
+bash "$repo_root/maintainer-skills/ssm-skill-validate/scripts/sync-skills.sh" >/dev/null
+
+if [ -n "$(git status --porcelain .claude/skills/)" ]; then
+  git add .claude/skills/
+  echo "pre-commit: .claude/skills/ symlink farm rebuilt and staged."
+fi
