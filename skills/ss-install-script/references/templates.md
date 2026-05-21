@@ -185,6 +185,12 @@ BIN_DIR="$HOME/.local/bin"
 echo "=== $PROJECT_NAME installer ==="
 echo
 
+# Check dependencies
+if ! command -v git >/dev/null 2>&1; then
+    echo "Error: git is required but not installed." >&2
+    exit 1
+fi
+
 # Clone or download
 if [ -d "$INSTALL_DIR" ]; then
     echo "Updating existing installation..."
