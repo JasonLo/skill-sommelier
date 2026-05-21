@@ -72,47 +72,74 @@ Create `scripts/install.sh` based on the chosen template.
 2. Customize these sections:
    - **Variables**: REPO, BINARY_NAME, CONFIG_DIR
    - **Install command**: The actual installation step
-   - **Configuration**: Create config files if needed
+   - **Configuration**: Create config files if needed (or defer to first run — see below)
    - **Optional dependencies**: Prompt for additional tools
    - **Verification**: Test that installation succeeded
 
 3. Ensure the script:
-   - Uses `set -eu` for error handling
-   - Reads from `/dev/tty` for interactive prompts
+   - Uses `set -eu` for error handling (or `set -euo pipefail` if `#!/bin/bash`)
+   - Reads from `/dev/tty` for interactive prompts, **gated by a TTY check** so CI installs don't hang
+   - Honors `--yes` / `INSTALLER_ASSUME_YES=1` for unattended installs (see "Non-Interactive Mode" in `references/templates.md`)
    - Sets proper permissions (600 for secrets, 755 for executables)
    - Provides clear success/error messages
    - Includes a "Done! Run '<command>' to start." message
 
+4. For binary downloads, **verify a checksum before extracting/installing**. See "Checksum Verification" in `references/templates.md`. `tar tzf` only detects corruption, not tampering.
+
+5. Prefer **deferring credential prompts to first run** rather than asking during `curl | sh`. Install-time prompts break unattended installs, can end up in shell history, and put secrets through a piped subshell. Inline credential prompts are only appropriate when the tool is unusable without them and no first-run UX exists.
+
 **Exit:** `scripts/install.sh` created and tested.
+
+## Phase 3.5 — Generate Uninstaller
+
+Create `scripts/uninstall.sh` as a standard companion artifact. Every mature installer (uv, rustup, rclone, brew) ships one — without it, users can't cleanly remove your tool.
+
+Use the "Uninstall Template" in `references/templates.md`. It should:
+- Remove the binary / `uv tool uninstall` / `cargo uninstall`
+- Optionally remove config (`$XDG_CONFIG_HOME/PROJECT`) — prompt unless `--purge` is passed
+- Leave user data untouched by default
+- Print exactly what was removed
+
+**Exit:** `scripts/uninstall.sh` created.
 
 ## Phase 4 — Add Auto-Update Support
 
-Create an update mechanism (optional but recommended).
+Create an update mechanism. **Default: built-in self-update subcommand.**
 
-Choose one approach:
+### Default: Self-update subcommand
 
-**Option A: Self-update subcommand** (for compiled binaries or Python tools)
-1. Add a `--self-update` or `update` subcommand to the tool itself
-2. Use git to check for updates and pull latest version
-3. See `references/self-update-patterns.md` for examples
+For any tool you control the source of (Python via `uv tool`, Rust via `cargo`, compiled binary with a release pipeline), add a `<tool> update` or `<tool> self-update` subcommand. This is what `uv`, `rustup`, and `gh` all do.
 
-**Option B: Separate update script** (for simpler tools)
-1. Create `scripts/update.sh` that re-runs the installer
-2. Or fetches latest version and replaces existing install
+1. Add the subcommand to the tool itself
+2. Inside it, run the package manager's upgrade command or re-fetch the release asset
+3. See "Pattern 1: Built-in Self-Update Command" in `references/self-update-patterns.md`
 
-**Option C: Check on startup** (for Python/Node tools)
-1. Add version check on tool startup
-2. Notify user if newer version available
+Why this is the default: discoverable via `--help`, no second file to maintain, no shell pipe required at update time, lives in the codebase under version control.
 
-**Exit:** Auto-update mechanism implemented or explicitly skipped.
+### Alternatives (use only if the default doesn't fit)
+
+- **Separate `scripts/update.sh`** — use when the tool is a pure shell script with no "source code" to add a subcommand to, or when the install is git-clone-based and `git pull` is the natural update path. See Pattern 2.
+- **Background version check on startup** — add *in addition* to the default for frequently-run tools that need a passive nudge. Never use as the only mechanism. See Pattern 3.
+- **Re-run the installer** — only for trivial single-file installs. Slower and racier than a real upgrade. See Pattern 4.
+
+**Exit:** A built-in `update` subcommand exists, or an explicit reason was recorded for choosing an alternative.
 
 ## Phase 5 — Update Documentation
 
 Add installation instructions to README.
 
-1. Add an "Install" section with the curl one-liner:
+1. Add an "Install" section with **two one-liners** — a pinned production install and a tracking install:
+
    ````markdown
    ## Install
+
+   Pinned to the latest release (recommended):
+
+   ```bash
+   curl -LsSf https://raw.githubusercontent.com/USER/REPO/v1.0.0/scripts/install.sh | sh
+   ```
+
+   Tracking `main` (for contributors / bleeding edge):
 
    ```bash
    curl -LsSf https://raw.githubusercontent.com/USER/REPO/main/scripts/install.sh | sh
@@ -120,6 +147,10 @@ Add installation instructions to README.
 
    The installer will set up `<command>`, prompt for configuration, and handle dependencies.
    ````
+
+   **Why two:** the `main` URL re-fetches whatever the latest commit is at the time the user runs it — that means a compromised or accidentally-broken commit on `main` ships to everyone who runs `curl | sh` until you notice. Pinning to a tag (or commit SHA) freezes what users execute. README copy should default to the pinned URL and only mention `main` as a contributor option.
+
+   Bump the pinned version in the README on every release. The `ssm-repo-release` skill is a good place to wire this in.
 
 2. Document what the installer does:
    - What gets installed
@@ -157,12 +188,14 @@ Verify the script works in a clean environment.
 
 ## Security Notes
 
-- Never pipe arbitrary URLs to shell without reviewing the script first
-- Use HTTPS URLs only
-- Pin to specific git refs/tags for production use
-- Validate checksums for binary downloads
-- Set restrictive permissions on credential files (600)
-- Avoid storing secrets in the install script itself
+Listed roughly in order of impact:
+
+- **Pin the install URL to a git tag or commit SHA in your README.** `raw.githubusercontent.com/.../main/install.sh` is mutable — anyone with push access (or a compromised dependency that touches the repo) can change what `curl | sh` users execute. See Phase 5 for the two-URL pattern.
+- **Verify a checksum before extracting binary downloads.** `tar tzf` only catches corruption. Publish a `.sha256` next to each release asset and check it in the installer. See the "Checksum Verification" template.
+- **Use HTTPS URLs only** — never HTTP, never plain git://.
+- **Set restrictive permissions on credential files** (`chmod 600`).
+- **Avoid storing secrets in the install script itself.** Prefer first-run prompts (Phase 3 note) so secrets never go through `curl | sh`.
+- **Never pipe arbitrary third-party URLs to shell without reviewing the script first** — applies to dependencies the installer pulls in (e.g. `rclone.org/install.sh`). Download to a temp file and `bash <file>` rather than piping.
 
 ## Examples
 
