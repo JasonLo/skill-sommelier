@@ -202,12 +202,15 @@ cd "$INSTALL_DIR"
 # - python setup.py install
 # - npm install -g .
 
+# Command/binary name
+COMMAND_NAME="command"
+
 # Create symlink in PATH
 mkdir -p "$BIN_DIR"
-ln -sf "$INSTALL_DIR/bin/command" "$BIN_DIR/command"
+ln -sf "$INSTALL_DIR/bin/$COMMAND_NAME" "$BIN_DIR/$COMMAND_NAME"
 
 echo
-echo "Done! Run 'command' to start."
+echo "Done! Run '$COMMAND_NAME' to start."
 ```
 
 ## Common Patterns
