@@ -30,7 +30,7 @@ Use this when the artifact needs to:
 - Survive porting (no language/framework details bleed into normative text)
 - Make conformance auditable (reviewers can answer "does this implementation comply?" point by point)
 
-If the user just wants a design doc, ADR, or PRD, suggest `ss-grill` (with-docs) or `ss-to-prd` instead — those have lower ceremony.
+If the user just wants a design doc, ADR, or PRD, suggest creating a simpler context document or PRD instead — those have lower ceremony.
 
 ## The shape of a good spec
 
@@ -181,4 +181,4 @@ Default output path: `SPEC.md` in the user's working directory (or wherever they
 - Which sections you filled vs. left as `TODO` or `Implementation-defined`
 - The conformance checklist size — if it's under ~10 items the spec is probably too thin; if it's over 100 the spec is probably too prescriptive
 
-Then offer to grill the spec with `ss-grill` to find weak spots before it ships.
+Then offer to review the spec and stress-test it to find weak spots before it ships.
