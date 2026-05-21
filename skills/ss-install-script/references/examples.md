@@ -369,7 +369,7 @@ def check_for_updates():
         if latest != current:
             print(f"⚠ New version available: {latest} (current: {current})")
             print(f"  Update with: <your-command> --update")
-    except:
+    except Exception:
         pass  # Silently fail
 
 if __name__ == "__main__":
