@@ -6,7 +6,7 @@
 # be removed via slash commands — this script prints those for you.
 #
 # Usage:
-#   curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.6.0/scripts/uninstall.sh | sh
+#   curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.7.0/scripts/uninstall.sh | sh
 #
 # Flags:
 #   --yes    skip confirmation prompts (also auto-enabled when not on a TTY)

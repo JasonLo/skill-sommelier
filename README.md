@@ -17,13 +17,13 @@ Don't have Claude Code yet, or want a one-liner that also sets up companions lik
 
 ```bash
 # Pinned (recommended)
-curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.6.0/scripts/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.7.0/scripts/install.sh | sh
 
 # Tracking main (contributors)
 curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/main/scripts/install.sh | sh
 
 # Unattended (CI / Docker / devcontainers)
-curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.6.0/scripts/install.sh | sh -s -- --yes
+curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.7.0/scripts/install.sh | sh -s -- --yes
 ```
 
 The bootstrap installer checks for Claude Code (offering to install it if missing), optionally installs `gh` and `uv`, then prints the two `/plugin` commands above for you to paste into Claude Code. The plugin install itself happens inside Claude Code — that's the only way to add a plugin.

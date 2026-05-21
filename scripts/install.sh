@@ -13,7 +13,7 @@
 # the prerequisites are in place.
 #
 # Usage:
-#   curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.6.0/scripts/install.sh | sh
+#   curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.7.0/scripts/install.sh | sh
 #
 # Flags / env:
 #   --yes, INSTALLER_ASSUME_YES=1   non-interactive; required deps Y, optional N
@@ -221,5 +221,5 @@ Updates:
     /plugin marketplace update          — refresh the marketplace cache
 
 Uninstall later:
-    curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.6.0/scripts/uninstall.sh | sh
+    curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.7.0/scripts/uninstall.sh | sh
 EOF
