@@ -80,7 +80,13 @@ else
     printf "Install optional_dep for extra features? (y/N): "
     read -r install_dep < /dev/tty
     case "$install_dep" in
-        [Yy]) sudo -v && curl https://example.com/install.sh | sudo bash ;;
+        [Yy])
+            sudo -v
+            tmp_install_script="$(mktemp)"
+            curl -fsSL https://example.com/install.sh -o "$tmp_install_script"
+            sudo bash "$tmp_install_script"
+            rm -f "$tmp_install_script"
+            ;;
         *) echo "Skipping optional_dep." ;;
     esac
 fi
