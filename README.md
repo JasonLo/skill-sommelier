@@ -34,7 +34,6 @@ Public skills (distributed):
 | [ss-modern-python](skills/ss-modern-python/SKILL.md) | Set up Python projects with `uv`, `ruff`, `ty` |
 | [ss-python-to-chtc](skills/ss-python-to-chtc/SKILL.md) | Containerize Python apps for Docker / Apptainer / HPC |
 | [ss-diagnose](skills/ss-diagnose/SKILL.md) | Disciplined diagnosis loop for hard bugs and perf regressions |
-| [ss-tdd](skills/ss-tdd/SKILL.md) | Test-driven development with red-green-refactor and tracer-bullet vertical slices |
 | [ss-spec-new](skills/ss-spec-new/SKILL.md) | Draft an RFC-style `SPEC.md` (RFC 2119, scope, domain model, conformance) |
 | [ss-autoresearch](skills/ss-autoresearch/SKILL.md) | Two-loop autonomous AI research: rapid experiments inside, synthesis outside |
 
