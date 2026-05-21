@@ -30,6 +30,7 @@ Public skills (distributed):
 | [ss-skill-discover](skills/ss-skill-discover/SKILL.md) | Build a developer profile from local history, then search GitHub and install ranked picks |
 | [ss-skill-craft](skills/ss-skill-craft/SKILL.md) | Create, improve, or design Claude Code skills |
 | [ss-update](skills/ss-update/SKILL.md) | Check for plugin updates, show changelog, apply them |
+| [ss-install-script](skills/ss-install-script/SKILL.md) | Create single-line install scripts with auto-update for CLI tools and Python packages |
 | [ss-modern-python](skills/ss-modern-python/SKILL.md) | Set up Python projects with `uv`, `ruff`, `ty` |
 | [ss-python-to-chtc](skills/ss-python-to-chtc/SKILL.md) | Containerize Python apps for Docker / Apptainer / HPC |
 | [ss-diagnose](skills/ss-diagnose/SKILL.md) | Disciplined diagnosis loop for hard bugs and perf regressions |
