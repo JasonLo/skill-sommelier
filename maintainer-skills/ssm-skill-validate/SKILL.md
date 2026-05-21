@@ -120,100 +120,22 @@ If running in CI context or user requests CI output:
 
 **Exit:** Validation complete.
 
-## GitHub Actions Integration
+## How to Run
 
-Add this job to `.github/workflows/` to run validation on PRs:
+The deterministic checks live in `scripts/validate.sh`. Run it locally:
 
-```yaml
-name: Validate Skills
-on:
-  pull_request:
-    paths:
-      - 'skills/**'
-
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Validate skill frontmatter
-        run: |
-          exit_code=0
-          for dir in skills/*/; do
-            skill_name=$(basename "$dir")
-            skill_file="$dir/SKILL.md"
-
-            # Check 1: SKILL.md exists
-            if [ ! -f "$skill_file" ]; then
-              echo "FAIL: $skill_name — missing SKILL.md"
-              exit_code=1
-              continue
-            fi
-
-            # Extract frontmatter (between first two ---)
-            frontmatter=$(sed -n '/^---$/,/^---$/p' "$skill_file" | sed '1d;$d')
-
-            # Check 3: name field exists
-            fm_name=$(echo "$frontmatter" | grep -m1 '^name:' | sed 's/^name:[[:space:]]*//')
-            if [ -z "$fm_name" ]; then
-              echo "FAIL: $skill_name — missing name field"
-              exit_code=1
-              continue
-            fi
-
-            # Check 4: description field exists
-            if ! echo "$frontmatter" | grep -q '^description:'; then
-              echo "FAIL: $skill_name — missing description field"
-              exit_code=1
-            fi
-
-            # Check 5: name matches directory
-            if [ "$fm_name" != "$skill_name" ]; then
-              echo "FAIL: $skill_name — name '$fm_name' does not match directory"
-              exit_code=1
-            fi
-
-            # Check 6: ss- prefix
-            if [[ "$fm_name" != ss-* ]]; then
-              echo "FAIL: $skill_name — name missing ss- prefix"
-              exit_code=1
-            fi
-
-            # Check 7: allowed-tools (warn only)
-            if ! echo "$frontmatter" | grep -q '^allowed-tools:'; then
-              echo "WARN: $skill_name — missing allowed-tools"
-            fi
-
-            # Check 8: line count
-            lines=$(wc -l < "$skill_file")
-            if [ "$lines" -gt 500 ]; then
-              echo "WARN: $skill_name — $lines lines (over 500)"
-            fi
-
-            # Check 11: depends-on targets exist
-            depends_on=$(echo "$frontmatter" | grep 'depends-on:' | sed 's/.*depends-on:[[:space:]]*//')
-            if [ -n "$depends_on" ]; then
-              for dep in $depends_on; do
-                if [ ! -d "skills/$dep" ]; then
-                  echo "FAIL: $skill_name — depends-on target '$dep' not found"
-                  exit_code=1
-                fi
-              done
-            fi
-
-            # Check 12: related-skills targets exist
-            related=$(echo "$frontmatter" | grep 'related-skills:' | sed 's/.*related-skills:[[:space:]]*//')
-            if [ -n "$related" ]; then
-              IFS=',' read -ra rels <<< "$related"
-              for rel in "${rels[@]}"; do
-                rel=$(echo "$rel" | xargs)  # trim whitespace
-                if [ -n "$rel" ] && [ ! -d "skills/$rel" ]; then
-                  echo "WARN: $skill_name — related-skills target '$rel' not found"
-                fi
-              done
-            fi
-
-            echo "OK: $skill_name"
-          done
-          exit $exit_code
+```bash
+bash maintainer-skills/ssm-skill-validate/scripts/validate.sh skills ss-
+bash maintainer-skills/ssm-skill-validate/scripts/validate.sh maintainer-skills ssm-
 ```
+
+Exit code is `0` if all checks pass (warnings allowed), `1` on any FAIL.
+
+## CI Integration
+
+The script is wired into two workflows:
+
+- `.github/workflows/validate.yml` — runs on every PR and push to `main` that touches `skills/`, `maintainer-skills/`, or the validator itself.
+- `.github/workflows/release.yml` — the `release` job has `needs: validate`, so a tag push cannot ship a broken skill.
+
+When adding a new check, edit `scripts/validate.sh` and the rules listed above in lockstep.

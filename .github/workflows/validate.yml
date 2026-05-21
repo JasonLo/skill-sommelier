@@ -1,0 +1,28 @@
+name: Validate Skills
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**'
+      - 'maintainer-skills/**'
+      - 'maintainer-skills/ssm-skill-validate/scripts/validate.sh'
+      - '.github/workflows/validate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+      - 'maintainer-skills/**'
+      - 'maintainer-skills/ssm-skill-validate/scripts/validate.sh'
+      - '.github/workflows/validate.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate public skills (ss-)
+        run: bash maintainer-skills/ssm-skill-validate/scripts/validate.sh skills ss-
+
+      - name: Validate maintainer skills (ssm-)
+        run: bash maintainer-skills/ssm-skill-validate/scripts/validate.sh maintainer-skills ssm-
