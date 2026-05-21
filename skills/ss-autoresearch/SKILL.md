@@ -17,7 +17,6 @@ allowed-tools:
   - WebSearch
 metadata:
   source: K-Dense-AI/claude-scientific-skills
-  depends-on: ss-arxiv-database
 ---
 
 # AutoResearch — Autonomous AI Research Loop
@@ -44,7 +43,7 @@ Outer Loop (strategic)
 1. Clarify the research objective with the user (one clear hypothesis).
 2. Identify baselines, datasets, and evaluation metrics.
 3. Create `research/plan.md` with: hypothesis, success criteria, compute budget.
-4. Search related work: use `ss-arxiv-database` or WebSearch for prior art.
+4. Search related work: use WebSearch for prior art.
 
 ---
 
@@ -108,7 +107,7 @@ Create `research/report.md` containing:
 - Conclusion and future work
 
 ### Presentation (optional)
-If the user wants slides, invoke `ss-make-slides` with `research/report.md` as input.
+If the user wants slides, generate them with a presentation tool using `research/report.md` as input.
 
 ---
 
