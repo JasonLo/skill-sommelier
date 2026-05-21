@@ -129,15 +129,20 @@ esac
 BINARY="uv-${ARCH}-${PLATFORM}"
 URL="https://github.com/astral-sh/uv/releases/latest/download/${BINARY}.tar.gz"
 INSTALL_DIR="$HOME/.local/bin"
+TMP_ARCHIVE="$(mktemp "${TMPDIR:-/tmp}/uv.XXXXXX.tar.gz")"
+
+trap 'rm -f "$TMP_ARCHIVE"' EXIT HUP INT TERM
 
 echo "=== uv installer ==="
 echo "Platform: ${ARCH}-${PLATFORM}"
 echo
 
-# Download and extract
+# Download, validate, and extract
 mkdir -p "$INSTALL_DIR"
 echo "Downloading uv..."
-curl -LsSf "$URL" | tar xz -C "$INSTALL_DIR"
+curl -LsSf -o "$TMP_ARCHIVE" "$URL"
+tar tzf "$TMP_ARCHIVE" >/dev/null
+tar xzf "$TMP_ARCHIVE" -C "$INSTALL_DIR"
 
 # Make executable
 chmod 755 "$INSTALL_DIR/uv"
