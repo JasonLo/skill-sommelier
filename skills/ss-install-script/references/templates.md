@@ -51,10 +51,13 @@ while true; do
 done
 
 while true; do
+    old_stty=$(stty -g < /dev/tty)
+    trap 'stty "$old_stty" < /dev/tty' EXIT HUP INT TERM
     printf "Secret: "
     stty -echo < /dev/tty
     read -r secret < /dev/tty
-    stty echo < /dev/tty
+    stty "$old_stty" < /dev/tty
+    trap - EXIT HUP INT TERM
     echo
     [ -n "$secret" ] && break
     echo "Secret cannot be empty."
