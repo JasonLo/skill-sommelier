@@ -8,10 +8,13 @@ Guidance for Claude Code when working in this repo.
 
 There is no build system, test suite, or application code — just `SKILL.md` files with YAML frontmatter and procedural instructions. **No standalone scripts.** All capabilities ship as skills; supporting scripts inside a skill directory (`scripts/`) are fine, top-level scripts are not.
 
+Narrow exception: `scripts/install.sh` and `scripts/uninstall.sh` at the repo root are distribution infrastructure, not capabilities — curl-pipeable installers need stable repo-root URLs. Don't add other top-level scripts under this exception; new capabilities still go in `skills/` or `maintainer-skills/`.
+
 ```
 skills/                # public — distributed
 maintainer-skills/     # local-only — repo upkeep, NOT distributed
 .claude/skills/        # symlink farm so project-level discovery picks up both
+scripts/               # carve-out: install.sh / uninstall.sh only
 ```
 
 ## Public vs maintainer-only

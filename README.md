@@ -6,12 +6,29 @@ Everything is `SKILL.md` files — no build system, no scripts.
 
 ## Install
 
+Inside Claude Code:
+
 ```
 /plugin marketplace add JasonLo/skill-sommelier
 /plugin install skill-sommelier@skill-sommelier
 ```
 
-Skills are namespaced as `/skill-sommelier:<name>`. Update with `/plugin marketplace update`.
+Don't have Claude Code yet, or want a one-liner that also sets up companions like `gh` and `uv`?
+
+```bash
+# Pinned (recommended)
+curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.6.0/scripts/install.sh | sh
+
+# Tracking main (contributors)
+curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/main/scripts/install.sh | sh
+
+# Unattended (CI / Docker / devcontainers)
+curl -LsSf https://raw.githubusercontent.com/JasonLo/skill-sommelier/v0.6.0/scripts/install.sh | sh -s -- --yes
+```
+
+The bootstrap installer checks for Claude Code (offering to install it if missing), optionally installs `gh` and `uv`, then prints the two `/plugin` commands above for you to paste into Claude Code. The plugin install itself happens inside Claude Code — that's the only way to add a plugin.
+
+Skills are namespaced as `/skill-sommelier:<name>`. Update with `/skill-sommelier:ss-update` or `/plugin marketplace update`. Uninstall via `/plugin uninstall skill-sommelier@skill-sommelier` (or [`scripts/uninstall.sh`](scripts/uninstall.sh) for a guided cleanup).
 
 ## Quickstart
 

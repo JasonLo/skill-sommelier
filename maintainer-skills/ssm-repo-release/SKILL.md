@@ -98,20 +98,30 @@ Highlight the suggested option. Ask the user to choose.
 
 1. Edit `.claude-plugin/plugin.json` — update the `"version"` field
 2. Edit `.claude-plugin/marketplace.json` — update the `"version"` field inside `metadata`
-3. Read both files back to confirm the version is correct
+3. Bump the pinned installer URLs in `README.md`, `scripts/install.sh`, and `scripts/uninstall.sh`. One sed handles all of them — they all match `JasonLo/skill-sommelier/v<old>/scripts/`:
+   ```bash
+   # NEW_VERSION already has no leading "v", e.g. 0.7.0
+   git ls-files README.md scripts/install.sh scripts/uninstall.sh | \
+     xargs sed -i -E "s|(JasonLo/skill-sommelier/)v[0-9]+\.[0-9]+\.[0-9]+(/scripts/)|\1v${NEW_VERSION}\2|g"
+   ```
+   Then verify with `grep -n "JasonLo/skill-sommelier/v" README.md scripts/install.sh scripts/uninstall.sh` — every line should show the new tag.
 
-**Exit:** Both files show the new version.
+   If `scripts/` doesn't exist in this repo, skip step 3 (older releases predate the bootstrap installer).
+
+4. Read all bumped files back to confirm the version is correct.
+
+**Exit:** All files show the new version.
 
 ## Phase 5 — Commit, Tag, Push
 
-**Entry:** Version bumped in both files.
+**Entry:** Version bumped in all relevant files.
 
-**⚠ SAFETY GATE:** Before proceeding, display this summary and wait for explicit confirmation:
+**⚠ SAFETY GATE:** Before proceeding, display this summary and wait for explicit confirmation. Use `git diff --stat` to list the files that actually changed — don't hard-code the list, since older releases may not have the bootstrap installer:
 
 ```
 Ready to release:
   Version: v<NEW_VERSION>
-  Files:   plugin.json, marketplace.json
+  Files:   <list from git diff --stat>
   Action:  commit → tag → push (triggers GitHub release workflow)
 
 Proceed? (yes/no)
@@ -119,9 +129,9 @@ Proceed? (yes/no)
 
 Only continue after user confirms.
 
-1. Stage the two changed files:
+1. Stage every file that was actually changed in Phase 4 (use `git diff --name-only` rather than a hard-coded list):
    ```
-   git add .claude-plugin/plugin.json .claude-plugin/marketplace.json
+   git add $(git diff --name-only)
    ```
 
 2. Commit with a release message:
