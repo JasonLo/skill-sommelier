@@ -29,10 +29,13 @@ Convert Python applications into production-ready Docker containers with Pixi de
 
 For simple containerization requests (uses Pixi by default):
 
-1. **Identify the Python file**: Locate the main script in uploaded files or working directory
+1. **Locate the dockerization script**: Look for `dockerize_python.py` within the plugin's install directory.
+   - If installed via marketplace: `~/.claude/plugins/marketplaces/skill-sommelier/skills/ss-python-to-chtc/scripts/dockerize_python.py`.
+   - If in local dev: `skills/ss-python-to-chtc/scripts/dockerize_python.py`.
+   - Alternatively, search for the script using Glob or find tools.
 2. **Run the dockerization script**:
    ```bash
-   python /mnt/skills/user/python-to-chtc/scripts/dockerize_python.py <script.py> [output_dir]
+   python <path_to_script>/dockerize_python.py <script.py> [output_dir]
    ```
 3. **Review generated files**: The script creates Dockerfile, pixi.toml, .dockerignore, docker-compose.yml, and PIXI_INSTRUCTIONS.md
 4. **Present to user**: Share the generated Docker configuration files
@@ -75,7 +78,7 @@ User wants to containerize Python code
 User uploads `data_processor.py` and asks to containerize it.
 
 **Actions:**
-1. Run: `python dockerize_python.py data_processor.py ./docker_output`
+1. Run: `python <path_to_script>/dockerize_python.py data_processor.py ./docker_output`
 2. Script analyzes imports, detects dependencies (e.g., pandas, requests)
 3. Generates optimized multi-stage Dockerfile
 4. Creates requirements.txt with detected packages
@@ -99,7 +102,7 @@ User has PyTorch/TensorFlow model and needs GPU support.
 
 **Actions:**
 1. Read `references/cuda_gpu_support.md` for GPU patterns
-2. Run: `python dockerize_python.py model.py ./gpu_output --cuda 12`
+2. Run: `python <path_to_script>/dockerize_python.py model.py ./gpu_output --cuda 12`
 3. Script generates:
    - CUDA-enabled Dockerfile with GPU base images
    - pixi.toml with CUDA features and multi-environment support
