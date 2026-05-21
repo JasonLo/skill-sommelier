@@ -307,3 +307,221 @@ chmod 755 "$BINARY"
 # Config: owner rw, group/other r
 chmod 644 "$CONFIG"
 ```
+
+### Checksum Verification
+
+For any binary or archive download, verify a checksum **before** extracting or executing. `tar tzf` only detects corruption, not tampering. Publish a `.sha256` file next to each release asset.
+
+```sh
+URL="https://github.com/USER/PROJECT/releases/download/v1.0.0/project-x86_64-linux.tar.gz"
+SHA_URL="${URL}.sha256"
+TMP_ARCHIVE="$(mktemp "${TMPDIR:-/tmp}/project.XXXXXX.tar.gz")"
+TMP_SHA="$(mktemp "${TMPDIR:-/tmp}/project.XXXXXX.sha256")"
+trap 'rm -f "$TMP_ARCHIVE" "$TMP_SHA"' EXIT HUP INT TERM
+
+echo "Downloading..."
+curl -fsSL -o "$TMP_ARCHIVE" "$URL"
+curl -fsSL -o "$TMP_SHA" "$SHA_URL"
+
+# The .sha256 file should contain: "<hex>  <filename>"
+# Rewrite the filename column so sha256sum -c finds our temp file.
+expected=$(awk '{print $1}' "$TMP_SHA")
+echo "${expected}  $TMP_ARCHIVE" | sha256sum -c - || {
+    echo "✗ Checksum mismatch — refusing to install" >&2
+    exit 1
+}
+echo "✓ Checksum verified"
+
+# Safe to extract now
+tar xzf "$TMP_ARCHIVE" -C "$INSTALL_DIR"
+```
+
+On macOS use `shasum -a 256 -c -` instead of `sha256sum -c -` (or detect: `command -v sha256sum || alias sha256sum='shasum -a 256'`).
+
+For stronger guarantees, use signature verification (minisign, cosign, GPG) — checksums protect against a corrupt CDN but not a compromised release pipeline.
+
+### Non-Interactive Mode
+
+Installers piped through `curl | sh` from a CI job, Dockerfile `RUN`, or devcontainer have no TTY. If your script blocks on `read < /dev/tty`, the install hangs forever. Always provide an unattended path.
+
+```sh
+#!/bin/sh
+set -eu
+
+ASSUME_YES="${INSTALLER_ASSUME_YES:-0}"
+
+# Parse flags
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -y|--yes) ASSUME_YES=1; shift ;;
+        *) echo "Unknown flag: $1" >&2; exit 1 ;;
+    esac
+done
+
+# Auto-enable if stdin is not a TTY (curl | sh in CI, Docker RUN, etc.)
+if [ ! -t 0 ] && [ ! -r /dev/tty ]; then
+    ASSUME_YES=1
+fi
+
+# Wrapper for any y/N prompt
+confirm() {
+    prompt="$1"
+    default="${2:-N}"   # "Y" or "N"
+    if [ "$ASSUME_YES" = "1" ]; then
+        [ "$default" = "Y" ]
+        return
+    fi
+    printf "%s " "$prompt"
+    read -r reply < /dev/tty
+    case "$reply" in
+        [Yy]) return 0 ;;
+        [Nn]) return 1 ;;
+        "")   [ "$default" = "Y" ] ;;
+        *)    return 1 ;;
+    esac
+}
+
+# Usage
+if confirm "Install optional rclone? (y/N)"; then
+    echo "Installing rclone..."
+fi
+```
+
+Document both invocations in the README:
+
+```bash
+# Interactive (default)
+curl -LsSf https://.../install.sh | sh
+
+# Unattended (CI, Docker, devcontainers)
+curl -LsSf https://.../install.sh | sh -s -- --yes
+# or
+INSTALLER_ASSUME_YES=1 curl -LsSf https://.../install.sh | sh
+```
+
+Note the `sh -s --` is required to pass flags through a pipe.
+
+### Pinning the Install URL
+
+In the README, default to a tagged URL — never `main` — for production users:
+
+```bash
+# Pinned (recommended in README)
+curl -LsSf https://raw.githubusercontent.com/USER/PROJECT/v1.0.0/scripts/install.sh | sh
+
+# Tracking main (contributors only)
+curl -LsSf https://raw.githubusercontent.com/USER/PROJECT/main/scripts/install.sh | sh
+```
+
+A commit SHA is even stronger than a tag (tags can be moved):
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/USER/PROJECT/a1b2c3d/scripts/install.sh | sh
+```
+
+Bump the pinned tag in the README on every release.
+
+## Template: uninstall (Companion)
+
+Every installer needs an uninstaller. This template covers the common cases.
+
+```sh
+#!/bin/sh
+set -eu
+
+PROJECT_NAME="myproject"
+COMMAND_NAME="mytool"
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/$PROJECT_NAME"
+DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/$PROJECT_NAME"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/$PROJECT_NAME"
+
+PURGE=0
+ASSUME_YES="${INSTALLER_ASSUME_YES:-0}"
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --purge) PURGE=1; shift ;;
+        -y|--yes) ASSUME_YES=1; shift ;;
+        -h|--help)
+            cat <<EOF
+Usage: uninstall.sh [--purge] [--yes]
+
+  --purge   Also remove config, data, and cache directories
+  --yes     Skip confirmation prompts
+EOF
+            exit 0 ;;
+        *) echo "Unknown flag: $1" >&2; exit 1 ;;
+    esac
+done
+
+if [ ! -t 0 ] && [ ! -r /dev/tty ]; then
+    ASSUME_YES=1
+fi
+
+confirm() {
+    [ "$ASSUME_YES" = "1" ] && return 0
+    printf "%s (y/N): " "$1"
+    read -r reply < /dev/tty
+    case "$reply" in [Yy]) return 0 ;; *) return 1 ;; esac
+}
+
+echo "=== $PROJECT_NAME uninstaller ==="
+echo
+
+REMOVED=""
+
+# Remove the binary / package
+# Pick the line(s) that match how you installed:
+if command -v uv >/dev/null 2>&1 && uv tool list 2>/dev/null | grep -q "^$PROJECT_NAME"; then
+    confirm "Uninstall $PROJECT_NAME via uv tool?" && {
+        uv tool uninstall "$PROJECT_NAME"
+        REMOVED="$REMOVED\n  - uv tool: $PROJECT_NAME"
+    }
+elif command -v cargo >/dev/null 2>&1 && cargo install --list 2>/dev/null | grep -q "^$PROJECT_NAME "; then
+    confirm "Uninstall $PROJECT_NAME via cargo?" && {
+        cargo uninstall "$PROJECT_NAME"
+        REMOVED="$REMOVED\n  - cargo: $PROJECT_NAME"
+    }
+elif [ -f "$HOME/.local/bin/$COMMAND_NAME" ]; then
+    confirm "Remove $HOME/.local/bin/$COMMAND_NAME?" && {
+        rm -f "$HOME/.local/bin/$COMMAND_NAME"
+        REMOVED="$REMOVED\n  - binary: $HOME/.local/bin/$COMMAND_NAME"
+    }
+else
+    echo "No installation found — nothing to remove."
+fi
+
+# Config / data / cache are kept by default (user data principle).
+# --purge opts in to wiping them.
+if [ "$PURGE" = "1" ]; then
+    for dir in "$CONFIG_DIR" "$DATA_DIR" "$CACHE_DIR"; do
+        [ -d "$dir" ] || continue
+        confirm "Delete $dir?" && {
+            rm -rf "$dir"
+            REMOVED="$REMOVED\n  - directory: $dir"
+        }
+    done
+else
+    echo
+    echo "Config, data, and cache directories were preserved."
+    echo "Run with --purge to remove them as well."
+fi
+
+echo
+if [ -n "$REMOVED" ]; then
+    printf "Removed:%b\n" "$REMOVED"
+else
+    echo "Nothing was removed."
+fi
+echo "Done."
+```
+
+Document in the README:
+
+```bash
+# Remove the tool, keep config
+curl -LsSf https://raw.githubusercontent.com/USER/PROJECT/v1.0.0/scripts/uninstall.sh | sh
+
+# Remove the tool and wipe config/data
+curl -LsSf https://raw.githubusercontent.com/USER/PROJECT/v1.0.0/scripts/uninstall.sh | sh -s -- --purge
+```
