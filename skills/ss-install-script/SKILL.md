@@ -111,7 +111,7 @@ Choose one approach:
 Add installation instructions to README.
 
 1. Add an "Install" section with the curl one-liner:
-   ```markdown
+   ````markdown
    ## Install
 
    ```bash
@@ -119,7 +119,7 @@ Add installation instructions to README.
    ```
 
    The installer will set up `<command>`, prompt for configuration, and handle dependencies.
-   ```
+   ````
 
 2. Document what the installer does:
    - What gets installed

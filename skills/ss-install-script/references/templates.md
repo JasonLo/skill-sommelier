@@ -158,13 +158,14 @@ curl -fsSL "$REPO/raw/main/$SCRIPT_NAME" -o "$INSTALL_DIR/$SCRIPT_NAME"
 chmod 755 "$INSTALL_DIR/$SCRIPT_NAME"
 
 # Check if in PATH
-if echo "$PATH" | grep -q "$INSTALL_DIR"; then
-    echo "✓ $INSTALL_DIR is in PATH"
-else
-    echo "⚠ Add $INSTALL_DIR to PATH:"
-    echo "  export PATH=\"$INSTALL_DIR:\$PATH\""
-    echo "  Add to ~/.bashrc or ~/.zshrc to persist"
-fi
+case ":$PATH:" in
+    *":$INSTALL_DIR:"*)
+        echo "✓ $INSTALL_DIR is in PATH" ;;
+    *)
+        echo "⚠ Add $INSTALL_DIR to PATH:"
+        echo "  export PATH=\"$INSTALL_DIR:\$PATH\""
+        echo "  Add to ~/.bashrc or ~/.zshrc to persist" ;;
+esac
 
 echo
 echo "Done! Run '$SCRIPT_NAME' to start."
@@ -248,10 +249,13 @@ esac
 ### Hide Password Input
 
 ```bash
+old_stty=$(stty -g < /dev/tty)
+trap 'stty "$old_stty" < /dev/tty' EXIT HUP INT TERM
 printf "Password: "
 stty -echo < /dev/tty
 read -r password < /dev/tty
-stty echo < /dev/tty
+stty "$old_stty" < /dev/tty
+trap - EXIT HUP INT TERM
 echo
 ```
 
@@ -264,7 +268,13 @@ else
     printf "Install rclone? (y/N): "
     read -r install_rclone < /dev/tty
     case "$install_rclone" in
-        [Yy]) sudo -v && curl https://rclone.org/install.sh | sudo bash ;;
+        [Yy])
+            sudo -v
+            _tmp_script="$(mktemp)"
+            curl -fsSL https://rclone.org/install.sh -o "$_tmp_script"
+            sudo bash "$_tmp_script"
+            rm -f "$_tmp_script"
+            ;;
         *) echo "Skipped." ;;
     esac
 fi
