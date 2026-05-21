@@ -19,7 +19,7 @@ echo
 
 # Install uw-s3 as a uv tool
 echo "Installing uw-s3..."
-uv tool install "$REPO" --python 3.14
+uv tool install "$REPO" --python 3.13
 echo
 
 # Set up credentials
@@ -50,10 +50,13 @@ while true; do
 done
 
 while true; do
+    old_stty=$(stty -g < /dev/tty)
+    trap 'stty "$old_stty" < /dev/tty' EXIT HUP INT TERM
     printf "Secret Access Key: "
     stty -echo < /dev/tty
     read -r secret_key < /dev/tty
-    stty echo < /dev/tty
+    stty "$old_stty" < /dev/tty
+    trap - EXIT HUP INT TERM
     echo
     [ -n "$secret_key" ] && break
     echo "Secret key cannot be empty."
@@ -157,12 +160,13 @@ else
 fi
 
 # Check PATH
-if echo "$PATH" | grep -q "$INSTALL_DIR"; then
-    echo "✓ $INSTALL_DIR is in PATH"
-else
-    echo "⚠ Add to PATH:"
-    echo "  export PATH=\"$INSTALL_DIR:\$PATH\""
-fi
+case ":$PATH:" in
+    *":$INSTALL_DIR:"*)
+        echo "✓ $INSTALL_DIR is in PATH" ;;
+    *)
+        echo "⚠ Add to PATH:"
+        echo "  export PATH=\"$INSTALL_DIR:\$PATH\"" ;;
+esac
 
 echo
 echo "Done! Run 'uv --help' to start."
@@ -307,11 +311,12 @@ else
 fi
 
 # Check PATH
-if echo "$PATH" | grep -q "$INSTALL_DIR"; then
-    echo "✓ Ready to use"
-else
-    echo "⚠ Add to PATH: export PATH=\"$INSTALL_DIR:\$PATH\""
-fi
+case ":$PATH:" in
+    *":$INSTALL_DIR:"*)
+        echo "✓ Ready to use" ;;
+    *)
+        echo "⚠ Add to PATH: export PATH=\"$INSTALL_DIR:\$PATH\"" ;;
+esac
 
 echo
 echo "Done! Run '$SCRIPT_NAME' to start."
