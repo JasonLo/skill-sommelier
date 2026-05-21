@@ -76,7 +76,13 @@ else
     printf "Install rclone for mount support? (y/N): "
     read -r install_rclone < /dev/tty
     case "$install_rclone" in
-        [Yy]) sudo -v && curl https://rclone.org/install.sh | sudo bash ;;
+        [Yy])
+            sudo -v
+            rclone_install_script="$(mktemp)"
+            curl -fsSL https://rclone.org/install.sh -o "$rclone_install_script"
+            sudo bash "$rclone_install_script"
+            rm -f "$rclone_install_script"
+            ;;
         *) echo "Skipping rclone (mount feature will be unavailable)." ;;
     esac
 fi
