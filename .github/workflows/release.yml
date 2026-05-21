@@ -12,7 +12,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Validate public skills (ss-)
         run: bash maintainer-skills/ssm-skill-validate/scripts/validate.sh skills ss-
       - name: Validate maintainer skills (ssm-)
@@ -22,14 +22,14 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Count skills
         id: skills
         run: echo "count=$(ls -1d skills/*/SKILL.md | wc -l)" >> "$GITHUB_OUTPUT"
 
       - name: Create release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
           body: |
