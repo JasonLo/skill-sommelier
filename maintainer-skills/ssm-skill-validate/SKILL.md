@@ -68,57 +68,43 @@ Count total lines in SKILL.md. Warn if over 500; suggest moving content to `refe
 ### Check 9 — Referenced directories exist (FAIL if broken)
 If the SKILL.md body mentions `references/` or `scripts/`, verify those directories exist in the skill folder.
 
-### Check 10 — Trigger phrase overlap (WARN if found)
-Compare each skill's `description:` trigger phrases against all other skills. Warn if two skills share significant trigger keywords that could cause ambiguous activation. List the overlapping pair and the shared phrases.
-
 ### Check 11 — `metadata.depends-on` targets exist (FAIL if broken)
-If frontmatter contains `metadata.depends-on:`, verify each space-delimited skill name corresponds to an existing directory under `skills/`.
+If frontmatter contains `metadata.depends-on:`, verify each space-delimited skill name corresponds to an existing directory under `skills/` or `maintainer-skills/`.
 
 ### Check 12 — `metadata.related-skills` targets exist (WARN if broken)
-If frontmatter contains `metadata.related-skills:`, verify each comma-separated skill name (trimmed) corresponds to an existing directory under `skills/`. Warn on missing targets — these are cross-references, not hard dependencies.
+If frontmatter contains `metadata.related-skills:`, verify each comma-separated skill name (trimmed) corresponds to an existing directory under `skills/` or `maintainer-skills/`. Warn on missing targets — these are cross-references, not hard dependencies.
 
-**Exit:** All checks run for all skills. Results collected.
+**Exit:** All per-skill checks run. Results collected.
 
-## Phase 3 — Report
+## Phase 3 — Cross-Skill Checks
 
-**Entry:** Validation results from Phase 2.
+**Entry:** Per-skill checks complete.
 
-Output a report in this format:
+### Check 10 — Trigger phrase overlap (WARN if 3+ phrases shared)
+Extract double-quoted phrases from each skill's `description:` block (the conventional location for trigger phrases). For every pair of skills, count exact phrase matches after lowercasing. Warn when a pair shares **3 or more** distinct quoted phrases — that's a strong signal they'll compete for activation. Use `ssm-skill-consolidate` to merge them or rewrite descriptions to disambiguate.
+
+**Exit:** Pairwise comparison done across the entire run.
+
+## Phase 4 — Report
+
+**Entry:** All checks complete.
+
+The script emits one line per check result:
 
 ```
-## Skill Validation Report
-
-| Skill | SKILL.md | name | description | name=dir | ss- prefix | allowed-tools | <500 lines | refs exist | triggers | meta.depends-on | meta.related-skills | Status |
-|-------|----------|------|-------------|----------|------------|---------------|------------|------------|----------|-----------------|---------------------|--------|
-| ss-foo | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | N/A | PASS |
-| ss-bar | PASS | PASS | PASS | PASS | PASS | WARN | PASS | N/A | WARN | PASS | WARN | WARN |
-
-### Summary
-- Total skills: N
-- Passed: N
-- Warnings: N
-- Failed: N
-
-### Failures (if any)
-- ss-bad-skill: name "wrong-name" does not match directory "ss-bad-skill"
-
-### Warnings (if any)
-- ss-bar: missing allowed-tools (recommended)
+OK: ss-foo
+FAIL: ss-bar — name 'bar' does not match directory
+WARN: ss-baz — missing allowed-tools (recommended)
+WARN: trigger overlap — ss-foo vs ss-quux (4 shared phrases: create a skill; new skill; make skill)
 ```
 
-**Exit:** Report displayed to user.
+Followed by a summary:
 
-## Phase 4 — CI Output
+```
+Summary for skills: N checked, X failures, Y warnings
+```
 
-**Entry:** Report generated.
-
-If running in CI context or user requests CI output:
-
-1. Exit with code 0 if no FAILs
-2. Exit with code 1 if any FAILs
-3. Warnings do not cause failure
-
-**Exit:** Validation complete.
+**Exit code:** `0` if no FAILs (warnings allowed), `1` if any FAIL. CI gates use the exit code directly.
 
 ## How to Run
 

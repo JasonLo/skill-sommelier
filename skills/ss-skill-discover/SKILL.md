@@ -29,7 +29,7 @@ local developer profile this skill builds and caches.
 
 - **Profile-only** — triggered by "my profile" / "who am I" / "developer
   profile" / "coding habits". Run Step 1, present, stop.
-- **Discover** (default) — Step 1 (cached) → Steps 2–7.
+- **Discover** (default) — Step 1 (cached) → Steps 2–4.
 
 ## Step 1 — Load or build the profile
 
@@ -101,68 +101,44 @@ memory, settings — never transcripts or tool output); delete the file to forge
 
 ---
 
-## Step 2 — Parse args, generate queries
+## Step 2 — Parse args
 
 `$ARGUMENTS` may contain a keyword, a number (max results, default 10), both,
-or neither.
+or neither. Extract them; if no keyword, leave it empty and let the script
+fall back to profile-based relevance scoring.
 
-- **No keyword:** synthesise 3 queries from the profile (primary stack, work
-  domain, tool patterns). Show them with one-line reasoning each.
-- **Keyword given:** use it directly.
+License filter defaults to permissive (MIT/Apache/BSD/ISC/Unlicense/0BSD);
+skills with restrictive or missing licences are excluded. Pass
+`--no-license-filter` only if the user explicitly asks.
 
-License filter defaults to permissive (MIT/Apache/BSD); skills with restrictive
-or missing licences are excluded. Only override if the user asks.
+## Step 3 — Discover candidates
 
-## Step 3 — Search GitHub
-
-Run in parallel and merge:
-
-```bash
-# Code search — direct SKILL.md hits
-gh search code 'filename:SKILL.md "name:" "description:"' --limit 30 --json repository,path
-# Topic search — repos tagged for skills
-gh search repos --topic=claude-code-skills --sort=stars --limit 20 --json fullName,url
-gh search repos --topic=claude-skills --sort=stars --limit 20 --json fullName,url
-gh search repos --topic=agent-skills --sort=stars --limit 20 --json fullName,url
-```
-
-If a keyword is set, append it to the code search. For topic-matched repos,
-fetch the tree to find SKILL.md files.
-
-**Merge + pre-filter:** dedup by repo, exclude `JasonLo/skill-sommelier`. Check
-each repo's licence (`gh api repos/{owner}/{repo}/license --jq '.license.spdx_id'`)
-and skip if restrictive. For repos with >20 SKILL.md files, keep only the top 5
-paths most relevant to the user's queries/profile before fetching content.
-
-## Step 4 — Validate candidates
-
-For each surviving path, fetch and base64-decode:
-```bash
-gh api repos/{owner}/{repo}/contents/{path} --jq '.content'
-```
-Require `---` frontmatter, `name:`, and `description:`. Extract `name`,
-`description`, and any skill-level `license` (skip if it overrides the repo
-licence with a restrictive one).
-
-## Step 5 — Repo metadata
+The search, fetch, license filter, dedupe, installed-skill filter, and ranking
+all live in `scripts/discover.sh` — one canonical pipeline shared with
+`ssm-skill-weekly-discover` and the weekly cron workflow. Call it:
 
 ```bash
-gh api repos/{owner}/{repo} --jq '{stars: .stargazers_count, pushed: .pushed_at}'
+scripts/discover.sh \
+  --profile "$HOME/.claude/user-profile.md" \
+  --limit "${MAX:-10}" \
+  ${KEYWORD:+--keyword "$KEYWORD"} \
+  --installed-dir skills \
+  --exclude-repo JasonLo/skill-sommelier
 ```
-On rate-limit, present partial results with a note.
 
-## Step 6 — Rank and display
-
-Exclude already-installed skills (compare base name without `ss-` prefix
-against existing `skills/` dirs). Flag near-duplicates with a note instead of
-silently dropping. Rank by relevance (primary), stars (tiebreak), pushed-at
-(final tiebreak). Output:
+Output is a JSON array sorted by `(relevance, stars, pushed_at)` descending,
+with `{name, description, repo, path, stars, pushed_at, license, relevance,
+age_label}` per element. Display as:
 
 ```
 | # | Skill | Repository | Stars | Relevance | Description |
 ```
 
-## Step 7 — Select and install
+If the array is empty, report "no new skills found" and exit. If the script
+itself errors (network, missing `gh`/`jq`), surface its stderr verbatim — do
+**not** re-implement the pipeline inline.
+
+## Step 4 — Select and install
 
 Ask via `AskUserQuestion`: install by number ("1, 3, 5" or "all"), view full
 SKILL.md, refine, or done.

@@ -40,16 +40,25 @@ Autonomously evolve this skill-sommelier repo by discovering trending skills, st
 
 ## Step 2 — Discover trending skills
 
-Search GitHub directly using `gh` CLI (faster than invoking `ss-skill-discover` interactively):
+Run the shared discovery pipeline. Do **not** re-implement search/fetch/filter
+inline — `skills/ss-skill-discover/scripts/discover.sh` is the single source
+of truth (shared with `ss-skill-discover` and the weekly cron):
 
-1. Run code search and topic searches in parallel via a single Agent:
-   - `gh search code 'filename:SKILL.md "name:" "description:"' --limit 30 --json repository,path`
-   - `gh search repos --topic=claude-code-skills --sort=stars --limit 20 --json fullName,url`
-   - `gh search repos --topic=claude-skills --sort=stars --limit 20 --json fullName,url`
-   - `gh search repos --topic=agent-skills --sort=stars --limit 20 --json fullName,url`
-2. Merge, deduplicate, exclude this repo (`JasonLo/skill-sommelier`).
-3. For each candidate, fetch the SKILL.md content and extract name, description, license. Fetch repo stars and last push date.
-4. Filter to permissive licenses only. Sort by stars descending.
+```bash
+bash skills/ss-skill-discover/scripts/discover.sh \
+  --profile .github/user-profile.md \
+  --limit 30 \
+  --installed-dir skills \
+  --exclude-repo JasonLo/skill-sommelier \
+  > /tmp/evolve-candidates.json
+```
+
+The script handles code + topic search, license filtering (permissive only),
+SKILL.md fetch, frontmatter parse, dedupe, installed-skill exclusion, and
+ranking by `(relevance, stars, pushed_at)`. Each candidate in the JSON has
+`{name, description, repo, path, stars, pushed_at, license, relevance, age_label}`.
+
+Use the resulting JSON as the input to Step 3.
 
 ## Step 3 — Deep study and diff against existing skills
 

@@ -22,6 +22,10 @@ total=0
 fails=0
 warns=0
 
+# Temp workspace for cross-skill checks (trigger overlap).
+tmpdir=$(mktemp -d)
+trap 'rm -rf "$tmpdir"' EXIT
+
 for skill_dir in "$dir"/*/; do
   [ -d "$skill_dir" ] || continue
   total=$((total + 1))
@@ -123,7 +127,56 @@ for skill_dir in "$dir"/*/; do
     done
   fi
 
+  # Check 12 — related-skills targets exist (WARN if broken)
+  related=$(printf '%s\n' "$frontmatter" | grep 'related-skills:' | sed 's/.*related-skills:[[:space:]]*//')
+  if [ -n "$related" ]; then
+    # Comma-separated, trim whitespace per entry.
+    IFS=',' read -ra related_arr <<< "$related"
+    for rel in "${related_arr[@]}"; do
+      rel_trimmed=$(printf '%s' "$rel" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      [ -z "$rel_trimmed" ] && continue
+      if [ ! -d "skills/$rel_trimmed" ] && [ ! -d "maintainer-skills/$rel_trimmed" ]; then
+        echo "WARN: $skill_name — related-skills target '$rel_trimmed' not found"
+        warns=$((warns + 1))
+      fi
+    done
+  fi
+
+  # Cache distinctive trigger phrases (double-quoted strings inside the
+  # description block) for the pairwise overlap check in the post-pass.
+  printf '%s\n' "$frontmatter" \
+    | awk '/^description:/{flag=1; next} flag && /^[a-zA-Z_-]+:/{exit} flag' \
+    | grep -oE '"[^"]+"' \
+    | tr -d '"' \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' \
+    | sort -u \
+    > "$tmpdir/$skill_name.phrases"
+
   echo "OK: $skill_name"
+done
+
+# Check 10 — pairwise trigger phrase overlap (WARN).
+# Two skills sharing 3+ distinctive quoted trigger phrases is a strong signal
+# that they will compete for activation — see ssm-skill-consolidate.
+overlap_threshold=3
+shopt -s nullglob
+phrase_files=("$tmpdir"/*.phrases)
+shopt -u nullglob
+for ((i=0; i<${#phrase_files[@]}; i++)); do
+  for ((j=i+1; j<${#phrase_files[@]}; j++)); do
+    a="${phrase_files[i]}"
+    b="${phrase_files[j]}"
+    # Both files are already sort -u, so comm works directly.
+    shared=$(comm -12 "$a" "$b" | grep -c '.')
+    if [ "$shared" -ge "$overlap_threshold" ]; then
+      name_a=$(basename "$a" .phrases)
+      name_b=$(basename "$b" .phrases)
+      sample=$(comm -12 "$a" "$b" | head -3 | paste -sd '; ' -)
+      echo "WARN: trigger overlap — $name_a vs $name_b ($shared shared phrases: $sample)"
+      warns=$((warns + 1))
+    fi
+  done
 done
 
 echo

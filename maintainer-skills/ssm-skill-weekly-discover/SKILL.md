@@ -1,9 +1,9 @@
 ---
 name: ssm-skill-weekly-discover
 description: >-
-  Automated weekly skill discovery for GitHub Actions. Uses claude-code-action
-  to search GitHub for new Claude Code skills, filter against installed skills
-  and user profile, and create a GitHub issue with recommendations. Triggers on
+  Automated weekly skill discovery for GitHub Actions. Runs the shared
+  discovery pipeline against the user profile, filters against installed
+  skills, and opens a GitHub issue with ranked recommendations. Triggers on
   "weekly discover", "automated discovery", "skill recommendations".
 allowed-tools:
   - Read
@@ -11,16 +11,32 @@ metadata:
   depends-on: ss-skill-discover
 ---
 
-Automated weekly skill discovery that runs as a GitHub Actions cron job. The workflow uses `claude-code-action` to search GitHub for new Claude Code skills, filter them against your installed skills and user profile, and create a GitHub issue with checkbox-based recommendations.
+# Weekly Skill Discovery
+
+GitHub Actions cron that surfaces new Claude Code skills as a checkbox-based
+recommendation issue. The user checks what they want and `@claude install ...`
+takes it from there.
 
 ## How It Works
 
-1. **Cron fires** (Sunday 2 PM UTC) via `.github/workflows/weekly-discover.yml`
-2. **claude-code-action** runs with a discovery prompt — searches GitHub, validates candidates, ranks by relevance
-3. **Issue created** with checkbox list of recommended skills
-4. **User reviews** and checks desired skills
-5. **User comments** `@claude install the checked skills from this issue`
-6. **Claude** (via `claude.yml`) reads the issue, installs checked skills, creates a PR
+1. **Cron fires** (Sunday 2 PM UTC) via `.github/workflows/weekly-discover.yml`.
+2. **Workflow runs `skills/ss-skill-discover/scripts/discover.sh`** with
+   `--profile .github/user-profile.md`. That script — the single source of
+   truth shared with `ss-skill-discover` — does GitHub search, license
+   filtering, dedupe against already-installed skills, and ranking, and
+   emits JSON.
+3. **Workflow shapes the JSON into an issue body** with `jq` and opens it via
+   `gh issue create --label skill-recommendation`. No LLM in this path.
+4. **User reviews** the issue and checks desired skills.
+5. **User comments** `@claude install the checked skills from this issue`.
+6. **`claude.yml`** picks that up, installs checked skills, and opens a PR.
+
+## Why this skill is thin
+
+All discovery logic lives in `skills/ss-skill-discover/scripts/discover.sh`.
+This skill exists to document the cron-driven entry point and the issue
+contract — not to re-implement the pipeline. Any change to search topics,
+ranking, or license rules belongs in the script, not here.
 
 ## Manual Trigger
 
@@ -28,9 +44,11 @@ The workflow supports `workflow_dispatch` for on-demand runs.
 
 ## Configuration
 
-Edit `.github/user-profile.md` to customize discovery keywords. The profile contains your tech stack and interests used to rank skill relevance.
+Edit `.github/user-profile.md` to shape relevance scoring. The profile is
+tokenised and matched against candidate `name` + `description` text.
 
 ## Files
 
-- `.github/workflows/weekly-discover.yml` — cron workflow using claude-code-action
-- `.github/user-profile.md` — user profile for keyword matching
+- `.github/workflows/weekly-discover.yml` — cron workflow (bash + `gh`)
+- `.github/user-profile.md` — user profile for relevance scoring
+- `skills/ss-skill-discover/scripts/discover.sh` — shared discovery pipeline
