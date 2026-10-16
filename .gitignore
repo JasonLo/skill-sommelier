@@ -7,6 +7,17 @@ nohup.out
 *.tmp
 /tmp
 .DS_Store
+.superpowers/
 .claude/*
 !.claude/skills
 !.claude/skills/**
+
+# skill-cellar (TypeScript / Bun)
+node_modules
+dist
+*.local
+*.tsbuildinfo
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.sw?

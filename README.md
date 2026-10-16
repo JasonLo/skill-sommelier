@@ -2,7 +2,7 @@
 
 A self-improving [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) plugin. It discovers skills from GitHub, ranks them against a profile built from your local Claude Code history, installs them, and uses its own skills to validate and evolve the collection.
 
-Everything is `SKILL.md` files — no build system, no scripts.
+The plugin itself is just `SKILL.md` files — no build system. The repo also hosts [skill-cellar](#skill-cellar-terminal-ui), an optional terminal UI for managing skills.
 
 ## Install
 
@@ -55,6 +55,33 @@ Public skills (distributed):
 | [ss-autoresearch](skills/ss-autoresearch/SKILL.md) | Two-loop autonomous AI research: rapid experiments inside, synthesis outside |
 
 Maintainer-only skills under `maintainer-skills/` are not distributed via the marketplace — only contributors with a clone see them. They cover release automation, frontmatter validation, weekly discovery, evolution, and consolidation.
+
+## skill-cellar (terminal UI)
+
+A terminal UI for managing AI-agent skills: shop for skills, install them into a project or your global skill directory, see which ones actually get used, and craft your own — all conformant to the [agentskills.io specification](https://agentskills.io/specification). It wraps the plugin's *management* capabilities (discover, install, craft) in a UI and adds usage analytics and a curated shop.
+
+> **Status:** early development. The TypeScript core (conformance, atomic install, registry with offline cache, usage analytics, sync boundary) is implemented and tested under `src/core/`; the OpenTUI shell (`src/App.tsx`, `src/screens/`) has Market, Library, and Settings screens. The authoritative spec lives under [`specs/`](specs/): principles in [`CONSTITUTION.md`](specs/CONSTITUTION.md), product scope per intent in [`INTENT/`](specs/INTENT/).
+
+- **🛒 Shop** — browse a curated registry of vetted skills and install them into the selected project or global directory.
+- **📚 Library** — see everything installed in the project (`.claude/skills/`) and globally (`~/.claude/skills/`), including plugin-managed skills; update, uninstall, spot unused skills.
+- **📊 Usage** — reads your local Claude Code transcripts and shows how often each skill fires. Cross-device sync of usage metadata (Turso/libSQL) is **opt-in and off by default**; transcript content never leaves your machine.
+- **🔨 Craft** — scaffold a skill and edit its frontmatter and body with live spec validation.
+- **✅ Conformance everywhere** — every skill carries a spec-conformance verdict.
+
+skill-cellar is a **librarian, not an agent runner**: it manages skill files and never executes workflows. The filesystem is the single source of truth.
+
+Stack: [OpenTUI](https://github.com/sst/opentui) on [Bun](https://bun.sh), TypeScript end to end. The logic under `src/core/` (`conformance`, `fs-skills`, `registry`, `usage`, `sync`) is pure TS with no UI dependencies.
+
+```bash
+bun install          # one-time
+bun run dev          # launch the TUI
+bun run test         # vitest, src/core/* suites
+bun run build        # tsc -b (type-check)
+bun run lint         # biome check (read-only)
+bun run format       # biome check --write
+```
+
+The toolchain is locked to Bun (constitution P-9); npm, yarn, and pnpm are out.
 
 ## Development
 

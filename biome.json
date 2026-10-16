@@ -6,13 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "**",
-      "!dist",
-      "!src/api/bindings.ts",
-      "!src-tauri/gen",
-      "!**/target"
-    ]
+    "includes": ["src/**", "*.json", "*.ts", "!bun.lock"]
   },
   "formatter": {
     "enabled": true,
